@@ -4,6 +4,14 @@ import { testDialog } from "../apps/test-dialog.mjs";
 import { performTest } from "../dice/test-roll.mjs";
 
 export class SinlessActor extends Actor {
+  /** @override Characters get linked tokens so pools and damage stay on the actor. */
+  async _preCreate(data, options, user) {
+    if ((await super._preCreate(data, options, user)) === false) return false;
+    if (this.type === "character" && data.prototypeToken?.actorLink === undefined) {
+      this.updateSource({ "prototypeToken.actorLink": true });
+    }
+  }
+
   /** @override */
   getRollData() {
     const data = { ...super.getRollData() };
@@ -16,7 +24,9 @@ export class SinlessActor extends Actor {
 
   /** Whether this actor currently takes part in an active combat. */
   get inConflict() {
-    return !!game.combat?.started && game.combat.combatants.some(c => c.actor === this);
+    const combat = game.combat;
+    if (!combat?.started) return false;
+    return combat.combatants.some(c => c.actor === this);
   }
 
   /** Best rank among other skills in the same group (for defaulting at -2). */
