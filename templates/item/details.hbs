@@ -1,0 +1,70 @@
+<section class="item-details">
+  {{#if isType.weapon}}
+    {{formGroup fields.category value=system.category localize=true}}
+    {{formGroup fields.skill value=system.skill choices=skillChoices localize=true}}
+    {{formGroup fields.accuracy value=system.accuracy}}
+    {{formGroup fields.damage value=system.damage}}
+    {{formGroup fields.penetration value=system.penetration}}
+    {{formGroup fields.reach value=system.reach}}
+    {{formGroup fields.modes value=system.modes}}
+    {{formGroup fields.rangeClose value=system.rangeClose}}
+    {{formGroup fields.rangeMax value=system.rangeMax}}
+    {{formGroup fields.ammo value=system.ammo}}
+    {{formGroup fields.alert value=system.alert}}
+  {{/if}}
+  {{#if isType.armor}}
+    {{formGroup fields.layer value=system.layer localize=true}}
+    {{formGroup fields.ballistic value=system.ballistic}}
+    {{formGroup fields.impact value=system.impact}}
+    {{formGroup fields.equipped value=system.equipped}}
+  {{/if}}
+  {{#if isType.gear}}
+    {{formGroup fields.rating value=system.rating}}
+    {{formGroup fields.limitBonus value=system.limitBonus}}
+  {{/if}}
+  {{#if isType.implant}}
+    {{formGroup fields.kind value=system.kind localize=true}}
+    {{formGroup fields.rating value=system.rating}}
+    {{formGroup fields.zoeticCost value=system.zoeticCost}}
+    {{formGroup fields.bodyIndex value=system.bodyIndex}}
+    {{formGroup fields.cost value=system.cost}}
+    {{formGroup fields.effect value=system.effect}}
+  {{/if}}
+  {{#if isType.power}}
+    {{formGroup fields.category value=system.category localize=true}}
+    {{formGroup fields.school value=system.school}}
+    {{formGroup fields.force value=system.force}}
+    {{formGroup fields.drain value=system.drain}}
+    {{formGroup fields.resistance value=system.resistance}}
+    {{formGroup fields.focus value=system.focus}}
+    {{formGroup fields.fetish value=system.fetish}}
+  {{/if}}
+  {{#if isType.ritual}}
+    {{formGroup fields.rank value=system.rank}}
+    {{formGroup fields.pool value=system.pool localize=true}}
+  {{/if}}
+  {{#if isType.knowledge}}
+    {{formGroup fields.rank value=system.rank}}
+  {{/if}}
+  {{#if isType.asset}}
+    {{formGroup fields.etiquette value=system.etiquette localize=true}}
+    {{formGroup fields.free value=system.free}}
+    {{formGroup fields.hireCost value=system.hireCost}}
+    {{formGroup fields.upkeep value=system.upkeep}}
+    {{formGroup fields.operation value=system.operation}}
+    {{formGroup fields.sector value=system.sector}}
+  {{/if}}
+  {{#if physical}}
+  <fieldset>
+    <legend>{{localize "SINLESS.Physical"}}</legend>
+    {{formGroup fields.quantity value=system.quantity}}
+    {{formGroup fields.weight value=system.weight}}
+    {{formGroup fields.cost value=system.cost}}
+    {{formGroup fields.carried value=system.carried}}
+    {{formGroup fields.metal value=system.metal}}
+    {{formGroup fields.concealability value=system.concealability}}
+    {{formGroup fields.hardening value=system.hardening}}
+  </fieldset>
+  {{/if}}
+  {{formGroup fields.source value=system.source}}
+</section>

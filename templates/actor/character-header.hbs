@@ -1,0 +1,45 @@
+<header class="sheet-header">
+  <img class="profile" src="{{actor.img}}" alt="{{actor.name}}" data-edit="img" data-action="editImage" data-tooltip="{{actor.name}}">
+  <div class="header-fields">
+    <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize "SINLESS.Name"}}">
+    <div class="header-grid">
+      <label>{{localize "SINLESS.Character.FIELDS.heritage.label"}}
+        <select name="system.heritage">{{selectOptions heritageChoices selected=system.heritage localize=true}}</select>
+      </label>
+      <label>{{localize "SINLESS.Character.FIELDS.talent.label"}}
+        <select name="system.talent">{{selectOptions talentChoices selected=system.talent localize=true}}</select>
+      </label>
+      <label>{{localize "SINLESS.Character.FIELDS.lifestyle.label"}}
+        <span class="inline">
+          <select name="system.lifestyle">{{selectOptions lifestyleChoices selected=system.lifestyle localize=true}}</select>
+          <input type="number" name="system.lifestyleMonths" value="{{system.lifestyleMonths}}" min="0" data-tooltip="{{localize "SINLESS.Character.FIELDS.lifestyleMonths.label"}}">
+        </span>
+      </label>
+      <label>{{localize "SINLESS.Character.FIELDS.brand.label"}}
+        <input type="text" name="system.brand" value="{{system.brand}}">
+      </label>
+      <label>{{localize "SINLESS.Character.FIELDS.ghost.label"}}
+        <input type="number" name="system.ghost" value="{{system.ghost}}" min="0">
+      </label>
+      <label>{{localize "SINLESS.Character.FIELDS.zuzu.label"}}
+        <input type="number" name="system.zuzu" value="{{system.zuzu}}" min="0">
+      </label>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat" data-tooltip="{{localize "SINLESS.TargetNumberHint"}}">
+      <span class="label">{{localize "SINLESS.TargetNumber"}}</span>
+      <span class="value">{{targetNumber}}+</span>
+    </div>
+    <div class="stat" data-tooltip="{{localize "SINLESS.ZoeticHint" base=system.zoetic.base implant=system.zoetic.implantLoss gear=system.zoetic.gearLoss}}">
+      <span class="label">{{localize "SINLESS.Zoetic"}}</span>
+      <span class="value">{{system.zoetic.value}}</span>
+      <span class="sub">({{system.zoetic.raw}})</span>
+    </div>
+    <div class="stat kismet">
+      <span class="label">{{localize "SINLESS.KismetPool"}}</span>
+      <span class="value">{{system.kismet.pool.value}}/{{system.kismet.pool.max}}</span>
+      <button type="button" class="icon" data-action="refreshKismet" data-tooltip="{{localize "SINLESS.RefreshKismet"}}"><i class="fa-solid fa-rotate"></i></button>
+    </div>
+  </div>
+</header>

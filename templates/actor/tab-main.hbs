@@ -1,0 +1,72 @@
+<section class="tab main {{tab.cssClass}}" data-tab="main" data-group="primary">
+  {{#if attributes}}
+  <div class="attributes">
+    {{#each attributes}}
+    <div class="attribute">
+      <span class="label">{{localize label}}</span>
+      <input type="number" name="system.attributes.{{key}}.value" value="{{value}}" min="0">
+      <span class="slash">/</span>
+      <input type="number" class="max" name="system.attributes.{{key}}.max" value="{{max}}" min="0">
+    </div>
+    {{/each}}
+    <div class="attribute charisma-pool">
+      <span class="label" data-tooltip="{{localize "SINLESS.Character.FIELDS.charismaPool.hint"}}">{{localize "SINLESS.Character.FIELDS.charismaPool.label"}}</span>
+      <select name="system.charismaPool">{{selectOptions charismaPoolChoices selected=system.charismaPool localize=true}}</select>
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="status-row">
+    <div class="condition">
+      {{> "systems/sinless/templates/actor/partials/condition-track.hbs" track="physical" label="SINLESS.Condition.physical" boxes=physicalBoxes}}
+      {{> "systems/sinless/templates/actor/partials/condition-track.hbs" track="stun" label="SINLESS.Condition.stun" boxes=stunBoxes}}
+      <div class="condition-footer">
+        <label>{{localize "SINLESS.Condition.overflow"}}
+          <input type="number" name="system.condition.overflow" value="{{system.condition.overflow}}" min="0">
+        </label>
+        <span class="penalty" data-tooltip="{{localize "SINLESS.Condition.penaltyHint"}}">
+          {{localize "SINLESS.Condition.penalty"}}: <strong>-{{system.totalPenalty}}</strong>
+        </span>
+        <label data-tooltip="{{localize "SINLESS.Actor.FIELDS.penalty.hint"}}">{{localize "SINLESS.Actor.FIELDS.penalty.label"}}
+          <input type="number" name="system.penalty" value="{{system.penalty}}" min="0">
+        </label>
+      </div>
+    </div>
+    <div class="defenses">
+      <div class="armor">
+        <span>{{localize "SINLESS.Armor.ballistic"}} <strong>{{system.armor.ballistic.total}}</strong> ({{system.armor.ballistic.highest}})</span>
+        <span>{{localize "SINLESS.Armor.impact"}} <strong>{{system.armor.impact.total}}</strong> ({{system.armor.impact.highest}})</span>
+      </div>
+      {{#each defenses}}
+      <button type="button" class="defense" data-action="rollDefense" data-defense="{{key}}">
+        <i class="fa-solid fa-shield-halved"></i> {{localize label}}
+      </button>
+      {{/each}}
+      <button type="button" class="refresh" data-action="refreshPools"><i class="fa-solid fa-rotate"></i> {{localize "SINLESS.RefreshPools"}}</button>
+    </div>
+  </div>
+
+  <div class="pools">
+    {{#each pools}}
+    <div class="pool pool-{{key}}">
+      <header>
+        <a class="pool-name" data-action="rollPool" data-pool="{{key}}" data-tooltip="{{localize "SINLESS.RollPool"}}">{{localize label}}</a>
+        <span class="pool-value"><strong>{{value}}</strong> / {{max}}</span>
+        {{#if ../system.poolMax}}
+        <input type="number" class="pool-max" name="system.poolMax.{{key}}" value="{{lookup ../system.poolMax key}}" min="0" data-tooltip="{{localize "SINLESS.Npc.FIELDS.poolMax.label"}}">
+        {{/if}}
+        <input type="number" class="pool-spent" name="system.pools.{{key}}.spent" value="{{spent}}" min="0" data-tooltip="{{localize "SINLESS.PoolSpent"}}">
+      </header>
+      <ol class="skills">
+        {{#each skills}}
+        <li class="skill{{#if trainedOnly}} trained-only{{/if}}{{#unless rank}} unranked{{/unless}}">
+          <a class="skill-name" data-action="rollSkill" data-skill="{{key}}"{{#if group}} data-tooltip="{{group}}"{{/if}}>{{label}}{{#if trainedOnly}}*{{/if}}</a>
+          <input type="text" class="spec" name="system.skills.{{key}}.spec" value="{{spec}}" placeholder="{{localize "SINLESS.Specialization"}}">
+          <input type="number" class="rank" name="system.skills.{{key}}.rank" value="{{rank}}" min="0">
+        </li>
+        {{/each}}
+      </ol>
+    </div>
+    {{/each}}
+  </div>
+</section>

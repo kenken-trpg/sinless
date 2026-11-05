@@ -1,0 +1,43 @@
+{
+  "id": "sinless",
+  "title": "Sinless",
+  "description": "Unofficial fan-made Foundry VTT system for the Sinless tabletop RPG. Not affiliated with or endorsed by the publisher.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14"
+  },
+  "authors": [
+    { "name": "kenken-trpg" }
+  ],
+  "esmodules": ["sinless.mjs"],
+  "styles": ["styles/sinless.css"],
+  "languages": [
+    { "lang": "en", "name": "English", "path": "lang/en.json" },
+    { "lang": "ja", "name": "日本語", "path": "lang/ja.json" }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": { "htmlFields": ["notes", "biography"] },
+      "npc": { "htmlFields": ["notes"] }
+    },
+    "Item": {
+      "weapon": { "htmlFields": ["description"] },
+      "armor": { "htmlFields": ["description"] },
+      "gear": { "htmlFields": ["description"] },
+      "implant": { "htmlFields": ["description"] },
+      "power": { "htmlFields": ["description"] },
+      "ritual": { "htmlFields": ["description"] },
+      "knowledge": { "htmlFields": ["description"] },
+      "asset": { "htmlFields": ["description"] }
+    }
+  },
+  "grid": { "distance": 2, "units": "m" },
+  "primaryTokenAttribute": "condition.physical",
+  "secondaryTokenAttribute": "condition.stun",
+  "socket": false,
+  "url": "https://github.com/kenken-trpg/sinless",
+  "manifest": "https://github.com/kenken-trpg/sinless/releases/latest/download/system.json",
+  "download": "https://github.com/kenken-trpg/sinless/releases/latest/download/sinless.zip",
+  "license": "LICENSE"
+}

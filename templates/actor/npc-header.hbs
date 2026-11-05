@@ -1,0 +1,30 @@
+<header class="sheet-header">
+  <img class="profile" src="{{actor.img}}" alt="{{actor.name}}" data-edit="img" data-action="editImage" data-tooltip="{{actor.name}}">
+  <div class="header-fields">
+    <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize "SINLESS.Name"}}">
+    <div class="header-grid">
+      <label>{{localize "SINLESS.Npc.FIELDS.initiative.label"}}
+        <input type="number" name="system.initiative" value="{{system.initiative}}" min="0">
+      </label>
+      <label>{{localize "SINLESS.Npc.FIELDS.strength.label"}}
+        <input type="number" name="system.strength" value="{{system.strength}}" min="0">
+      </label>
+      <label>{{localize "SINLESS.Npc.FIELDS.conditionMax.physical.label"}}
+        <input type="number" name="system.conditionMax.physical" value="{{system.conditionMax.physical}}" min="0">
+      </label>
+      <label>{{localize "SINLESS.Npc.FIELDS.conditionMax.stun.label"}}
+        <input type="number" name="system.conditionMax.stun" value="{{system.conditionMax.stun}}" min="0">
+      </label>
+      <label class="checkbox" data-tooltip="{{localize "SINLESS.Npc.FIELDS.agonarch.hint"}}">
+        <input type="checkbox" name="system.agonarch" {{checked system.agonarch}}>
+        {{localize "SINLESS.Npc.FIELDS.agonarch.label"}}
+      </label>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat">
+      <span class="label">{{localize "SINLESS.TargetNumber"}}</span>
+      <span class="value">{{targetNumber}}+</span>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,26 @@
+<section class="tab social {{tab.cssClass}}" data-tab="social" data-group="primary">
+  <div class="etiquettes">
+    <h3>{{localize "SINLESS.Etiquettes"}}</h3>
+    <ol>
+      {{#each etiquettes}}
+      <li>
+        <a data-action="rollEtiquette" data-etiquette="{{key}}">{{localize label}}</a>
+        <input type="number" name="system.etiquettes.{{key}}.rank" value="{{rank}}" min="0">
+      </li>
+      {{/each}}
+    </ol>
+  </div>
+  <div class="kismet-block">
+    <h3>{{localize "SINLESS.Kismet"}}</h3>
+    <label>{{localize "SINLESS.Character.FIELDS.kismet.earned.label"}} <input type="number" name="system.kismet.earned" value="{{system.kismet.earned}}" min="0"></label>
+    <label>{{localize "SINLESS.Character.FIELDS.kismet.unspent.label"}} <input type="number" name="system.kismet.unspent" value="{{system.kismet.unspent}}" min="0"></label>
+    <label>{{localize "SINLESS.Character.FIELDS.kismet.poolBonus.label"}} <input type="number" name="system.kismet.poolBonus" value="{{system.kismet.poolBonus}}" min="0"></label>
+    <label>{{localize "SINLESS.Character.FIELDS.kismet.spent.label"}} <input type="number" name="system.kismet.spent" value="{{system.kismet.spent}}" min="0"></label>
+    <label>{{localize "SINLESS.Character.FIELDS.zoetic.bonus.label"}} <input type="number" step="0.1" name="system.zoetic.bonus" value="{{system.zoetic.bonus}}"></label>
+    <label>{{localize "SINLESS.Character.FIELDS.initiativeBonus.label"}} <input type="number" name="system.initiativeBonus" value="{{system.initiativeBonus}}"></label>
+    <label>{{localize "SINLESS.Character.FIELDS.movement.label"}} <input type="number" name="system.movement" value="{{system.movement}}" min="0"></label>
+  </div>
+  {{#each itemGroups.social}}
+  {{> "systems/sinless/templates/actor/partials/item-list.hbs" this}}
+  {{/each}}
+</section>

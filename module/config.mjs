@@ -1,0 +1,202 @@
+/**
+ * Static configuration for the Sinless system. Every user-facing label is an
+ * i18n key; never put display text here.
+ */
+
+export const SYSTEM_ID = "sinless";
+
+const L = key => `SINLESS.${key}`;
+
+export const ATTRIBUTES = Object.freeze({
+  str: L("Attribute.str"),
+  bod: L("Attribute.bod"),
+  rea: L("Attribute.rea"),
+  int: L("Attribute.int"),
+  wil: L("Attribute.wil"),
+  cha: L("Attribute.cha")
+});
+
+export const POOLS = Object.freeze({
+  brawn: L("Pool.brawn"),
+  finesse: L("Pool.finesse"),
+  focus: L("Pool.focus"),
+  resolve: L("Pool.resolve")
+});
+
+export const SKILL_GROUPS = Object.freeze({
+  close: L("SkillGroup.close"),
+  ranged: L("SkillGroup.ranged"),
+  vehicle: L("SkillGroup.vehicle"),
+  hacking: L("SkillGroup.hacking"),
+  engineering: L("SkillGroup.engineering")
+});
+
+/**
+ * Active skills (pp.66-69). `trainedOnly` marks skills with an asterisk:
+ * they cannot be rolled untrained from the pool.
+ */
+export const SKILLS = Object.freeze({
+  // Brawn
+  meleeWeapons: { pool: "brawn", group: "close" },
+  unarmedCombat: { pool: "brawn", group: "close" },
+  martialArts: { pool: "brawn", trainedOnly: true },
+  cyberCombat: { pool: "brawn", group: "close", trainedOnly: true },
+  throwingWeapons: { pool: "brawn", group: "close" },
+  athletics: { pool: "brawn" },
+  // Finesse
+  firearms: { pool: "finesse", group: "ranged" },
+  gunnery: { pool: "finesse", group: "ranged" },
+  heavyWeapons: { pool: "finesse", group: "ranged" },
+  energyWeapons: { pool: "finesse", group: "ranged" },
+  archery: { pool: "finesse" },
+  articulatedManeuvers: { pool: "finesse" },
+  // Focus
+  shadow: { pool: "focus" },
+  drive: { pool: "focus", group: "vehicle", trainedOnly: true },
+  fly: { pool: "focus", group: "vehicle", trainedOnly: true },
+  observation: { pool: "focus" },
+  biotech: { pool: "focus", trainedOnly: true },
+  reconnaissance: { pool: "focus" },
+  locksmithing: { pool: "focus", group: "hacking", trainedOnly: true },
+  hacking: { pool: "focus", group: "hacking", trainedOnly: true },
+  electronicWarfare: { pool: "focus", group: "hacking", trainedOnly: true },
+  programming: { pool: "focus", trainedOnly: true },
+  engMechanical: { pool: "focus", group: "engineering", trainedOnly: true },
+  engIndustrial: { pool: "focus", group: "engineering", trainedOnly: true },
+  engAeronautics: { pool: "focus", group: "engineering", trainedOnly: true },
+  engArmory: { pool: "focus", group: "engineering", trainedOnly: true },
+  engElectronics: { pool: "focus", group: "engineering", trainedOnly: true },
+  engNautical: { pool: "focus", group: "engineering", trainedOnly: true },
+  artificing: { pool: "focus", trainedOnly: true },
+  negotiation: { pool: "focus" },
+  // Resolve
+  channeling: { pool: "resolve", trainedOnly: true },
+  sorcery: { pool: "resolve", trainedOnly: true },
+  astralSenses: { pool: "resolve" },
+  survival: { pool: "resolve", trainedOnly: true },
+  conjuring: { pool: "resolve", trainedOnly: true },
+  leadership: { pool: "resolve" },
+  subterfuge: { pool: "resolve" },
+  coercion: { pool: "resolve" },
+  fascination: { pool: "resolve" }
+});
+
+export const ETIQUETTES = Object.freeze({
+  corporate: L("Etiquette.corporate"),
+  street: L("Etiquette.street"),
+  civic: L("Etiquette.civic"),
+  aristocratic: L("Etiquette.aristocratic"),
+  military: L("Etiquette.military"),
+  criminal: L("Etiquette.criminal"),
+  wasteland: L("Etiquette.wasteland")
+});
+
+/** Heritages and their base Zoetic Potential (p.34). */
+export const HERITAGES = Object.freeze({
+  human: { label: L("Heritage.human"), zoetic: 6 },
+  green: { label: L("Heritage.green"), zoetic: 6 },
+  blighted: { label: L("Heritage.blighted"), zoetic: 6 },
+  uplifted: { label: L("Heritage.uplifted"), zoetic: 5 },
+  synthetic: { label: L("Heritage.synthetic"), zoetic: 1 }
+});
+
+export const MAGIC_TALENTS = Object.freeze({
+  hedge: L("Talent.hedge"),
+  mage: L("Talent.mage"),
+  archmage: L("Talent.archmage"),
+  amp: L("Talent.amp"),
+  speaker: L("Talent.speaker")
+});
+
+export const LIFESTYLES = Object.freeze({
+  squatter: L("Lifestyle.squatter"),
+  low: L("Lifestyle.low"),
+  middle: L("Lifestyle.middle"),
+  high: L("Lifestyle.high"),
+  wealthy: L("Lifestyle.wealthy")
+});
+
+/** Run difficulty and its default player target number (p.28). */
+export const DIFFICULTIES = Object.freeze({
+  veteran: { label: L("Difficulty.veteran"), tn: 4 },
+  professional: { label: L("Difficulty.professional"), tn: 5 },
+  prime: { label: L("Difficulty.prime"), tn: 6 }
+});
+
+/** The Agonarch always rolls against 4+ (p.27). */
+export const AGONARCH_TN = 4;
+
+export const HEAT_LEVELS = Object.freeze({
+  0: L("Heat.0"),
+  1: L("Heat.1"),
+  2: L("Heat.2"),
+  3: L("Heat.3"),
+  4: L("Heat.4")
+});
+
+export const WEAPON_CATEGORIES = Object.freeze({
+  melee: L("WeaponCategory.melee"),
+  unarmed: L("WeaponCategory.unarmed"),
+  thrown: L("WeaponCategory.thrown"),
+  projectile: L("WeaponCategory.projectile"),
+  firearm: L("WeaponCategory.firearm"),
+  energy: L("WeaponCategory.energy"),
+  heavy: L("WeaponCategory.heavy"),
+  vehicle: L("WeaponCategory.vehicle")
+});
+
+/** Firing modes and their bonus dice (p.92). */
+export const FIRING_MODES = Object.freeze({
+  none: { label: L("FiringMode.none"), bonus: 0 },
+  single: { label: L("FiringMode.single"), bonus: 0 },
+  doubleTap: { label: L("FiringMode.doubleTap"), bonus: 1 },
+  burst: { label: L("FiringMode.burst"), bonus: 3 },
+  fullAuto: { label: L("FiringMode.fullAuto"), bonus: 20 }
+});
+
+export const ARMOR_LAYERS = Object.freeze({
+  internal: L("ArmorLayer.internal"),
+  under: L("ArmorLayer.under"),
+  outer: L("ArmorLayer.outer")
+});
+
+export const IMPLANT_KINDS = Object.freeze({
+  cyber: L("ImplantKind.cyber"),
+  bio: L("ImplantKind.bio")
+});
+
+export const POWER_CATEGORIES = Object.freeze({
+  spell: L("PowerCategory.spell"),
+  amplification: L("PowerCategory.amplification"),
+  infusion: L("PowerCategory.infusion"),
+  spirit: L("PowerCategory.spirit")
+});
+
+export const REROLL_OPTIONS = Object.freeze({
+  0: L("Reroll.none"),
+  1: L("Reroll.ones"),
+  2: L("Reroll.onesTwos")
+});
+
+export const TEST_MODES = Object.freeze({
+  skill: L("TestMode.skill"),
+  default: L("TestMode.default"),
+  untrained: L("TestMode.untrained"),
+  defense: L("TestMode.defense"),
+  rank: L("TestMode.rank")
+});
+
+export const DEFENSES = Object.freeze({
+  dodge: { pool: "finesse", label: L("Defense.dodge") },
+  soak: { pool: "brawn", label: L("Defense.soak") },
+  resist: { pool: "resolve", label: L("Defense.resist") }
+});
+
+export const SINLESS = {
+  ATTRIBUTES, POOLS, SKILLS, SKILL_GROUPS, ETIQUETTES, HERITAGES, MAGIC_TALENTS,
+  LIFESTYLES, DIFFICULTIES, AGONARCH_TN, HEAT_LEVELS, WEAPON_CATEGORIES, FIRING_MODES,
+  ARMOR_LAYERS, IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES
+};
+
+/** i18n key for a skill label. */
+export const skillLabel = key => `SINLESS.Skill.${key}`;

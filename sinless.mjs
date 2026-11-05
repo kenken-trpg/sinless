@@ -1,0 +1,69 @@
+import { SYSTEM_ID, SINLESS } from "./module/config.mjs";
+import { registerSettings } from "./module/settings.mjs";
+import { CharacterData, NpcData } from "./module/data/actor.mjs";
+import {
+  WeaponData, ArmorData, GearData, ImplantData, PowerData, RitualData, KnowledgeData, AssetData
+} from "./module/data/item.mjs";
+import { SinlessActor } from "./module/documents/actor.mjs";
+import { SinlessCombatant, registerCombatHooks } from "./module/documents/combat.mjs";
+import { CharacterSheet, NpcSheet } from "./module/sheets/actor-sheet.mjs";
+import { SinlessItemSheet } from "./module/sheets/item-sheet.mjs";
+import { onRenderChatMessage } from "./module/dice/test-roll.mjs";
+import * as rules from "./module/helpers/rules.mjs";
+
+Hooks.once("init", () => {
+  console.log(`${SYSTEM_ID} | Initializing Sinless`);
+
+  CONFIG.SINLESS = SINLESS;
+  game.sinless = { rules, config: SINLESS };
+
+  CONFIG.Actor.documentClass = SinlessActor;
+  CONFIG.Combatant.documentClass = SinlessCombatant;
+  Object.assign(CONFIG.Actor.dataModels, { character: CharacterData, npc: NpcData });
+  Object.assign(CONFIG.Item.dataModels, {
+    weapon: WeaponData,
+    armor: ArmorData,
+    gear: GearData,
+    implant: ImplantData,
+    power: PowerData,
+    ritual: RitualData,
+    knowledge: KnowledgeData,
+    asset: AssetData
+  });
+
+  CONFIG.Actor.trackableAttributes = {
+    character: { bar: ["condition.physical", "condition.stun"], value: ["ghost"] },
+    npc: { bar: ["condition.physical", "condition.stun"], value: ["initiative"] }
+  };
+
+  const { DocumentSheetConfig } = foundry.applications.apps;
+  DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, CharacterSheet, {
+    types: ["character"], makeDefault: true, label: "SINLESS.Sheet.character"
+  });
+  DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NpcSheet, {
+    types: ["npc"], makeDefault: true, label: "SINLESS.Sheet.npc"
+  });
+  DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, SinlessItemSheet, {
+    makeDefault: true, label: "SINLESS.Sheet.item"
+  });
+
+  registerSettings();
+  registerCombatHooks();
+  registerHandlebarsHelpers();
+
+  foundry.applications.handlebars.loadTemplates([
+    `systems/${SYSTEM_ID}/templates/actor/partials/item-list.hbs`,
+    `systems/${SYSTEM_ID}/templates/actor/partials/condition-track.hbs`
+  ]);
+});
+
+Hooks.on("renderChatMessageHTML", onRenderChatMessage);
+
+function registerHandlebarsHelpers() {
+  Handlebars.registerHelper("sinlessTimes", (n, block) => {
+    let out = "";
+    for (let i = 0; i < n; i++) out += block.fn(i);
+    return out;
+  });
+  Handlebars.registerHelper("sinlessSigned", n => (n > 0 ? `+${n}` : `${n}`));
+}

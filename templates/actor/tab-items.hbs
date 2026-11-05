@@ -1,0 +1,8 @@
+<section class="tab {{tab.id}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="primary">
+  {{#if (eq tab.id "gear")}}{{#if system.carryCapacity}}
+  <p class="carry">{{localize "SINLESS.Carry" carried=system.carried capacity=system.carryCapacity}}{{#if system.encumbrance}} <strong class="warn">-{{system.encumbrance}}</strong>{{/if}}</p>
+  {{/if}}{{/if}}
+  {{#each groups}}
+  {{> "systems/sinless/templates/actor/partials/item-list.hbs" this}}
+  {{/each}}
+</section>

@@ -1,0 +1,8 @@
+<section class="tab bio {{tab.cssClass}}" data-tab="bio" data-group="primary">
+  {{#if fields.biography}}
+  <h3>{{localize "SINLESS.Character.FIELDS.biography.label"}}</h3>
+  {{formInput fields.biography value=system.biography enriched=enrichedBiography toggled=true}}
+  {{/if}}
+  <h3>{{localize "SINLESS.Actor.FIELDS.notes.label"}}</h3>
+  {{formInput fields.notes value=system.notes enriched=enrichedNotes toggled=true}}
+</section>

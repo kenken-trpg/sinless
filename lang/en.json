@@ -1,0 +1,375 @@
+{
+  "TYPES": {
+    "Actor": {
+      "character": "Sinless",
+      "npc": "NPC"
+    },
+    "Item": {
+      "weapon": "Weapon",
+      "armor": "Armor",
+      "gear": "Gear",
+      "implant": "Implant",
+      "power": "Spell / Power",
+      "ritual": "Ritual",
+      "knowledge": "Knowledge Skill",
+      "asset": "Asset"
+    }
+  },
+  "SINLESS": {
+    "Name": "Name",
+    "TargetNumber": "Target Number",
+    "TargetNumberHint": "Set by the run difficulty and operational heat in the world settings.",
+    "Zoetic": "Zoetic Potential",
+    "ZoeticHint": "Base {base} − implants {implant} − carried metal/electronic gear {gear}",
+    "Kismet": "Kismet",
+    "KismetPool": "Kismet Pool",
+    "RefreshKismet": "Refresh Kismet pool",
+    "RefreshPools": "Refresh pools",
+    "RollPool": "Roll this pool",
+    "PoolSpent": "Dice spent this round",
+    "Specialization": "Specialization",
+    "Etiquettes": "Etiquettes",
+    "Physical": "Physical",
+    "ItemCreate": "Create",
+    "ItemEdit": "Edit",
+    "ItemDelete": "Delete",
+    "Carry": "Carried weight {carried} / {capacity}",
+    "ABF": "Argle Bargle Foofaraw!",
+    "Attribute": {
+      "str": "Strength",
+      "bod": "Body",
+      "rea": "Reaction",
+      "int": "Intelligence",
+      "wil": "Willpower",
+      "cha": "Charisma"
+    },
+    "Pool": {
+      "brawn": "Brawn",
+      "finesse": "Finesse",
+      "focus": "Focus",
+      "resolve": "Resolve"
+    },
+    "SkillGroup": {
+      "close": "Close combat skills",
+      "ranged": "Ranged weapon skills",
+      "vehicle": "Vehicle skills",
+      "hacking": "Hacking skills",
+      "engineering": "Engineering skills"
+    },
+    "Skill": {
+      "meleeWeapons": "Melee Weapons",
+      "unarmedCombat": "Unarmed Combat",
+      "martialArts": "Martial Arts",
+      "cyberCombat": "Cyber Combat",
+      "throwingWeapons": "Throwing Weapons",
+      "athletics": "Athletics",
+      "firearms": "Firearms",
+      "gunnery": "Gunnery",
+      "heavyWeapons": "Heavy Weapons",
+      "energyWeapons": "Energy Weapons",
+      "archery": "Archery",
+      "articulatedManeuvers": "Articulated Maneuvers",
+      "shadow": "Shadow",
+      "drive": "Drive",
+      "fly": "Fly",
+      "observation": "Observation",
+      "biotech": "Biotech",
+      "reconnaissance": "Reconnaissance",
+      "locksmithing": "Locksmithing/Safecracking",
+      "hacking": "Computer: Hacking",
+      "electronicWarfare": "Computer: Electronic Warfare",
+      "programming": "Computer: Programming",
+      "engMechanical": "Engineering: Mechanical",
+      "engIndustrial": "Engineering: Industrial",
+      "engAeronautics": "Engineering: Aeronautics",
+      "engArmory": "Engineering: Armory",
+      "engElectronics": "Engineering: Electronics",
+      "engNautical": "Engineering: Nautical",
+      "artificing": "Artificing",
+      "negotiation": "Negotiation",
+      "channeling": "Channeling",
+      "sorcery": "Sorcery",
+      "astralSenses": "Astral Senses",
+      "survival": "Survival",
+      "conjuring": "Conjuring",
+      "leadership": "Leadership",
+      "subterfuge": "Subterfuge",
+      "coercion": "Coercion",
+      "fascination": "Fascination"
+    },
+    "Etiquette": {
+      "corporate": "Corporate",
+      "street": "Street",
+      "civic": "Civic",
+      "aristocratic": "Aristocratic",
+      "military": "Military",
+      "criminal": "Criminal",
+      "wasteland": "Wasteland"
+    },
+    "Heritage": {
+      "human": "Human",
+      "green": "Green",
+      "blighted": "Blighted",
+      "uplifted": "Uplifted Animal",
+      "synthetic": "Synthetic"
+    },
+    "Talent": {
+      "hedge": "Hedge",
+      "mage": "Mage",
+      "archmage": "Archmage",
+      "amp": "Amp",
+      "speaker": "Speaker"
+    },
+    "Lifestyle": {
+      "squatter": "Squatter",
+      "low": "Low",
+      "middle": "Middle",
+      "high": "High",
+      "wealthy": "Wealthy"
+    },
+    "Difficulty": {
+      "veteran": "Veteran (4+)",
+      "professional": "Professional (5+)",
+      "prime": "Prime (6)"
+    },
+    "Heat": {
+      "0": "No heat",
+      "1": "★ Suspicious",
+      "2": "★★ Alerted (+1 die)",
+      "3": "★★★ Alarm (target number −1)",
+      "4": "★★★★ HTR incoming (+1 simple action)"
+    },
+    "WeaponCategory": {
+      "melee": "Melee",
+      "unarmed": "Unarmed",
+      "thrown": "Thrown",
+      "projectile": "Projectile",
+      "firearm": "Firearm",
+      "energy": "Energy",
+      "heavy": "Heavy",
+      "vehicle": "Vehicle / Drone"
+    },
+    "FiringMode": {
+      "none": "—",
+      "single": "Single shot",
+      "doubleTap": "Double tap (+1)",
+      "burst": "Burst (+3)",
+      "fullAuto": "Full auto (+20)"
+    },
+    "ArmorLayer": {
+      "internal": "Internal",
+      "under": "Under",
+      "outer": "Outer"
+    },
+    "ImplantKind": {
+      "cyber": "Cybertechtronic",
+      "bio": "Biogenetic"
+    },
+    "PowerCategory": {
+      "spell": "Spell",
+      "amplification": "Amplification",
+      "infusion": "Infusion",
+      "spirit": "Spirit"
+    },
+    "Reroll": {
+      "none": "None",
+      "ones": "Reroll 1s",
+      "onesTwos": "Reroll 1s and 2s"
+    },
+    "TestMode": {
+      "skill": "Skill (skill + gear limit)",
+      "default": "Group skill (−2)",
+      "untrained": "Untrained (whole pool, 4 successes = 1)",
+      "defense": "No limit (dodge / soak / resist)",
+      "rank": "Outside conflict (roll the rank)"
+    },
+    "Defense": {
+      "dodge": "Dodge",
+      "soak": "Soak",
+      "resist": "Resist"
+    },
+    "Condition": {
+      "physical": "Physical",
+      "stun": "Stun",
+      "overflow": "Overflow",
+      "penalty": "Penalty",
+      "penaltyHint": "Wounds (−1 per 3 boxes on each track), encumbrance and situational penalty."
+    },
+    "Armor": {
+      "ballistic": "Ballistic",
+      "impact": "Impact"
+    },
+    "Tab": {
+      "main": "Main",
+      "gear": "Gear",
+      "magic": "Magic",
+      "social": "Etiquette & Assets",
+      "bio": "Biography"
+    },
+    "Sheet": {
+      "character": "Sinless Character Sheet",
+      "npc": "Sinless NPC Sheet",
+      "item": "Sinless Item Sheet"
+    },
+    "Setting": {
+      "difficulty": {
+        "name": "Run difficulty",
+        "hint": "Default target number for player tests during the current operation."
+      },
+      "heat": {
+        "name": "Operational heat",
+        "hint": "Two stars: +1 bonus die on player tests. Three stars: player target number −1."
+      },
+      "baseConditionBoxes": {
+        "name": "Base condition boxes",
+        "hint": "6 is the default. 9 or 12 for a heroic game, 3 for a brutal one."
+      },
+      "woundPenalties": {
+        "name": "Wound penalties",
+        "hint": "Apply −1 die for every 3 boxes marked on a condition track."
+      },
+      "refreshPoolsOnRound": {
+        "name": "Refresh pools each round",
+        "hint": "Automatically refresh dice pools of all combatants when a new combat round begins."
+      }
+    },
+    "Notify": {
+      "noKismet": "No dice left in the Kismet pool."
+    },
+    "Test": {
+      "roll": "Roll",
+      "impossible": "The test is impossible: no dice remain after penalties, or the pool is empty.",
+      "preview": "Limit {limit} / pool left {available} → pool {pool} + bonus {bonus} + Kismet {kismet} = <strong>{total}</strong> dice",
+      "pool": "Pool",
+      "mode": "Test type",
+      "rank": "Skill rank",
+      "gear": "Gear limit bonus",
+      "gearHint": "Accuracy and other gear features that raise the limit.",
+      "firingMode": "Firing mode",
+      "bonus": "Bonus dice",
+      "penalty": "Penalty dice",
+      "penaltyHint": "Penalties remove bonus dice first, then lower the limit.",
+      "poolDice": "Dice drawn from pool",
+      "poolDiceHint": "Leave empty to draw the maximum allowed.",
+      "max": "max",
+      "kismet": "Kismet dice ({available} left)",
+      "reroll": "Reroll",
+      "threshold": "Required successes",
+      "spendPool": "Spend pool dice"
+    },
+    "Card": {
+      "breakdown": "Pool {pool} · bonus {bonus} · Kismet {kismet}",
+      "rerollCancelled": "All ones: rerolls are cancelled.",
+      "afterReroll": "After reroll",
+      "kismetAdded": "Kismet dice added",
+      "untrained": "Untrained: {raw} ÷ 4",
+      "successes": "{n} successes",
+      "success": "Success (needed {threshold})",
+      "failure": "Failure (needed {threshold})",
+      "damage": "Damage {damage} + net successes · Penetration {penetration}",
+      "addKismet": "Add a Kismet die"
+    },
+    "Actor": {
+      "FIELDS": {
+        "penalty": {
+          "label": "Situational penalty",
+          "hint": "Extra penalty dice applied to all tests (lighting, drugs, etc.)."
+        },
+        "notes": { "label": "Notes" }
+      }
+    },
+    "Character": {
+      "FIELDS": {
+        "heritage": { "label": "Heritage" },
+        "talent": { "label": "Magical Talent" },
+        "lifestyle": { "label": "Lifestyle" },
+        "lifestyleMonths": { "label": "Prepaid months" },
+        "brand": { "label": "Brand" },
+        "ghost": { "label": "Ghost Rating" },
+        "zuzu": { "label": "Zuzu" },
+        "charismaPool": {
+          "label": "¼ Charisma to",
+          "hint": "One pool receives one quarter of Charisma, chosen at character creation."
+        },
+        "kismet": {
+          "earned": { "label": "Kismet earned" },
+          "unspent": { "label": "Kismet unspent" },
+          "spent": { "label": "Kismet pool dice used" },
+          "poolBonus": { "label": "Kismet pool bonus" }
+        },
+        "zoetic": {
+          "bonus": { "label": "Zoetic Potential bonus" }
+        },
+        "initiativeBonus": { "label": "Initiative bonus" },
+        "movement": { "label": "Movement" },
+        "biography": { "label": "Biography" }
+      }
+    },
+    "Npc": {
+      "FIELDS": {
+        "initiative": { "label": "Initiative" },
+        "strength": { "label": "Strength" },
+        "conditionMax": {
+          "physical": { "label": "Physical boxes" },
+          "stun": { "label": "Stun boxes" }
+        },
+        "poolMax": { "label": "Pool size" },
+        "agonarch": {
+          "label": "Agonarch controlled",
+          "hint": "Agonarch opponents always roll against 4+."
+        }
+      }
+    },
+    "Item": {
+      "FIELDS": {
+        "description": { "label": "Description" },
+        "source": { "label": "Source" },
+        "quantity": { "label": "Quantity" },
+        "weight": { "label": "Weight" },
+        "cost": { "label": "Cost (ㄓ)" },
+        "carried": { "label": "Carried" },
+        "metal": {
+          "label": "Metal / electronics",
+          "hint": "Reduces Zoetic Potential by 1 while carried."
+        },
+        "concealability": { "label": "Concealability" },
+        "hardening": { "label": "Hardening" },
+        "category": { "label": "Category" },
+        "skill": { "label": "Skill" },
+        "accuracy": { "label": "Accuracy" },
+        "damage": { "label": "Damage" },
+        "penetration": { "label": "Penetration" },
+        "reach": { "label": "Reach" },
+        "modes": { "label": "Modes" },
+        "rangeClose": { "label": "Close range" },
+        "rangeMax": { "label": "Max range" },
+        "ammo": { "label": "Ammo" },
+        "alert": { "label": "Alert" },
+        "layer": { "label": "Slot" },
+        "ballistic": { "label": "Ballistic" },
+        "impact": { "label": "Impact" },
+        "equipped": { "label": "Equipped" },
+        "rating": { "label": "Rating" },
+        "limitBonus": { "label": "Limit bonus" },
+        "kind": { "label": "Kind" },
+        "zoeticCost": { "label": "Zoetic cost (ZC)" },
+        "bodyIndex": { "label": "Body Index (BI)" },
+        "effect": { "label": "Effect" },
+        "school": { "label": "School" },
+        "force": { "label": "Force" },
+        "drain": { "label": "Drain" },
+        "resistance": { "label": "Resistance" },
+        "focus": { "label": "Focus" },
+        "fetish": { "label": "Fetish" },
+        "rank": { "label": "Rank" },
+        "pool": { "label": "Pool" },
+        "etiquette": { "label": "Etiquette" },
+        "hireCost": { "label": "Hire cost" },
+        "upkeep": { "label": "Upkeep" },
+        "free": { "label": "Free (character creation)" },
+        "operation": { "label": "Operation ability" },
+        "sector": { "label": "Sector action" }
+      }
+    }
+  }
+}

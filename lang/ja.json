@@ -1,0 +1,375 @@
+{
+  "TYPES": {
+    "Actor": {
+      "character": "シンレス",
+      "npc": "NPC"
+    },
+    "Item": {
+      "weapon": "武器",
+      "armor": "防具",
+      "gear": "装備品",
+      "implant": "インプラント",
+      "power": "呪文／能力",
+      "ritual": "儀式",
+      "knowledge": "知識技能",
+      "asset": "アセット"
+    }
+  },
+  "SINLESS": {
+    "Name": "名前",
+    "TargetNumber": "目標値",
+    "TargetNumberHint": "ワールド設定のラン難易度とオペレーショナル・ヒートで決まります。",
+    "Zoetic": "ゾエティック・ポテンシャル",
+    "ZoeticHint": "基本値 {base} − インプラント {implant} − 携行中の金属／電子機器 {gear}",
+    "Kismet": "キスメット",
+    "KismetPool": "キスメット・プール",
+    "RefreshKismet": "キスメット・プールを回復",
+    "RefreshPools": "プールを回復",
+    "RollPool": "このプールで判定",
+    "PoolSpent": "このラウンドの使用ダイス数",
+    "Specialization": "専門化",
+    "Etiquettes": "エチケット",
+    "Physical": "物品情報",
+    "ItemCreate": "作成",
+    "ItemEdit": "編集",
+    "ItemDelete": "削除",
+    "Carry": "携行重量 {carried} / {capacity}",
+    "ABF": "アーグル・バーグル・フーファロウ！",
+    "Attribute": {
+      "str": "筋力",
+      "bod": "体力",
+      "rea": "反応",
+      "int": "知力",
+      "wil": "意志力",
+      "cha": "魅力"
+    },
+    "Pool": {
+      "brawn": "剛力",
+      "finesse": "技巧",
+      "focus": "集中",
+      "resolve": "決意"
+    },
+    "SkillGroup": {
+      "close": "近接戦闘技能グループ",
+      "ranged": "射撃武器技能グループ",
+      "vehicle": "乗り物技能グループ",
+      "hacking": "ハッキング技能グループ",
+      "engineering": "工学技能グループ"
+    },
+    "Skill": {
+      "meleeWeapons": "近接武器",
+      "unarmedCombat": "素手戦闘",
+      "martialArts": "武術",
+      "cyberCombat": "サイバー戦闘",
+      "throwingWeapons": "投擲武器",
+      "athletics": "運動",
+      "firearms": "銃器",
+      "gunnery": "砲術",
+      "heavyWeapons": "重火器",
+      "energyWeapons": "エネルギー兵器",
+      "archery": "弓術",
+      "articulatedManeuvers": "多関節機動",
+      "shadow": "隠密",
+      "drive": "運転",
+      "fly": "飛行操縦",
+      "observation": "観察",
+      "biotech": "バイオテック",
+      "reconnaissance": "偵察",
+      "locksmithing": "鍵開け／金庫破り",
+      "hacking": "コンピューター：ハッキング",
+      "electronicWarfare": "コンピューター：電子戦",
+      "programming": "コンピューター：プログラミング",
+      "engMechanical": "工学：機械",
+      "engIndustrial": "工学：産業",
+      "engAeronautics": "工学：航空",
+      "engArmory": "工学：武器",
+      "engElectronics": "工学：電子",
+      "engNautical": "工学：船舶",
+      "artificing": "魔具製作",
+      "negotiation": "交渉",
+      "channeling": "チャネリング",
+      "sorcery": "魔術",
+      "astralSenses": "アストラル感知",
+      "survival": "サバイバル",
+      "conjuring": "召喚",
+      "leadership": "統率",
+      "subterfuge": "欺瞞",
+      "coercion": "威圧",
+      "fascination": "魅了"
+    },
+    "Etiquette": {
+      "corporate": "企業",
+      "street": "ストリート",
+      "civic": "市民",
+      "aristocratic": "貴族",
+      "military": "軍事",
+      "criminal": "犯罪",
+      "wasteland": "荒野"
+    },
+    "Heritage": {
+      "human": "人間",
+      "green": "グリーン",
+      "blighted": "ブライテッド",
+      "uplifted": "アップリフテッド・アニマル",
+      "synthetic": "シンセティック"
+    },
+    "Talent": {
+      "hedge": "ヘッジ",
+      "mage": "メイジ",
+      "archmage": "アークメイジ",
+      "amp": "アンプ",
+      "speaker": "スピーカー"
+    },
+    "Lifestyle": {
+      "squatter": "不法占拠",
+      "low": "低",
+      "middle": "中",
+      "high": "高",
+      "wealthy": "富裕"
+    },
+    "Difficulty": {
+      "veteran": "ベテラン（4+）",
+      "professional": "プロフェッショナル（5+）",
+      "prime": "プライム（6）"
+    },
+    "Heat": {
+      "0": "ヒートなし",
+      "1": "★ 不審",
+      "2": "★★ 警戒（+1ダイス）",
+      "3": "★★★ 警報（目標値−1）",
+      "4": "★★★★ HTR接近中（+1シンプル・アクション）"
+    },
+    "WeaponCategory": {
+      "melee": "近接",
+      "unarmed": "素手",
+      "thrown": "投擲",
+      "projectile": "飛び道具",
+      "firearm": "銃器",
+      "energy": "エネルギー",
+      "heavy": "重火器",
+      "vehicle": "車両／ドローン"
+    },
+    "FiringMode": {
+      "none": "—",
+      "single": "単発",
+      "doubleTap": "ダブルタップ（+1）",
+      "burst": "バースト（+3）",
+      "fullAuto": "フルオート（+20）"
+    },
+    "ArmorLayer": {
+      "internal": "内部",
+      "under": "下層",
+      "outer": "外層"
+    },
+    "ImplantKind": {
+      "cyber": "サイバーテクトロニクス",
+      "bio": "バイオジェネティック"
+    },
+    "PowerCategory": {
+      "spell": "呪文",
+      "amplification": "アンプリフィケーション",
+      "infusion": "インフュージョン",
+      "spirit": "精霊"
+    },
+    "Reroll": {
+      "none": "なし",
+      "ones": "出目1を振り直す",
+      "onesTwos": "出目1・2を振り直す"
+    },
+    "TestMode": {
+      "skill": "技能（技能＋装備が上限）",
+      "default": "グループ技能で代用（−2）",
+      "untrained": "未修得（プール全部、4成功＝1成功）",
+      "defense": "上限なし（回避／ソーク／抵抗）",
+      "rank": "衝突外（技能値を振る）"
+    },
+    "Defense": {
+      "dodge": "回避",
+      "soak": "ソーク",
+      "resist": "抵抗"
+    },
+    "Condition": {
+      "physical": "肉体",
+      "stun": "朦朧",
+      "overflow": "超過",
+      "penalty": "ペナルティ",
+      "penaltyHint": "負傷（各トラック3マスごとに−1）、過重、状況ペナルティの合計です。"
+    },
+    "Armor": {
+      "ballistic": "対弾",
+      "impact": "対衝撃"
+    },
+    "Tab": {
+      "main": "メイン",
+      "gear": "装備",
+      "magic": "魔法",
+      "social": "エチケット＆アセット",
+      "bio": "経歴"
+    },
+    "Sheet": {
+      "character": "Sinless キャラクターシート",
+      "npc": "Sinless NPCシート",
+      "item": "Sinless アイテムシート"
+    },
+    "Setting": {
+      "difficulty": {
+        "name": "ランの難易度",
+        "hint": "現在のオペレーションにおけるプレイヤー判定の基本目標値です。"
+      },
+      "heat": {
+        "name": "オペレーショナル・ヒート",
+        "hint": "★2：プレイヤーの判定に+1ボーナスダイス。★3：プレイヤーの目標値−1。"
+      },
+      "baseConditionBoxes": {
+        "name": "コンディション基本マス数",
+        "hint": "標準は6。ヒロイックなら9か12、過酷なゲームなら3。"
+      },
+      "woundPenalties": {
+        "name": "負傷ペナルティ",
+        "hint": "コンディション・トラック3マスごとに−1ダイスを適用します。"
+      },
+      "refreshPoolsOnRound": {
+        "name": "ラウンドごとにプールを回復",
+        "hint": "新しい戦闘ラウンドの開始時に、全戦闘参加者のダイスプールを自動で回復します。"
+      }
+    },
+    "Notify": {
+      "noKismet": "キスメット・プールにダイスが残っていません。"
+    },
+    "Test": {
+      "roll": "ロール",
+      "impossible": "判定できません：ペナルティ適用後にダイスが残らないか、プールが空です。",
+      "preview": "上限 {limit}／プール残り {available} → プール {pool} + ボーナス {bonus} + キスメット {kismet} = <strong>{total}</strong> 個",
+      "pool": "プール",
+      "mode": "判定の種類",
+      "rank": "技能値",
+      "gear": "装備による上限増加",
+      "gearHint": "精度など、上限を引き上げる装備の性能です。",
+      "firingMode": "射撃モード",
+      "bonus": "ボーナスダイス",
+      "penalty": "ペナルティダイス",
+      "penaltyHint": "ペナルティはまずボーナスダイスを打ち消し、残りが上限を下げます。",
+      "poolDice": "プールから使うダイス数",
+      "poolDiceHint": "空欄なら使える最大数を使います。",
+      "max": "最大",
+      "kismet": "キスメット・ダイス（残り {available}）",
+      "reroll": "振り直し",
+      "threshold": "必要成功数",
+      "spendPool": "プールのダイスを消費する"
+    },
+    "Card": {
+      "breakdown": "プール {pool}・ボーナス {bonus}・キスメット {kismet}",
+      "rerollCancelled": "出目がすべて1のため、振り直しは無効です。",
+      "afterReroll": "振り直し後",
+      "kismetAdded": "追加したキスメット・ダイス",
+      "untrained": "未修得：{raw} ÷ 4",
+      "successes": "成功数 {n}",
+      "success": "成功（必要 {threshold}）",
+      "failure": "失敗（必要 {threshold}）",
+      "damage": "ダメージ {damage} + 純成功数・貫通 {penetration}",
+      "addKismet": "キスメット・ダイスを1個追加"
+    },
+    "Actor": {
+      "FIELDS": {
+        "penalty": {
+          "label": "状況ペナルティ",
+          "hint": "すべての判定に適用する追加ペナルティダイス（照明、薬物など）。"
+        },
+        "notes": { "label": "メモ" }
+      }
+    },
+    "Character": {
+      "FIELDS": {
+        "heritage": { "label": "出自" },
+        "talent": { "label": "魔法の才能" },
+        "lifestyle": { "label": "ライフスタイル" },
+        "lifestyleMonths": { "label": "前払い月数" },
+        "brand": { "label": "ブランド" },
+        "ghost": { "label": "ゴースト・レーティング" },
+        "zuzu": { "label": "ズズ" },
+        "charismaPool": {
+          "label": "魅力の¼を加えるプール",
+          "hint": "キャラクター作成時に選んだプール1つに、魅力の¼を加えます。"
+        },
+        "kismet": {
+          "earned": { "label": "獲得キスメット" },
+          "unspent": { "label": "未使用キスメット" },
+          "spent": { "label": "使用済みプールダイス" },
+          "poolBonus": { "label": "キスメット・プール修正" }
+        },
+        "zoetic": {
+          "bonus": { "label": "ゾエティック・ポテンシャル修正" }
+        },
+        "initiativeBonus": { "label": "イニシアチブ修正" },
+        "movement": { "label": "移動力" },
+        "biography": { "label": "経歴" }
+      }
+    },
+    "Npc": {
+      "FIELDS": {
+        "initiative": { "label": "イニシアチブ" },
+        "strength": { "label": "筋力" },
+        "conditionMax": {
+          "physical": { "label": "肉体マス数" },
+          "stun": { "label": "朦朧マス数" }
+        },
+        "poolMax": { "label": "プールのサイズ" },
+        "agonarch": {
+          "label": "アゴナークが操作",
+          "hint": "アゴナークが操作する敵は常に4+で判定します。"
+        }
+      }
+    },
+    "Item": {
+      "FIELDS": {
+        "description": { "label": "説明" },
+        "source": { "label": "出典" },
+        "quantity": { "label": "数量" },
+        "weight": { "label": "重量" },
+        "cost": { "label": "価格（ㄓ）" },
+        "carried": { "label": "携行中" },
+        "metal": {
+          "label": "金属／電子機器",
+          "hint": "携行中はゾエティック・ポテンシャルを1下げます。"
+        },
+        "concealability": { "label": "隠匿性" },
+        "hardening": { "label": "ハードニング" },
+        "category": { "label": "分類" },
+        "skill": { "label": "技能" },
+        "accuracy": { "label": "精度" },
+        "damage": { "label": "ダメージ" },
+        "penetration": { "label": "貫通" },
+        "reach": { "label": "リーチ" },
+        "modes": { "label": "モード" },
+        "rangeClose": { "label": "近距離" },
+        "rangeMax": { "label": "最大射程" },
+        "ammo": { "label": "弾薬" },
+        "alert": { "label": "警戒値" },
+        "layer": { "label": "スロット" },
+        "ballistic": { "label": "対弾" },
+        "impact": { "label": "対衝撃" },
+        "equipped": { "label": "装備中" },
+        "rating": { "label": "レーティング" },
+        "limitBonus": { "label": "上限修正" },
+        "kind": { "label": "種別" },
+        "zoeticCost": { "label": "ゾエティック・コスト（ZC）" },
+        "bodyIndex": { "label": "ボディ・インデックス（BI）" },
+        "effect": { "label": "効果" },
+        "school": { "label": "流派" },
+        "force": { "label": "フォース" },
+        "drain": { "label": "ドレイン" },
+        "resistance": { "label": "抵抗" },
+        "focus": { "label": "フォーカス" },
+        "fetish": { "label": "フェティッシュ" },
+        "rank": { "label": "ランク" },
+        "pool": { "label": "プール" },
+        "etiquette": { "label": "エチケット" },
+        "hireCost": { "label": "雇用費" },
+        "upkeep": { "label": "維持費" },
+        "free": { "label": "無料（キャラクター作成時）" },
+        "operation": { "label": "オペレーション能力" },
+        "sector": { "label": "セクター・アクション" }
+      }
+    }
+  }
+}
