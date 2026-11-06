@@ -1,5 +1,6 @@
 <div class="sinless-test">
   {{#if notes.length}}<p class="notes">{{#each notes}}<span>{{this}}</span>{{/each}}</p>{{/if}}
+  {{#unless simple}}
   <div class="form-group">
     <label>{{localize "SINLESS.Test.pool"}}</label>
     <select name="pool">{{selectOptions poolChoices selected=pool localize=true}}</select>
@@ -8,14 +9,17 @@
     <label>{{localize "SINLESS.Test.mode"}}</label>
     <select name="mode">{{selectOptions modeChoices selected=mode localize=true}}</select>
   </div>
+  {{/unless}}
   <div class="form-group">
-    <label>{{localize "SINLESS.Test.rank"}}</label>
+    <label>{{#if rankLabel}}{{rankLabel}}{{else}}{{localize "SINLESS.Test.rank"}}{{/if}}</label>
     <input type="number" name="rank" value="{{rank}}" min="0">
   </div>
+  {{#unless simple}}
   <div class="form-group">
     <label data-tooltip="{{localize "SINLESS.Test.gearHint"}}">{{localize "SINLESS.Test.gear"}}</label>
     <input type="number" name="gear" value="{{gear}}">
   </div>
+  {{/unless}}
   {{#if showFiring}}
   <div class="form-group">
     <label>{{localize "SINLESS.Test.firingMode"}}</label>
@@ -30,10 +34,12 @@
     <label data-tooltip="{{localize "SINLESS.Test.penaltyHint"}}">{{localize "SINLESS.Test.penalty"}}</label>
     <input type="number" name="penalty" value="{{penalty}}" min="0">
   </div>
+  {{#unless simple}}
   <div class="form-group">
     <label data-tooltip="{{localize "SINLESS.Test.poolDiceHint"}}">{{localize "SINLESS.Test.poolDice"}}</label>
     <input type="number" name="poolDice" value="" min="0" placeholder="{{localize "SINLESS.Test.max"}}">
   </div>
+  {{/unless}}
   {{#if hasKismet}}
   <div class="form-group">
     <label>{{localize "SINLESS.Test.kismet" available=kismetAvailable}}</label>
@@ -52,9 +58,12 @@
     <label>{{localize "SINLESS.Test.threshold"}}</label>
     <input type="number" name="threshold" value="{{threshold}}" min="0" placeholder="—">
   </div>
+  {{#unless simple}}
   <div class="form-group">
     <label>{{localize "SINLESS.Test.spendPool"}}</label>
     <input type="checkbox" name="spendPool" {{checked spendPool}}>
   </div>
+  {{/unless}}
+  {{#if autoSuccesses}}<p class="hint">{{localize "SINLESS.Test.autoSuccesses" n=autoSuccesses}}</p>{{/if}}
   <p class="sinless-test-preview"></p>
 </div>

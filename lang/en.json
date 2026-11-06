@@ -2,7 +2,8 @@
   "TYPES": {
     "Actor": {
       "character": "Sinless",
-      "npc": "NPC"
+      "npc": "NPC",
+      "brand": "Brand"
     },
     "Item": {
       "weapon": "Weapon",
@@ -12,7 +13,8 @@
       "power": "Spell / Power",
       "ritual": "Ritual",
       "knowledge": "Knowledge Skill",
-      "asset": "Asset"
+      "asset": "Asset",
+      "resource": "Resource"
     }
   },
   "SINLESS": {
@@ -204,12 +206,15 @@
       "gear": "Gear",
       "magic": "Magic",
       "social": "Etiquette & Assets",
-      "bio": "Biography"
+      "bio": "Biography",
+      "resources": "Resources & Assets",
+      "members": "Members"
     },
     "Sheet": {
       "character": "Sinless Character Sheet",
       "npc": "Sinless NPC Sheet",
-      "item": "Sinless Item Sheet"
+      "item": "Sinless Item Sheet",
+      "brand": "Sinless Brand Sheet"
     },
     "Setting": {
       "difficulty": {
@@ -234,7 +239,10 @@
       }
     },
     "Notify": {
-      "noKismet": "No dice left in the Kismet pool."
+      "noKismet": "No dice left in the Kismet pool.",
+      "noSectorActions": "No sector actions left this turn.",
+      "tooManyTraits": "More traits than the brand's market cap allows.",
+      "noMember": "The brand has no member you control to make this test."
     },
     "Test": {
       "roll": "Roll",
@@ -255,7 +263,9 @@
       "kismet": "Kismet dice ({available} left)",
       "reroll": "Reroll",
       "threshold": "Required successes",
-      "spendPool": "Spend pool dice"
+      "spendPool": "Spend pool dice",
+      "autoSuccesses": "+{n} automatic successes (Competence)",
+      "previewDice": "Dice {pool} + bonus {bonus} + Kismet {kismet} = <strong>{total}</strong> dice"
     },
     "Card": {
       "breakdown": "Pool {pool} · bonus {bonus} · Kismet {kismet}",
@@ -267,7 +277,10 @@
       "success": "Success (needed {threshold})",
       "failure": "Failure (needed {threshold})",
       "damage": "Damage {damage} + net successes · Penetration {penetration}",
-      "addKismet": "Add a Kismet die"
+      "addKismet": "Add a Kismet die",
+      "dice": "{n} dice",
+      "autoSuccesses": "+{n} automatic",
+      "heatRaised": "Sector heat is now {heat}."
     },
     "Actor": {
       "FIELDS": {
@@ -275,45 +288,87 @@
           "label": "Situational penalty",
           "hint": "Extra penalty dice applied to all tests (lighting, drugs, etc.)."
         },
-        "notes": { "label": "Notes" }
+        "notes": {
+          "label": "Notes"
+        }
       }
     },
     "Character": {
       "FIELDS": {
-        "heritage": { "label": "Heritage" },
-        "talent": { "label": "Magical Talent" },
-        "lifestyle": { "label": "Lifestyle" },
-        "lifestyleMonths": { "label": "Prepaid months" },
-        "brand": { "label": "Brand" },
-        "ghost": { "label": "Ghost Rating" },
-        "zuzu": { "label": "Zuzu" },
+        "heritage": {
+          "label": "Heritage"
+        },
+        "talent": {
+          "label": "Magical Talent"
+        },
+        "lifestyle": {
+          "label": "Lifestyle"
+        },
+        "lifestyleMonths": {
+          "label": "Prepaid months"
+        },
+        "brand": {
+          "label": "Brand"
+        },
+        "ghost": {
+          "label": "Ghost Rating"
+        },
+        "zuzu": {
+          "label": "Zuzu"
+        },
         "charismaPool": {
           "label": "¼ Charisma to",
           "hint": "One pool receives one quarter of Charisma, chosen at character creation."
         },
         "kismet": {
-          "earned": { "label": "Kismet earned" },
-          "unspent": { "label": "Kismet unspent" },
-          "spent": { "label": "Kismet pool dice used" },
-          "poolBonus": { "label": "Kismet pool bonus" }
+          "earned": {
+            "label": "Kismet earned"
+          },
+          "unspent": {
+            "label": "Kismet unspent"
+          },
+          "spent": {
+            "label": "Kismet pool dice used"
+          },
+          "poolBonus": {
+            "label": "Kismet pool bonus"
+          }
         },
         "zoetic": {
-          "bonus": { "label": "Zoetic Potential bonus" }
+          "bonus": {
+            "label": "Zoetic Potential bonus"
+          }
         },
-        "initiativeBonus": { "label": "Initiative bonus" },
-        "movement": { "label": "Movement" },
-        "biography": { "label": "Biography" }
+        "initiativeBonus": {
+          "label": "Initiative bonus"
+        },
+        "movement": {
+          "label": "Movement"
+        },
+        "biography": {
+          "label": "Biography"
+        }
       }
     },
     "Npc": {
       "FIELDS": {
-        "initiative": { "label": "Initiative" },
-        "strength": { "label": "Strength" },
-        "conditionMax": {
-          "physical": { "label": "Physical boxes" },
-          "stun": { "label": "Stun boxes" }
+        "initiative": {
+          "label": "Initiative"
         },
-        "poolMax": { "label": "Pool size" },
+        "strength": {
+          "label": "Strength"
+        },
+        "conditionMax": {
+          "physical": {
+            "label": "Physical boxes"
+          },
+          "stun": {
+            "label": "Stun boxes"
+          }
+        },
+        "poolMax": {
+          "label": "Pool size"
+        },
         "agonarch": {
           "label": "Agonarch controlled",
           "hint": "Agonarch opponents always roll against 4+."
@@ -322,54 +377,397 @@
     },
     "Item": {
       "FIELDS": {
-        "description": { "label": "Description" },
-        "source": { "label": "Source" },
-        "quantity": { "label": "Quantity" },
-        "weight": { "label": "Weight" },
-        "cost": { "label": "Cost (ㄓ)" },
-        "carried": { "label": "Carried" },
+        "description": {
+          "label": "Description"
+        },
+        "source": {
+          "label": "Source"
+        },
+        "quantity": {
+          "label": "Quantity"
+        },
+        "weight": {
+          "label": "Weight"
+        },
+        "cost": {
+          "label": "Cost (ㄓ)"
+        },
+        "carried": {
+          "label": "Carried"
+        },
         "metal": {
           "label": "Metal / electronics",
           "hint": "Reduces Zoetic Potential by 1 while carried."
         },
-        "concealability": { "label": "Concealability" },
-        "hardening": { "label": "Hardening" },
-        "category": { "label": "Category" },
-        "skill": { "label": "Skill" },
-        "accuracy": { "label": "Accuracy" },
-        "damage": { "label": "Damage" },
-        "penetration": { "label": "Penetration" },
-        "reach": { "label": "Reach" },
-        "modes": { "label": "Modes" },
-        "rangeClose": { "label": "Close range" },
-        "rangeMax": { "label": "Max range" },
-        "ammo": { "label": "Ammo" },
-        "alert": { "label": "Alert" },
-        "layer": { "label": "Slot" },
-        "ballistic": { "label": "Ballistic" },
-        "impact": { "label": "Impact" },
-        "equipped": { "label": "Equipped" },
-        "rating": { "label": "Rating" },
-        "limitBonus": { "label": "Limit bonus" },
-        "kind": { "label": "Kind" },
-        "zoeticCost": { "label": "Zoetic cost (ZC)" },
-        "bodyIndex": { "label": "Body Index (BI)" },
-        "effect": { "label": "Effect" },
-        "school": { "label": "School" },
-        "force": { "label": "Force" },
-        "drain": { "label": "Drain" },
-        "resistance": { "label": "Resistance" },
-        "focus": { "label": "Focus" },
-        "fetish": { "label": "Fetish" },
-        "rank": { "label": "Rank" },
-        "pool": { "label": "Pool" },
-        "etiquette": { "label": "Etiquette" },
-        "hireCost": { "label": "Hire cost" },
-        "upkeep": { "label": "Upkeep" },
-        "free": { "label": "Free (character creation)" },
-        "operation": { "label": "Operation ability" },
-        "sector": { "label": "Sector action" }
+        "concealability": {
+          "label": "Concealability"
+        },
+        "hardening": {
+          "label": "Hardening"
+        },
+        "category": {
+          "label": "Category"
+        },
+        "skill": {
+          "label": "Skill"
+        },
+        "accuracy": {
+          "label": "Accuracy"
+        },
+        "damage": {
+          "label": "Damage"
+        },
+        "penetration": {
+          "label": "Penetration"
+        },
+        "reach": {
+          "label": "Reach"
+        },
+        "modes": {
+          "label": "Modes"
+        },
+        "rangeClose": {
+          "label": "Close range"
+        },
+        "rangeMax": {
+          "label": "Max range"
+        },
+        "ammo": {
+          "label": "Ammo"
+        },
+        "alert": {
+          "label": "Alert"
+        },
+        "layer": {
+          "label": "Slot"
+        },
+        "ballistic": {
+          "label": "Ballistic"
+        },
+        "impact": {
+          "label": "Impact"
+        },
+        "equipped": {
+          "label": "Equipped"
+        },
+        "rating": {
+          "label": "Rating"
+        },
+        "limitBonus": {
+          "label": "Limit bonus"
+        },
+        "kind": {
+          "label": "Kind"
+        },
+        "zoeticCost": {
+          "label": "Zoetic cost (ZC)"
+        },
+        "bodyIndex": {
+          "label": "Body Index (BI)"
+        },
+        "effect": {
+          "label": "Effect"
+        },
+        "school": {
+          "label": "School"
+        },
+        "force": {
+          "label": "Force"
+        },
+        "drain": {
+          "label": "Drain"
+        },
+        "resistance": {
+          "label": "Resistance"
+        },
+        "focus": {
+          "label": "Focus"
+        },
+        "fetish": {
+          "label": "Fetish"
+        },
+        "rank": {
+          "label": "Rank"
+        },
+        "pool": {
+          "label": "Pool"
+        },
+        "etiquette": {
+          "label": "Etiquette"
+        },
+        "hireCost": {
+          "label": "Hire cost"
+        },
+        "upkeep": {
+          "label": "Upkeep"
+        },
+        "free": {
+          "label": "Free (character creation)"
+        },
+        "operation": {
+          "label": "Operation ability"
+        },
+        "sector": {
+          "label": "Sector action"
+        }
       }
+    },
+    "BrandStat": {
+      "muscle": "Muscle",
+      "magic": "Magic",
+      "media": "Media",
+      "espionage": "Espionage",
+      "grid": "Grid"
+    },
+    "BrandTrait": {
+      "analytical": {
+        "label": "Analytical",
+        "hint": "+1 Espionage, +1 Grid"
+      },
+      "arcane": {
+        "label": "Arcane",
+        "hint": "+2 Magic"
+      },
+      "athletic": {
+        "label": "Athletic",
+        "hint": "+1 Muscle, +1 Media"
+      },
+      "avantGarde": {
+        "label": "Avant-garde",
+        "hint": "+1 Grid, +1 Media"
+      },
+      "competence": {
+        "label": "Competence",
+        "hint": "One automatic success on every brand action"
+      },
+      "dangerous": {
+        "label": "Dangerous",
+        "hint": "+2 Muscle"
+      },
+      "experienced": {
+        "label": "Experienced",
+        "hint": "+1 Media, +1 Espionage"
+      },
+      "inspirational": {
+        "label": "Inspirational",
+        "hint": "+2 Media"
+      },
+      "luxury": {
+        "label": "Luxury",
+        "hint": "+1 Media; +1 market cap for service, vice and housing resources"
+      },
+      "lethal": {
+        "label": "Lethal",
+        "hint": "+1 Muscle, +1 Espionage"
+      },
+      "mercenary": {
+        "label": "Mercenary",
+        "hint": "+1 asset available for hire; each asset's upkeep −1"
+      },
+      "modern": {
+        "label": "Modern",
+        "hint": "+1 Magic, +1 Media"
+      },
+      "nefarious": {
+        "label": "Nefarious",
+        "hint": "+2 Espionage"
+      },
+      "obscure": {
+        "label": "Obscure",
+        "hint": "+1 Magic, +1 Espionage"
+      },
+      "ruggedness": {
+        "label": "Ruggedness",
+        "hint": "+1 Muscle; damage to resources −1"
+      },
+      "secure": {
+        "label": "Secure",
+        "hint": "+1 Grid; devices and gear +1 hardening"
+      },
+      "sincerity": {
+        "label": "Sincerity",
+        "hint": "+1 Media; total upkeep −2"
+      },
+      "sophistication": {
+        "label": "Sophistication",
+        "hint": "+1 Grid; +2 market cap for resources with the production tag"
+      },
+      "technical": {
+        "label": "Technical",
+        "hint": "+2 Grid"
+      }
+    },
+    "BrandAction": {
+      "mediaCampaign": {
+        "label": "Media Campaign",
+        "effect": "Each success: 1 influence on a resource in the sector."
+      },
+      "racketeering": {
+        "label": "Racketeering",
+        "effect": "Each success: 1 damage to one resource. Sector heat +1."
+      },
+      "covertInfluence": {
+        "label": "Covert Influence",
+        "effect": "Each success: 1 influence on one resource, or sector heat −1."
+      },
+      "hakAttack": {
+        "label": "HakAttack",
+        "effect": "Each success: 1 damage, or every 2 successes: 1 influence on a resource."
+      },
+      "ensorcellment": {
+        "label": "Ensorcellment",
+        "effect": "Each success: shift a resource's damage or influence by 1 either way."
+      },
+      "repair": {
+        "label": "Repair",
+        "effect": "Each success: remove 1 damage by paying 1 market cap / bank."
+      },
+      "doCrime": {
+        "label": "Do Crime",
+        "effect": "Each success: 10,000–60,000ㄓ. Sector heat +1."
+      },
+      "reinforceGhost": {
+        "label": "Reinforce Ghost Rating",
+        "effect": "Needs a decker with ghost protocol software. Raise a Ghost Rating as the software lists."
+      },
+      "demolish": {
+        "label": "Demolish",
+        "effect": "Fully damaged resources only. Each success destroys 2 boxes."
+      },
+      "itemCracking": {
+        "label": "Item Cracking",
+        "effect": "Successes equal to the item's hardening re-code it for the brand."
+      },
+      "persuadertron": {
+        "label": "Persuadertron Sweeps",
+        "effect": "Each success: 10 new followers."
+      },
+      "ragebait": {
+        "label": "Ragebait Media",
+        "effect": "Each success: 1ㄓ per follower."
+      }
+    },
+    "ResourceTag": {
+      "service": "Service",
+      "business": "Business",
+      "science": "Science",
+      "vice": "Vice",
+      "housing": "Housing",
+      "production": "Production"
+    },
+    "SectorHeat": {
+      "0": "No heat",
+      "1": "★ Minor crime",
+      "2": "★★ Major crime",
+      "3": "★★★ Enforcement",
+      "4": "★★★★ Crackdown"
+    },
+    "SectorHeatEffect": {
+      "0": "Vice resources −1 market cap, business resources +2.",
+      "1": "No effect.",
+      "2": "Brand Media tests and character Subterfuge/Reconnaissance tests −1 die. Vice resources +10% market cap (min 1).",
+      "3": "All resources −1 market cap. Asset and operation preparation tests −2 dice. Enforcement arrives 1d6 rounds into combat.",
+      "4": "Crackdown: business resources produce nothing. Asset and preparation tests −4 dice. Enforcement present at the start of combat; HTR in 1d6 rounds."
+    },
+    "Brand": {
+      "stats": "Brand Statistics",
+      "traits": "Brand Traits",
+      "finance": "Finances",
+      "members": "Members",
+      "marketCap": "Market cap",
+      "upkeep": "Upkeep",
+      "net": "Net",
+      "actions": "Sector actions",
+      "upkeepBreakdown": "resources {resources} / assets {assets}",
+      "actionsLeft": "{left} of {max} actions left",
+      "rollStat": "Roll this statistic",
+      "raisesHeat": "Raises sector heat",
+      "assetCapacityExceeded": "Asset upkeep exceeds market cap: some assets must move on.",
+      "exchangeHint": "Exchange: −2 banked MC → 10,000ㄓ; 20,000ㄓ → +1 banked MC.",
+      "assetHint": "Asset tests are rolled by the member with the best matching etiquette.",
+      "membersHint": "Drag character actors here to add them to the brand.",
+      "removeMember": "Remove from brand",
+      "missingMember": "(deleted actor)",
+      "FIELDS": {
+        "kind": {
+          "label": "Type",
+          "hint": "gang, syndicate, band…"
+        },
+        "base": {
+          "label": "Base",
+          "hint": "Starts at 1; each player may raise one statistic by 1."
+        },
+        "bank": {
+          "label": "Bank (MC)"
+        },
+        "marketAdjust": {
+          "label": "Market cap adjustment",
+          "hint": "Assets or other effects that change market cap."
+        },
+        "followers": {
+          "label": "Followers"
+        },
+        "actionsUsed": {
+          "label": "Used"
+        },
+        "sector": {
+          "name": {
+            "label": "Sector"
+          },
+          "heat": {
+            "label": "Sector heat"
+          }
+        }
+      }
+    },
+    "Resource": {
+      "classLabel": "Class {cls}",
+      "marketUpkeep": "MC {market} / upkeep {upkeep}",
+      "FIELDS": {
+        "resourceType": {
+          "label": "Resource type"
+        },
+        "tags": {
+          "label": "Tags"
+        },
+        "class": {
+          "label": "Class"
+        },
+        "market": {
+          "label": "Market cap"
+        },
+        "marketBonus": {
+          "label": "Market cap bonus"
+        },
+        "upkeep": {
+          "label": "Upkeep"
+        },
+        "controlled": {
+          "label": "Controlled by the brand"
+        },
+        "damage": {
+          "label": "Damage"
+        },
+        "influence": {
+          "label": "Influence"
+        },
+        "demolished": {
+          "label": "Demolished boxes"
+        },
+        "brandBonus": {
+          "label": "Brand statistic bonus"
+        },
+        "effect": {
+          "label": "Effect"
+        }
+      }
+    },
+    "SectorTurn": {
+      "title": "Sector turn {turn}",
+      "end": "End sector turn",
+      "confirm": "Bank the net market cap, reset used actions and start the next sector turn?",
+      "unmet": "Unmet upkeep {n}: each unpaid point deals 1d6 damage to a resource.",
+      "crackdown": "Crackdown: at the start of the next turn roll 1d6; on 4+ heat drops to three stars."
     }
   }
 }

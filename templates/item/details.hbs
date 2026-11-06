@@ -54,6 +54,28 @@
     {{formGroup fields.operation value=system.operation}}
     {{formGroup fields.sector value=system.sector}}
   {{/if}}
+  {{#if isType.resource}}
+    {{formGroup fields.resourceType value=system.resourceType}}
+    {{formGroup fields.class value=system.class}}
+    {{formGroup fields.tags value=system.tags type="checkboxes" localize=true}}
+    {{formGroup fields.market value=system.market}}
+    {{formGroup fields.marketBonus value=system.marketBonus}}
+    {{formGroup fields.upkeep value=system.upkeep}}
+    {{formGroup fields.controlled value=system.controlled}}
+    {{formGroup fields.damage value=system.damage}}
+    {{formGroup fields.influence value=system.influence}}
+    {{formGroup fields.demolished value=system.demolished}}
+    <fieldset class="brand-bonus">
+      <legend>{{localize "SINLESS.Resource.FIELDS.brandBonus.label"}}</legend>
+      {{#each config.BRAND_STATS as |label key|}}
+      <div class="form-group">
+        <label>{{localize label}}</label>
+        <input type="number" name="system.brandBonus.{{key}}" value="{{lookup ../system.brandBonus key}}" min="0">
+      </div>
+      {{/each}}
+    </fieldset>
+    {{formGroup fields.effect value=system.effect}}
+  {{/if}}
   {{#if physical}}
   <fieldset>
     <legend>{{localize "SINLESS.Physical"}}</legend>

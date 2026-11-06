@@ -115,3 +115,45 @@
 .sinless-card.abf { border-left: 3px solid var(--sl-fail); padding-left: 0.35rem; }
 .sinless-card .weapon-line { margin: 0.2rem 0; font-size: 0.85rem; }
 .sinless-card button { margin-top: 0.25rem; }
+
+/* ---------- Brand ---------- */
+.sinless.sheet.brand .heat-effect { margin: 0.25rem 0; padding: 0.35rem; border-left: 3px solid var(--sl-accent); background: var(--sl-accent-soft); font-size: 0.85rem; }
+.sinless.sheet .brand-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.35rem; }
+.sinless.sheet .brand-stat { display: flex; flex-direction: column; align-items: center; border: 1px solid var(--sl-border); border-radius: 4px; padding: 0.25rem; }
+.sinless.sheet .brand-stat .label { font-weight: bold; }
+.sinless.sheet .brand-stat .value { font-size: 1.6rem; font-weight: bold; color: var(--sl-accent); }
+.sinless.sheet .brand-stat .base input { width: 3rem; text-align: center; }
+.sinless.sheet .brand-traits { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.2rem 0.5rem; font-size: 0.85rem; }
+.sinless.sheet .brand-traits .trait { color: var(--sl-muted); }
+.sinless.sheet .brand-traits .trait.active { color: inherit; font-weight: bold; }
+.sinless.sheet .slots { font-size: 0.85rem; font-weight: normal; }
+.sinless.sheet .warn, .sinless.sheet .slots.warn { color: var(--sl-fail); }
+.sinless.sheet .hint { font-size: 0.8rem; color: var(--sl-muted); margin: 0.2rem 0; }
+.sinless.sheet .brand-finance { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; align-items: center; }
+.sinless.sheet .brand-finance label { display: flex; gap: 0.35rem; align-items: center; }
+.sinless.sheet .brand-finance input { width: 4.5rem; }
+.sinless.sheet .brand-finance p { flex-basis: 100%; }
+.sinless.sheet .sector-turn-header { display: flex; align-items: center; gap: 0.75rem; }
+.sinless.sheet .sector-turn-header .actions-left { flex: 1; font-size: 0.85rem; font-weight: normal; }
+.sinless.sheet .sector-turn-header .used { font-size: 0.8rem; font-weight: normal; display: flex; gap: 0.25rem; align-items: center; }
+.sinless.sheet .sector-turn-header .used input { width: 3rem; }
+.sinless.sheet .sector-turn-header button { width: auto; flex: 0 0 auto; }
+.sinless.sheet .brand-actions { list-style: none; margin: 0; padding: 0; }
+.sinless.sheet .brand-actions li { display: grid; grid-template-columns: 12rem 7rem minmax(0, 1fr); gap: 0.5rem; align-items: baseline; padding: 2px 0; border-bottom: 1px solid var(--sl-border); }
+.sinless.sheet .brand-actions .action-stat { font-size: 0.8rem; color: var(--sl-muted); }
+.sinless.sheet .brand-actions .action-effect { font-size: 0.8rem; }
+.sinless.sheet .resource-list .item { grid-template-columns: 1.75rem minmax(0, 1fr) auto auto; }
+.sinless.sheet .resource.inactive .item-name { color: var(--sl-muted); text-decoration: line-through; }
+.sinless.sheet .resource-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sinless.sheet .resource-track { display: flex; flex-wrap: wrap; gap: 1px; }
+.sinless.sheet .rbox { width: 0.8rem; height: 0.8rem; border: 1px solid var(--sl-border); }
+.sinless.sheet .rbox.influenced { background: var(--sl-success); }
+.sinless.sheet .rbox.damaged { background: var(--sl-fail); }
+.sinless.sheet .rbox.demolished { background: #000; }
+.sinless.sheet .resource-adjust { display: flex; gap: 0.75rem; font-size: 0.85rem; }
+.sinless.sheet .resource-adjust a { margin: 0 0.2rem; color: var(--sl-muted); }
+.sinless.sheet .members .item { grid-template-columns: 1.75rem minmax(0, 1fr) auto auto; }
+.sinless-card .auto { font-size: 0.85rem; }
+.sinless-card .effect { margin: 0.2rem 0; font-size: 0.85rem; }
+.sinless-card .effect.warn { color: var(--sl-fail); }
+.sinless-card .finance { list-style: none; padding: 0; margin: 0.25rem 0; }

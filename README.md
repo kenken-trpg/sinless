@@ -20,7 +20,10 @@ this system contains no rules text.
   Pools refresh automatically every combat round.
 - World settings for run difficulty (Veteran / Professional / Prime), operational heat,
   base condition boxes and wound penalties.
-- Item types: weapon, armor, gear, implant, spell/power, ritual, knowledge skill, asset.
+- Item types: weapon, armor, gear, implant, spell/power, ritual, knowledge skill, asset, resource.
+- Brand actor for sector play: five statistics, brand traits, market cap / upkeep / bank,
+  sector heat effects, sector action tests (with heat and Competence), end-of-turn banking,
+  resources with damage / influence tracks, members and asset tests rolled by the best member.
 - Localization from day one: English and Japanese.
 
 ## Development

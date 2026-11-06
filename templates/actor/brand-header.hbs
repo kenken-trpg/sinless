@@ -1,0 +1,31 @@
+<header class="sheet-header">
+  <img class="profile" src="{{actor.img}}" alt="{{actor.name}}" data-edit="img" data-action="editImage" data-tooltip="{{actor.name}}">
+  <div class="header-fields">
+    <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize "SINLESS.Name"}}">
+    <div class="header-grid">
+      <label>{{localize "SINLESS.Brand.FIELDS.kind.label"}}
+        <input type="text" name="system.kind" value="{{system.kind}}" placeholder="{{localize "SINLESS.Brand.FIELDS.kind.hint"}}">
+      </label>
+      <label>{{localize "SINLESS.Brand.FIELDS.sector.name.label"}}
+        <input type="text" name="system.sector.name" value="{{system.sector.name}}">
+      </label>
+      <label>{{localize "SINLESS.Brand.FIELDS.sector.heat.label"}}
+        <select name="system.sector.heat" data-dtype="Number">{{selectOptions heatChoices selected=system.sector.heat localize=true}}</select>
+      </label>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat">
+      <span class="label">{{localize "SINLESS.Brand.marketCap"}}</span>
+      <span class="value">{{system.finance.marketCap}}</span>
+    </div>
+    <div class="stat">
+      <span class="label">{{localize "SINLESS.Brand.FIELDS.bank.label"}}</span>
+      <span class="value">{{system.bank}}</span>
+    </div>
+    <div class="stat">
+      <span class="label">{{localize "SINLESS.Brand.actions"}}</span>
+      <span class="value">{{system.actionsLeft}}/{{system.actionsAvailable}}</span>
+    </div>
+  </div>
+</header>

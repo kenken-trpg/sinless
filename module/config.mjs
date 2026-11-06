@@ -192,10 +192,81 @@ export const DEFENSES = Object.freeze({
   resist: { pool: "resolve", label: L("Defense.resist") }
 });
 
+
+/* ---------------- Brand (pp.47, 218-224) ---------------- */
+
+export const BRAND_STATS = Object.freeze({
+  muscle: L("BrandStat.muscle"),
+  magic: L("BrandStat.magic"),
+  media: L("BrandStat.media"),
+  espionage: L("BrandStat.espionage"),
+  grid: L("BrandStat.grid")
+});
+
+/** Brand image traits: stat bonuses plus flags for special effects. */
+export const BRAND_TRAITS = Object.freeze({
+  analytical: { stats: { espionage: 1, grid: 1 } },
+  arcane: { stats: { magic: 2 } },
+  athletic: { stats: { muscle: 1, media: 1 } },
+  avantGarde: { stats: { grid: 1, media: 1 } },
+  competence: { stats: {}, autoSuccess: 1 },
+  dangerous: { stats: { muscle: 2 } },
+  experienced: { stats: { media: 1, espionage: 1 } },
+  inspirational: { stats: { media: 2 } },
+  luxury: { stats: { media: 1 }, marketTags: { service: 1, vice: 1, housing: 1 } },
+  lethal: { stats: { muscle: 1, espionage: 1 } },
+  mercenary: { stats: {}, assetUpkeep: -1, extraHires: 1 },
+  modern: { stats: { magic: 1, media: 1 } },
+  nefarious: { stats: { espionage: 2 } },
+  obscure: { stats: { magic: 1, espionage: 1 } },
+  ruggedness: { stats: { muscle: 1 } },
+  secure: { stats: { grid: 1 } },
+  sincerity: { stats: { media: 1 }, totalUpkeep: -2 },
+  sophistication: { stats: { grid: 1 }, marketTags: { production: 2 } },
+  technical: { stats: { grid: 2 } }
+});
+
+export const RESOURCE_TAGS = Object.freeze({
+  service: L("ResourceTag.service"),
+  business: L("ResourceTag.business"),
+  science: L("ResourceTag.science"),
+  vice: L("ResourceTag.vice"),
+  housing: L("ResourceTag.housing"),
+  production: L("ResourceTag.production")
+});
+
+/** Resource class -> condition boxes (p.224). */
+export const RESOURCE_CLASSES = Object.freeze({ A: 36, B: 18, C: 9, D: 3, E: 1 });
+
+export const SECTOR_HEAT = Object.freeze({
+  0: L("SectorHeat.0"),
+  1: L("SectorHeat.1"),
+  2: L("SectorHeat.2"),
+  3: L("SectorHeat.3"),
+  4: L("SectorHeat.4")
+});
+
+/** Brand sector actions that need a test (pp.222-223). `heat` raises sector heat. */
+export const BRAND_ACTIONS = Object.freeze({
+  mediaCampaign: { stat: "media" },
+  racketeering: { stat: "muscle", heat: 1 },
+  covertInfluence: { stat: "espionage" },
+  hakAttack: { stat: "grid" },
+  ensorcellment: { stat: "magic" },
+  repair: { stat: "muscle" },
+  doCrime: { stat: "muscle", heat: 1 },
+  reinforceGhost: { stat: "grid" },
+  demolish: { stat: "muscle" },
+  itemCracking: { stat: "grid" },
+  persuadertron: { stat: "media" },
+  ragebait: { stat: "media" }
+});
+
 export const SINLESS = {
   ATTRIBUTES, POOLS, SKILLS, SKILL_GROUPS, ETIQUETTES, HERITAGES, MAGIC_TALENTS,
   LIFESTYLES, DIFFICULTIES, AGONARCH_TN, HEAT_LEVELS, WEAPON_CATEGORIES, FIRING_MODES,
-  ARMOR_LAYERS, IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES
+  ARMOR_LAYERS, IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES,
+  BRAND_STATS, BRAND_TRAITS, RESOURCE_TAGS, RESOURCE_CLASSES, SECTOR_HEAT, BRAND_ACTIONS
 };
 
 /** i18n key for a skill label. */

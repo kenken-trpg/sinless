@@ -1,0 +1,59 @@
+<section class="tab main {{tab.cssClass}}" data-tab="main" data-group="primary">
+  <p class="heat-effect"><strong>{{localize (lookup heatChoices system.sector.heat)}}</strong>: {{localize heatEffect}}</p>
+
+  <h3>{{localize "SINLESS.Brand.stats"}}</h3>
+  <div class="brand-stats">
+    {{#each stats}}
+    <div class="brand-stat">
+      <a class="label" data-action="rollBrandStat" data-stat="{{key}}" data-tooltip="{{localize "SINLESS.Brand.rollStat"}}">{{localize label}}</a>
+      <span class="value">{{value}}</span>
+      <label class="base" data-tooltip="{{localize "SINLESS.Brand.FIELDS.base.hint"}}">
+        <input type="number" name="system.base.{{key}}" value="{{base}}" min="0">
+      </label>
+    </div>
+    {{/each}}
+  </div>
+
+  <h3>
+    {{localize "SINLESS.Brand.traits"}}
+    <span class="slots{{#if system.traitsOver}} warn{{/if}}">({{traitCount}}/{{system.traitSlots}})</span>
+  </h3>
+  <div class="brand-traits">
+    {{#each traits}}
+    <a class="trait{{#if active}} active{{/if}}" data-action="toggleTrait" data-trait="{{key}}" data-tooltip="{{localize hint}}">
+      <i class="fa-{{#if active}}solid fa-square-check{{else}}regular fa-square{{/if}}"></i> {{localize label}}
+    </a>
+    {{/each}}
+  </div>
+
+  <h3>{{localize "SINLESS.Brand.finance"}}</h3>
+  <div class="brand-finance">
+    <span>{{localize "SINLESS.Brand.marketCap"}} <strong>{{system.finance.marketCap}}</strong></span>
+    <span>{{localize "SINLESS.Brand.upkeep"}} <strong>{{system.finance.upkeep}}</strong>
+      <small>({{localize "SINLESS.Brand.upkeepBreakdown" resources=system.finance.resourceUpkeep assets=system.finance.assetUpkeep}})</small></span>
+    <span>{{localize "SINLESS.Brand.net"}} <strong>{{sinlessSigned system.finance.net}}</strong></span>
+    <label>{{localize "SINLESS.Brand.FIELDS.bank.label"}} <input type="number" name="system.bank" value="{{system.bank}}"></label>
+    <label data-tooltip="{{localize "SINLESS.Brand.FIELDS.marketAdjust.hint"}}">{{localize "SINLESS.Brand.FIELDS.marketAdjust.label"}} <input type="number" name="system.marketAdjust" value="{{system.marketAdjust}}"></label>
+    <label>{{localize "SINLESS.Brand.FIELDS.followers.label"}} <input type="number" name="system.followers" value="{{system.followers}}" min="0"></label>
+    {{#if system.finance.assetCapacityExceeded}}<p class="warn">{{localize "SINLESS.Brand.assetCapacityExceeded"}}</p>{{/if}}
+    <p class="hint">{{localize "SINLESS.Brand.exchangeHint"}}</p>
+  </div>
+
+  <h3 class="sector-turn-header">
+    {{localize "SINLESS.SectorTurn.title" turn=system.sectorTurn}}
+    <span class="actions-left">{{localize "SINLESS.Brand.actionsLeft" left=system.actionsLeft max=system.actionsAvailable}}</span>
+    <label class="used">{{localize "SINLESS.Brand.FIELDS.actionsUsed.label"}} <input type="number" name="system.actionsUsed" value="{{system.actionsUsed}}" min="0"></label>
+    <button type="button" data-action="endSectorTurn"><i class="fa-solid fa-forward-step"></i> {{localize "SINLESS.SectorTurn.end"}}</button>
+  </h3>
+  <ol class="brand-actions">
+    {{#each actions}}
+    <li>
+      <a class="action-name" data-action="rollBrandAction" data-brand-action="{{key}}">
+        <i class="fa-solid fa-dice"></i> {{localize label}}
+      </a>
+      <span class="action-stat">{{stat}} {{dice}}{{#if heat}} · <i class="fa-solid fa-fire" data-tooltip="{{localize "SINLESS.Brand.raisesHeat"}}"></i>{{/if}}</span>
+      <span class="action-effect">{{localize effect}}</span>
+    </li>
+    {{/each}}
+  </ol>
+</section>

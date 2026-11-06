@@ -2,7 +2,8 @@
   "TYPES": {
     "Actor": {
       "character": "シンレス",
-      "npc": "NPC"
+      "npc": "NPC",
+      "brand": "ブランド"
     },
     "Item": {
       "weapon": "武器",
@@ -12,7 +13,8 @@
       "power": "呪文／能力",
       "ritual": "儀式",
       "knowledge": "知識技能",
-      "asset": "アセット"
+      "asset": "アセット",
+      "resource": "リソース"
     }
   },
   "SINLESS": {
@@ -204,12 +206,15 @@
       "gear": "装備",
       "magic": "魔法",
       "social": "エチケット＆アセット",
-      "bio": "経歴"
+      "bio": "経歴",
+      "resources": "リソース＆アセット",
+      "members": "メンバー"
     },
     "Sheet": {
       "character": "Sinless キャラクターシート",
       "npc": "Sinless NPCシート",
-      "item": "Sinless アイテムシート"
+      "item": "Sinless アイテムシート",
+      "brand": "Sinless ブランドシート"
     },
     "Setting": {
       "difficulty": {
@@ -234,7 +239,10 @@
       }
     },
     "Notify": {
-      "noKismet": "キスメット・プールにダイスが残っていません。"
+      "noKismet": "キスメット・プールにダイスが残っていません。",
+      "noSectorActions": "このターンのセクター・アクションは残っていません。",
+      "tooManyTraits": "時価総額で許される数より多くの特性を選んでいます。",
+      "noMember": "この判定を行える、あなたが操作するメンバーがいません。"
     },
     "Test": {
       "roll": "ロール",
@@ -255,7 +263,9 @@
       "kismet": "キスメット・ダイス（残り {available}）",
       "reroll": "振り直し",
       "threshold": "必要成功数",
-      "spendPool": "プールのダイスを消費する"
+      "spendPool": "プールのダイスを消費する",
+      "autoSuccesses": "自動成功 +{n}（有能）",
+      "previewDice": "ダイス {pool} + ボーナス {bonus} + キスメット {kismet} = <strong>{total}</strong> 個"
     },
     "Card": {
       "breakdown": "プール {pool}・ボーナス {bonus}・キスメット {kismet}",
@@ -267,7 +277,10 @@
       "success": "成功（必要 {threshold}）",
       "failure": "失敗（必要 {threshold}）",
       "damage": "ダメージ {damage} + 純成功数・貫通 {penetration}",
-      "addKismet": "キスメット・ダイスを1個追加"
+      "addKismet": "キスメット・ダイスを1個追加",
+      "dice": "ダイス {n} 個",
+      "autoSuccesses": "自動 +{n}",
+      "heatRaised": "セクター・ヒートが {heat} になりました。"
     },
     "Actor": {
       "FIELDS": {
@@ -275,45 +288,87 @@
           "label": "状況ペナルティ",
           "hint": "すべての判定に適用する追加ペナルティダイス（照明、薬物など）。"
         },
-        "notes": { "label": "メモ" }
+        "notes": {
+          "label": "メモ"
+        }
       }
     },
     "Character": {
       "FIELDS": {
-        "heritage": { "label": "出自" },
-        "talent": { "label": "魔法の才能" },
-        "lifestyle": { "label": "ライフスタイル" },
-        "lifestyleMonths": { "label": "前払い月数" },
-        "brand": { "label": "ブランド" },
-        "ghost": { "label": "ゴースト・レーティング" },
-        "zuzu": { "label": "ズズ" },
+        "heritage": {
+          "label": "出自"
+        },
+        "talent": {
+          "label": "魔法の才能"
+        },
+        "lifestyle": {
+          "label": "ライフスタイル"
+        },
+        "lifestyleMonths": {
+          "label": "前払い月数"
+        },
+        "brand": {
+          "label": "ブランド"
+        },
+        "ghost": {
+          "label": "ゴースト・レーティング"
+        },
+        "zuzu": {
+          "label": "ズズ"
+        },
         "charismaPool": {
           "label": "魅力の¼を加えるプール",
           "hint": "キャラクター作成時に選んだプール1つに、魅力の¼を加えます。"
         },
         "kismet": {
-          "earned": { "label": "獲得キスメット" },
-          "unspent": { "label": "未使用キスメット" },
-          "spent": { "label": "使用済みプールダイス" },
-          "poolBonus": { "label": "キスメット・プール修正" }
+          "earned": {
+            "label": "獲得キスメット"
+          },
+          "unspent": {
+            "label": "未使用キスメット"
+          },
+          "spent": {
+            "label": "使用済みプールダイス"
+          },
+          "poolBonus": {
+            "label": "キスメット・プール修正"
+          }
         },
         "zoetic": {
-          "bonus": { "label": "ゾエティック・ポテンシャル修正" }
+          "bonus": {
+            "label": "ゾエティック・ポテンシャル修正"
+          }
         },
-        "initiativeBonus": { "label": "イニシアチブ修正" },
-        "movement": { "label": "移動力" },
-        "biography": { "label": "経歴" }
+        "initiativeBonus": {
+          "label": "イニシアチブ修正"
+        },
+        "movement": {
+          "label": "移動力"
+        },
+        "biography": {
+          "label": "経歴"
+        }
       }
     },
     "Npc": {
       "FIELDS": {
-        "initiative": { "label": "イニシアチブ" },
-        "strength": { "label": "筋力" },
-        "conditionMax": {
-          "physical": { "label": "肉体マス数" },
-          "stun": { "label": "朦朧マス数" }
+        "initiative": {
+          "label": "イニシアチブ"
         },
-        "poolMax": { "label": "プールのサイズ" },
+        "strength": {
+          "label": "筋力"
+        },
+        "conditionMax": {
+          "physical": {
+            "label": "肉体マス数"
+          },
+          "stun": {
+            "label": "朦朧マス数"
+          }
+        },
+        "poolMax": {
+          "label": "プールのサイズ"
+        },
         "agonarch": {
           "label": "アゴナークが操作",
           "hint": "アゴナークが操作する敵は常に4+で判定します。"
@@ -322,54 +377,397 @@
     },
     "Item": {
       "FIELDS": {
-        "description": { "label": "説明" },
-        "source": { "label": "出典" },
-        "quantity": { "label": "数量" },
-        "weight": { "label": "重量" },
-        "cost": { "label": "価格（ㄓ）" },
-        "carried": { "label": "携行中" },
+        "description": {
+          "label": "説明"
+        },
+        "source": {
+          "label": "出典"
+        },
+        "quantity": {
+          "label": "数量"
+        },
+        "weight": {
+          "label": "重量"
+        },
+        "cost": {
+          "label": "価格（ㄓ）"
+        },
+        "carried": {
+          "label": "携行中"
+        },
         "metal": {
           "label": "金属／電子機器",
           "hint": "携行中はゾエティック・ポテンシャルを1下げます。"
         },
-        "concealability": { "label": "隠匿性" },
-        "hardening": { "label": "ハードニング" },
-        "category": { "label": "分類" },
-        "skill": { "label": "技能" },
-        "accuracy": { "label": "精度" },
-        "damage": { "label": "ダメージ" },
-        "penetration": { "label": "貫通" },
-        "reach": { "label": "リーチ" },
-        "modes": { "label": "モード" },
-        "rangeClose": { "label": "近距離" },
-        "rangeMax": { "label": "最大射程" },
-        "ammo": { "label": "弾薬" },
-        "alert": { "label": "警戒値" },
-        "layer": { "label": "スロット" },
-        "ballistic": { "label": "対弾" },
-        "impact": { "label": "対衝撃" },
-        "equipped": { "label": "装備中" },
-        "rating": { "label": "レーティング" },
-        "limitBonus": { "label": "上限修正" },
-        "kind": { "label": "種別" },
-        "zoeticCost": { "label": "ゾエティック・コスト（ZC）" },
-        "bodyIndex": { "label": "ボディ・インデックス（BI）" },
-        "effect": { "label": "効果" },
-        "school": { "label": "流派" },
-        "force": { "label": "フォース" },
-        "drain": { "label": "ドレイン" },
-        "resistance": { "label": "抵抗" },
-        "focus": { "label": "フォーカス" },
-        "fetish": { "label": "フェティッシュ" },
-        "rank": { "label": "ランク" },
-        "pool": { "label": "プール" },
-        "etiquette": { "label": "エチケット" },
-        "hireCost": { "label": "雇用費" },
-        "upkeep": { "label": "維持費" },
-        "free": { "label": "無料（キャラクター作成時）" },
-        "operation": { "label": "オペレーション能力" },
-        "sector": { "label": "セクター・アクション" }
+        "concealability": {
+          "label": "隠匿性"
+        },
+        "hardening": {
+          "label": "ハードニング"
+        },
+        "category": {
+          "label": "分類"
+        },
+        "skill": {
+          "label": "技能"
+        },
+        "accuracy": {
+          "label": "精度"
+        },
+        "damage": {
+          "label": "ダメージ"
+        },
+        "penetration": {
+          "label": "貫通"
+        },
+        "reach": {
+          "label": "リーチ"
+        },
+        "modes": {
+          "label": "モード"
+        },
+        "rangeClose": {
+          "label": "近距離"
+        },
+        "rangeMax": {
+          "label": "最大射程"
+        },
+        "ammo": {
+          "label": "弾薬"
+        },
+        "alert": {
+          "label": "警戒値"
+        },
+        "layer": {
+          "label": "スロット"
+        },
+        "ballistic": {
+          "label": "対弾"
+        },
+        "impact": {
+          "label": "対衝撃"
+        },
+        "equipped": {
+          "label": "装備中"
+        },
+        "rating": {
+          "label": "レーティング"
+        },
+        "limitBonus": {
+          "label": "上限修正"
+        },
+        "kind": {
+          "label": "種別"
+        },
+        "zoeticCost": {
+          "label": "ゾエティック・コスト（ZC）"
+        },
+        "bodyIndex": {
+          "label": "ボディ・インデックス（BI）"
+        },
+        "effect": {
+          "label": "効果"
+        },
+        "school": {
+          "label": "流派"
+        },
+        "force": {
+          "label": "フォース"
+        },
+        "drain": {
+          "label": "ドレイン"
+        },
+        "resistance": {
+          "label": "抵抗"
+        },
+        "focus": {
+          "label": "フォーカス"
+        },
+        "fetish": {
+          "label": "フェティッシュ"
+        },
+        "rank": {
+          "label": "ランク"
+        },
+        "pool": {
+          "label": "プール"
+        },
+        "etiquette": {
+          "label": "エチケット"
+        },
+        "hireCost": {
+          "label": "雇用費"
+        },
+        "upkeep": {
+          "label": "維持費"
+        },
+        "free": {
+          "label": "無料（キャラクター作成時）"
+        },
+        "operation": {
+          "label": "オペレーション能力"
+        },
+        "sector": {
+          "label": "セクター・アクション"
+        }
       }
+    },
+    "BrandStat": {
+      "muscle": "武力",
+      "magic": "魔法",
+      "media": "メディア",
+      "espionage": "諜報",
+      "grid": "グリッド"
+    },
+    "BrandTrait": {
+      "analytical": {
+        "label": "分析的",
+        "hint": "諜報+1、グリッド+1"
+      },
+      "arcane": {
+        "label": "秘儀的",
+        "hint": "魔法+2"
+      },
+      "athletic": {
+        "label": "体育会系",
+        "hint": "武力+1、メディア+1"
+      },
+      "avantGarde": {
+        "label": "前衛的",
+        "hint": "グリッド+1、メディア+1"
+      },
+      "competence": {
+        "label": "有能",
+        "hint": "すべてのブランド・アクションに自動成功1"
+      },
+      "dangerous": {
+        "label": "危険",
+        "hint": "武力+2"
+      },
+      "experienced": {
+        "label": "老練",
+        "hint": "メディア+1、諜報+1"
+      },
+      "inspirational": {
+        "label": "カリスマ的",
+        "hint": "メディア+2"
+      },
+      "luxury": {
+        "label": "高級",
+        "hint": "メディア+1。サービス・悪徳・住宅リソースの時価総額+1"
+      },
+      "lethal": {
+        "label": "致命的",
+        "hint": "武力+1、諜報+1"
+      },
+      "mercenary": {
+        "label": "傭兵的",
+        "hint": "雇用可能なアセット+1。各アセットの維持費−1"
+      },
+      "modern": {
+        "label": "現代的",
+        "hint": "魔法+1、メディア+1"
+      },
+      "nefarious": {
+        "label": "悪辣",
+        "hint": "諜報+2"
+      },
+      "obscure": {
+        "label": "謎めいた",
+        "hint": "魔法+1、諜報+1"
+      },
+      "ruggedness": {
+        "label": "頑健",
+        "hint": "武力+1。リソースへのダメージ−1"
+      },
+      "secure": {
+        "label": "堅牢",
+        "hint": "グリッド+1。機器と装備のハードニング+1"
+      },
+      "sincerity": {
+        "label": "誠実",
+        "hint": "メディア+1。維持費合計−2"
+      },
+      "sophistication": {
+        "label": "洗練",
+        "hint": "グリッド+1。生産タグを持つリソースの時価総額+2"
+      },
+      "technical": {
+        "label": "技術的",
+        "hint": "グリッド+2"
+      }
+    },
+    "BrandAction": {
+      "mediaCampaign": {
+        "label": "メディア・キャンペーン",
+        "effect": "成功1につき、セクター内のリソース1つに影響力1。"
+      },
+      "racketeering": {
+        "label": "ゆすり",
+        "effect": "成功1につき、リソース1つにダメージ1。セクター・ヒート+1。"
+      },
+      "covertInfluence": {
+        "label": "秘密工作",
+        "effect": "成功1につき、リソース1つに影響力1、またはセクター・ヒート−1。"
+      },
+      "hakAttack": {
+        "label": "ハックアタック",
+        "effect": "成功1につきダメージ1、または成功2につき影響力1をリソースに。"
+      },
+      "ensorcellment": {
+        "label": "魔力付与",
+        "effect": "成功1につき、リソースのダメージか影響力をどちらかの方向に1動かす。"
+      },
+      "repair": {
+        "label": "修理",
+        "effect": "成功1につき、時価総額か貯蓄を1払ってダメージ1を回復。"
+      },
+      "doCrime": {
+        "label": "犯罪",
+        "effect": "成功1につき10,000〜60,000ㄓ。セクター・ヒート+1。"
+      },
+      "reinforceGhost": {
+        "label": "ゴースト・レーティング強化",
+        "effect": "ゴースト・プロトコルを持つデッカーが必要。ソフトウェアの値だけゴースト・レーティングを上げる。"
+      },
+      "demolish": {
+        "label": "解体",
+        "effect": "ダメージで埋まったリソースのみ。成功1につき2マスを破壊。"
+      },
+      "itemCracking": {
+        "label": "アイテム・クラッキング",
+        "effect": "アイテムのハードニングに等しい成功で、ブランド用に再コード化。"
+      },
+      "persuadertron": {
+        "label": "パースエイダートロン掃討",
+        "effect": "成功1につき信者10人を獲得。"
+      },
+      "ragebait": {
+        "label": "怒り煽りメディア",
+        "effect": "成功1につき、信者1人あたり1ㄓ。"
+      }
+    },
+    "ResourceTag": {
+      "service": "サービス",
+      "business": "ビジネス",
+      "science": "科学",
+      "vice": "悪徳",
+      "housing": "住宅",
+      "production": "生産"
+    },
+    "SectorHeat": {
+      "0": "ヒートなし",
+      "1": "★ 軽犯罪",
+      "2": "★★ 重大犯罪",
+      "3": "★★★ 取り締まり強化",
+      "4": "★★★★ 一斉摘発"
+    },
+    "SectorHeatEffect": {
+      "0": "悪徳リソースの時価総額−1、ビジネス・リソース+2。",
+      "1": "効果なし。",
+      "2": "ブランドのメディア判定とキャラクターの欺瞞／偵察判定に−1ダイス。悪徳リソースの時価総額+10%（最低1）。",
+      "3": "全リソースの時価総額−1。アセット判定とオペレーション準備判定に−2ダイス。戦闘開始から1d6ラウンドで治安部隊が到着。",
+      "4": "一斉摘発：ビジネス・リソースは収益なし。アセット判定と準備判定に−4ダイス。戦闘開始時から治安部隊がおり、1d6ラウンドでHTRが到着。"
+    },
+    "Brand": {
+      "stats": "ブランド能力値",
+      "traits": "ブランド特性",
+      "finance": "財務",
+      "members": "メンバー",
+      "marketCap": "時価総額",
+      "upkeep": "維持費",
+      "net": "収支",
+      "actions": "セクター・アクション",
+      "upkeepBreakdown": "リソース {resources}／アセット {assets}",
+      "actionsLeft": "残りアクション {left}／{max}",
+      "rollStat": "この能力値で判定",
+      "raisesHeat": "セクター・ヒートが上がる",
+      "assetCapacityExceeded": "アセットの維持費が時価総額を超えています。超過分のアセットは去ります。",
+      "exchangeHint": "交換：貯蓄MC−2 → 10,000ㄓ、20,000ㄓ → 貯蓄MC+1。",
+      "assetHint": "アセット判定は、対応するエチケットが最も高いメンバーが振ります。",
+      "membersHint": "キャラクターのアクターをここにドラッグするとブランドに加わります。",
+      "removeMember": "ブランドから外す",
+      "missingMember": "（削除されたアクター）",
+      "FIELDS": {
+        "kind": {
+          "label": "種類",
+          "hint": "ギャング、シンジケート、バンド…"
+        },
+        "base": {
+          "label": "基本値",
+          "hint": "開始時は1。各プレイヤーが1つの能力値を+1できます。"
+        },
+        "bank": {
+          "label": "貯蓄（MC）"
+        },
+        "marketAdjust": {
+          "label": "時価総額の修正",
+          "hint": "時価総額を変えるアセットなどの効果。"
+        },
+        "followers": {
+          "label": "信者"
+        },
+        "actionsUsed": {
+          "label": "使用済み"
+        },
+        "sector": {
+          "name": {
+            "label": "セクター"
+          },
+          "heat": {
+            "label": "セクター・ヒート"
+          }
+        }
+      }
+    },
+    "Resource": {
+      "classLabel": "クラス{cls}",
+      "marketUpkeep": "MC {market}／維持費 {upkeep}",
+      "FIELDS": {
+        "resourceType": {
+          "label": "リソースの種類"
+        },
+        "tags": {
+          "label": "タグ"
+        },
+        "class": {
+          "label": "クラス"
+        },
+        "market": {
+          "label": "時価総額"
+        },
+        "marketBonus": {
+          "label": "時価総額ボーナス"
+        },
+        "upkeep": {
+          "label": "維持費"
+        },
+        "controlled": {
+          "label": "ブランドが支配"
+        },
+        "damage": {
+          "label": "ダメージ"
+        },
+        "influence": {
+          "label": "影響力"
+        },
+        "demolished": {
+          "label": "破壊済みマス"
+        },
+        "brandBonus": {
+          "label": "ブランド能力値ボーナス"
+        },
+        "effect": {
+          "label": "効果"
+        }
+      }
+    },
+    "SectorTurn": {
+      "title": "セクター・ターン {turn}",
+      "end": "セクター・ターン終了",
+      "confirm": "収支を貯蓄に繰り入れ、使用済みアクションをリセットして次のセクター・ターンを始めますか？",
+      "unmet": "未払いの維持費 {n}：未払い1点につきリソース1つに1d6ダメージ。",
+      "crackdown": "一斉摘発中：次のターン開始時に1d6を振り、4以上ならヒートが★3に下がります。"
     }
   }
 }

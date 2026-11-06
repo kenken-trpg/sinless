@@ -1,0 +1,38 @@
+<section class="tab resources {{tab.cssClass}}" data-tab="resources" data-group="primary">
+  <section class="item-group" data-type="resource">
+    <header class="item-group-header">
+      <h3>{{localize "TYPES.Item.resource"}}</h3>
+      {{#if editable}}<button type="button" class="icon" data-action="itemCreate" data-type="resource" data-tooltip="{{localize "SINLESS.ItemCreate"}}"><i class="fa-solid fa-plus"></i></button>{{/if}}
+    </header>
+    <ol class="item-list resource-list">
+      {{#each resources}}
+      <li class="item resource draggable{{#unless item.system.functions}} inactive{{/unless}}" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="" class="item-img" data-action="itemEdit">
+        <div class="resource-main">
+          <a class="item-name" data-action="itemEdit">{{item.name}}</a>
+          <span class="item-summary">
+            {{localize "SINLESS.Resource.classLabel" cls=item.system.class}} · {{tags}} ·
+            {{localize "SINLESS.Resource.marketUpkeep" market=item.system.effectiveMarket upkeep=item.system.upkeep}}
+          </span>
+          <div class="resource-track">
+            {{#each boxes}}<span class="rbox{{#if damaged}} damaged{{/if}}{{#if influenced}} influenced{{/if}}{{#if demolished}} demolished{{/if}}"></span>{{/each}}
+          </div>
+        </div>
+        <span class="resource-adjust">
+          <span data-tooltip="{{localize "SINLESS.Resource.FIELDS.damage.label"}}"><i class="fa-solid fa-xmark"></i>
+            <a data-action="adjustItem" data-field="damage" data-delta="-1"><i class="fa-solid fa-minus"></i></a>{{item.system.damage}}<a data-action="adjustItem" data-field="damage" data-delta="1"><i class="fa-solid fa-plus"></i></a></span>
+          <span data-tooltip="{{localize "SINLESS.Resource.FIELDS.influence.label"}}"><i class="fa-solid fa-slash"></i>
+            <a data-action="adjustItem" data-field="influence" data-delta="-1"><i class="fa-solid fa-minus"></i></a>{{item.system.influence}}<a data-action="adjustItem" data-field="influence" data-delta="1"><i class="fa-solid fa-plus"></i></a></span>
+        </span>
+        <span class="item-controls">
+          <a data-action="itemToggle" data-field="controlled" class="{{#if item.system.controlled}}active{{/if}}" data-tooltip="{{localize "SINLESS.Resource.FIELDS.controlled.label"}}"><i class="fa-solid fa-flag"></i></a>
+          <a data-action="itemEdit" data-tooltip="{{localize "SINLESS.ItemEdit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
+          {{#if @root.editable}}<a data-action="itemDelete" data-tooltip="{{localize "SINLESS.ItemDelete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
+        </span>
+      </li>
+      {{/each}}
+    </ol>
+  </section>
+  {{> "systems/sinless/templates/actor/partials/item-list.hbs" type="asset" label="TYPES.Item.asset" items=assets}}
+  <p class="hint">{{localize "SINLESS.Brand.assetHint"}}</p>
+</section>

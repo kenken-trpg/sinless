@@ -1,0 +1,18 @@
+<section class="tab members {{tab.cssClass}}" data-tab="members" data-group="primary">
+  <h3>{{localize "SINLESS.Brand.members"}}</h3>
+  <p class="hint">{{localize "SINLESS.Brand.membersHint"}}</p>
+  <ol class="item-list members">
+    {{#each members}}
+    <li class="item member" data-member-id="{{id}}">
+      <img src="{{img}}" alt="" class="item-img">
+      <a class="item-name" data-action="openMember">{{name}}</a>
+      <span class="item-summary">{{#unless missing}}{{localize "SINLESS.Character.FIELDS.ghost.label"}} {{ghost}}{{/unless}}</span>
+      <span class="item-controls">
+        {{#if @root.editable}}<a data-action="removeMember" data-tooltip="{{localize "SINLESS.Brand.removeMember"}}"><i class="fa-solid fa-user-minus"></i></a>{{/if}}
+      </span>
+    </li>
+    {{/each}}
+  </ol>
+  <h3>{{localize "SINLESS.Actor.FIELDS.notes.label"}}</h3>
+  {{formInput fields.notes value=system.notes enriched=enrichedNotes toggled=true}}
+</section>

@@ -12,7 +12,7 @@ const ITEM_GROUPS = {
 };
 
 /** Shared behavior for character and NPC sheets. */
-class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
+export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["sinless", "sheet", "actor"],
     position: { width: 820, height: 860 },
@@ -47,6 +47,19 @@ class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.isGM = game.user.isGM;
     context.targetNumber = currentTargetNumber(sys.isAgonarch);
 
+    context.items = {};
+    context.itemGroups = {};
+    for (const item of actor.items.contents.sort((a, b) => (a.sort || 0) - (b.sort || 0))) {
+      (context.items[item.type] ??= []).push(item);
+    }
+    context.itemGroups = Object.fromEntries(Object.entries(ITEM_GROUPS).map(([tab, types]) => [
+      tab, types.map(type => ({ type, label: `TYPES.Item.${type}`, items: context.items[type] ?? [] }))
+    ]));
+    const TextEditor = foundry.applications.ux.TextEditor.implementation;
+    context.enrichedNotes = await TextEditor.enrichHTML(sys.notes, { relativeTo: actor, secrets: actor.isOwner });
+    context.fields = sys.schema.fields;
+    if (!sys.pools) return context;
+
     context.pools = Object.entries(SINLESS.POOLS).map(([key, label]) => ({
       key, label, ...sys.pools[key],
       skills: Object.entries(SINLESS.SKILLS)
@@ -74,19 +87,6 @@ class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     }));
     context.physicalBoxes = boxes(sys.condition.physical.value, sys.condition.physical.max);
     context.stunBoxes = boxes(sys.condition.stun.value, sys.condition.stun.max);
-
-    const items = {};
-    for (const item of actor.items.contents.sort((a, b) => (a.sort || 0) - (b.sort || 0))) {
-      (items[item.type] ??= []).push(item);
-    }
-    context.items = items;
-    context.itemGroups = Object.fromEntries(Object.entries(ITEM_GROUPS).map(([tab, types]) => [
-      tab, types.map(type => ({ type, label: `TYPES.Item.${type}`, items: items[type] ?? [] }))
-    ]));
-
-    const TextEditor = foundry.applications.ux.TextEditor.implementation;
-    context.enrichedNotes = await TextEditor.enrichHTML(sys.notes, { relativeTo: actor, secrets: actor.isOwner });
-    context.fields = sys.schema.fields;
     return context;
   }
 
@@ -115,6 +115,7 @@ class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       case "weapon": return this.actor.rollWeapon(item);
       case "ritual": return this.actor.rollRitual(item);
       case "asset": return this.actor.rollAsset(item);
+      case "resource": return item.sheet.render(true);
       default: return item.toMessage?.();
     }
   }

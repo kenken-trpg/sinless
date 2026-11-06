@@ -1,12 +1,14 @@
 import { SYSTEM_ID, SINLESS } from "./module/config.mjs";
 import { registerSettings } from "./module/settings.mjs";
 import { CharacterData, NpcData } from "./module/data/actor.mjs";
+import { BrandData, ResourceData } from "./module/data/brand.mjs";
 import {
   WeaponData, ArmorData, GearData, ImplantData, PowerData, RitualData, KnowledgeData, AssetData
 } from "./module/data/item.mjs";
 import { SinlessActor } from "./module/documents/actor.mjs";
 import { SinlessCombatant, registerCombatHooks } from "./module/documents/combat.mjs";
 import { CharacterSheet, NpcSheet } from "./module/sheets/actor-sheet.mjs";
+import { BrandSheet } from "./module/sheets/brand-sheet.mjs";
 import { SinlessItemSheet } from "./module/sheets/item-sheet.mjs";
 import { onRenderChatMessage } from "./module/dice/test-roll.mjs";
 import * as rules from "./module/helpers/rules.mjs";
@@ -19,7 +21,7 @@ Hooks.once("init", () => {
 
   CONFIG.Actor.documentClass = SinlessActor;
   CONFIG.Combatant.documentClass = SinlessCombatant;
-  Object.assign(CONFIG.Actor.dataModels, { character: CharacterData, npc: NpcData });
+  Object.assign(CONFIG.Actor.dataModels, { character: CharacterData, npc: NpcData, brand: BrandData });
   Object.assign(CONFIG.Item.dataModels, {
     weapon: WeaponData,
     armor: ArmorData,
@@ -28,12 +30,14 @@ Hooks.once("init", () => {
     power: PowerData,
     ritual: RitualData,
     knowledge: KnowledgeData,
-    asset: AssetData
+    asset: AssetData,
+    resource: ResourceData
   });
 
   CONFIG.Actor.trackableAttributes = {
     character: { bar: ["condition.physical", "condition.stun"], value: ["ghost"] },
-    npc: { bar: ["condition.physical", "condition.stun"], value: ["initiative"] }
+    npc: { bar: ["condition.physical", "condition.stun"], value: ["initiative"] },
+    brand: { bar: [], value: ["bank"] }
   };
 
   const { DocumentSheetConfig } = foundry.applications.apps;
@@ -42,6 +46,9 @@ Hooks.once("init", () => {
   });
   DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NpcSheet, {
     types: ["npc"], makeDefault: true, label: "SINLESS.Sheet.npc"
+  });
+  DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BrandSheet, {
+    types: ["brand"], makeDefault: true, label: "SINLESS.Sheet.brand"
   });
   DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, SinlessItemSheet, {
     makeDefault: true, label: "SINLESS.Sheet.item"

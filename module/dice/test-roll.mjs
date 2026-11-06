@@ -24,6 +24,7 @@ async function rollD6(count) {
  * @param {number|null} [o.threshold] Required successes (>=).
  * @param {string[]} [o.notes]       Extra lines shown on the card (already localized).
  * @param {object} [o.extra]         Extra card data (weapon damage etc.).
+ * @param {number} [o.autoSuccesses] Successes added without rolling (brand Competence).
  */
 export async function performTest(o) {
   const { actor, plan } = o;
@@ -58,7 +59,8 @@ export async function performTest(o) {
     rerolledIndices: result.rerolledIndices,
     rerollCancelled: result.rerollCancelled,
     abf: result.abf,
-    kismetAdded: []
+    kismetAdded: [],
+    autoSuccesses: o.autoSuccesses ?? 0
   };
 
   const rolls = [main.roll, rerolls.roll].filter(Boolean);
@@ -75,7 +77,7 @@ export async function performTest(o) {
 export function summarize(state) {
   const all = [...state.final, ...state.kismetAdded];
   const raw = all.filter(d => d >= state.target).length;
-  const successes = state.untrained ? Math.floor(raw / 4) : raw;
+  const successes = (state.untrained ? Math.floor(raw / 4) : raw) + (state.autoSuccesses ?? 0);
   let outcome = null;
   if (state.abf) outcome = "abf";
   else if (state.threshold !== null && state.threshold !== undefined) {

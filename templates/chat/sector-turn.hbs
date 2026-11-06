@@ -1,0 +1,13 @@
+<div class="sinless-card sector-turn">
+  <header class="card-header">
+    <h3>{{localize "SINLESS.SectorTurn.title" turn=turn}}</h3>
+  </header>
+  <ul class="finance">
+    <li>{{localize "SINLESS.Brand.marketCap"}}: <strong>{{marketCap}}</strong></li>
+    <li>{{localize "SINLESS.Brand.upkeep"}}: <strong>{{upkeep}}</strong></li>
+    <li>{{localize "SINLESS.Brand.net"}}: <strong>{{sinlessSigned net}}</strong></li>
+    <li>{{localize "SINLESS.Brand.FIELDS.bank.label"}}: <strong>{{bank}}</strong></li>
+  </ul>
+  {{#if unmet}}<p class="effect warn">{{localize "SINLESS.SectorTurn.unmet" n=unmet}}</p>{{/if}}
+  {{#if (gte heat 4)}}<p class="effect warn">{{localize "SINLESS.SectorTurn.crackdown"}}</p>{{/if}}
+</div>

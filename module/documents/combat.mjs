@@ -13,6 +13,7 @@ export class SinlessCombatant extends Combatant {
     if (!actor) return "0";
     const sys = actor.system;
     if (actor.type === "npc") return `${sys.initiative}`;
+    if (!sys.pools) return "0";
     const dice = Math.max(0, sys.pools.focus.max);
     const rea = sys.attributes.rea.value;
     const tn = currentTargetNumber(false);

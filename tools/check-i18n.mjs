@@ -69,9 +69,19 @@ export async function checkI18n() {
   }
 
   // Keys generated dynamically from config.
-  const { SKILLS } = await import("../module/config.mjs");
-  for (const k of Object.keys(SKILLS)) {
-    if (!(`SINLESS.Skill.${k}` in en)) problems.push(`[en] missing skill label: SINLESS.Skill.${k}`);
+  const { SKILLS, BRAND_TRAITS, BRAND_ACTIONS, SECTOR_HEAT } = await import("../module/config.mjs");
+  const dynamic = [
+    ...Object.keys(SKILLS).map(k => `SINLESS.Skill.${k}`),
+    ...Object.keys(BRAND_TRAITS).flatMap(k => [`SINLESS.BrandTrait.${k}.label`, `SINLESS.BrandTrait.${k}.hint`]),
+    ...Object.keys(BRAND_ACTIONS).flatMap(k => [`SINLESS.BrandAction.${k}.label`, `SINLESS.BrandAction.${k}.effect`]),
+    ...Object.keys(SECTOR_HEAT).map(k => `SINLESS.SectorHeatEffect.${k}`)
+  ];
+  // Tab labels come from the TABS config (labelPrefix SINLESS.Tab).
+  for (const file of walk(join(root, "module", "sheets"), [".mjs"])) {
+    for (const m of readFileSync(file, "utf8").matchAll(/\{ id: "(\w+)" \}/g)) dynamic.push(`SINLESS.Tab.${m[1]}`);
+  }
+  for (const key of dynamic) {
+    if (!(key in en)) problems.push(`[en] missing generated key: ${key}`);
   }
   return problems;
 }

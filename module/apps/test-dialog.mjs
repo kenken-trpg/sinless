@@ -29,17 +29,18 @@ export async function testDialog(defaults) {
     const poolAvailable = pool ? defaults.poolValues[pool] : 0;
     const config = {
       pool,
-      mode: data.mode,
+      mode: data.mode ?? defaults.mode,
       rank: n(data.rank),
       gear: n(data.gear),
       bonus: n(data.bonus) + firingBonus,
       penalty: n(data.penalty),
       kismet: Math.min(n(data.kismet), defaults.kismetAvailable ?? 0),
-      poolDice: data.poolDice === "" || data.poolDice === null ? undefined : n(data.poolDice),
+      poolDice: data.poolDice === "" || data.poolDice === null || data.poolDice === undefined ? undefined : n(data.poolDice),
       target: Math.clamp(n(data.target, 4), 2, 6),
       reroll: n(data.reroll),
       threshold: data.threshold === "" || data.threshold === null ? null : n(data.threshold),
       spendPool: !!data.spendPool,
+      autoSuccesses: defaults.autoSuccesses ?? 0,
       firingMode: data.firingMode,
       poolAvailable
     };
@@ -52,9 +53,10 @@ export async function testDialog(defaults) {
     if (!form) return;
     const { plan, poolAvailable } = read(form);
     const out = dialog.element.querySelector(".sinless-test-preview");
+    const fmt = plan.usesPool ? "SINLESS.Test.preview" : "SINLESS.Test.previewDice";
     out.innerHTML = plan.impossible
       ? `<strong class="impossible">${game.i18n.localize("SINLESS.Test.impossible")}</strong>`
-      : game.i18n.format("SINLESS.Test.preview", {
+      : game.i18n.format(fmt, {
         limit: plan.usesPool ? plan.limit : "—",
         available: plan.usesPool ? poolAvailable : "—",
         pool: plan.poolDice,

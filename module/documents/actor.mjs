@@ -1,4 +1,5 @@
-import { SINLESS, skillLabel } from "../config.mjs";
+import { SINLESS, SYSTEM_ID, skillLabel, AGONARCH_TN } from "../config.mjs";
+import { autoSuccesses, sectorHeatPenalty } from "../helpers/brand.mjs";
 import { currentTargetNumber, currentHeatBonus } from "../settings.mjs";
 import { testDialog } from "../apps/test-dialog.mjs";
 import { performTest } from "../dice/test-roll.mjs";
@@ -95,7 +96,8 @@ export class SinlessActor extends Actor {
       spendPool: config.spendPool,
       threshold: config.threshold,
       notes,
-      extra
+      extra,
+      autoSuccesses: config.autoSuccesses
     });
   }
 
@@ -133,7 +135,7 @@ export class SinlessActor extends Actor {
   }
 
   /** Etiquette test: roll dice equal to the etiquette rank (p.69). */
-  async rollEtiquette(key, { label, bonus = 0 } = {}) {
+  async rollEtiquette(key, { label, bonus = 0, penalty = 0 } = {}) {
     let rank = this.system.etiquettes[key]?.rank ?? 0;
     let extraBonus = bonus;
     // Wealthy lifestyle: +1 die on etiquette tests, even at rank 0 (p.46).
@@ -143,6 +145,7 @@ export class SinlessActor extends Actor {
     });
     defaults.mode = "rank";
     defaults.spendPool = false;
+    defaults.penalty += penalty;
     return this._runTest(defaults);
   }
 
@@ -173,8 +176,23 @@ export class SinlessActor extends Actor {
     }));
   }
 
+  /**
+   * Asset test (p.70). On a brand, the member with the best matching etiquette
+   * rolls; sector heat 3+ penalizes asset tests (p.220).
+   */
   async rollAsset(item) {
-    return this.rollEtiquette(item.system.etiquette, { label: item.name });
+    const key = item.system.etiquette;
+    if (this.type !== "brand") return this.rollEtiquette(key, { label: item.name });
+    const heat = this.system.sector.heat;
+    const penalty = heat >= 4 ? 4 : heat >= 3 ? 2 : 0;
+    const members = this.system.members.map(id => game.actors.get(id)).filter(a => a?.isOwner);
+    const best = members.sort((a, b) =>
+      (b.system.etiquettes[key]?.rank ?? 0) - (a.system.etiquettes[key]?.rank ?? 0))[0];
+    if (!best) {
+      ui.notifications.warn("SINLESS.Notify.noMember", { localize: true });
+      return null;
+    }
+    return best.rollEtiquette(key, { label: `${item.name} (${best.name})`, penalty });
   }
 
   /** Free roll from a pool (e.g. an attribute-only test decided by the Agonarch). */
@@ -184,8 +202,121 @@ export class SinlessActor extends Actor {
     }));
   }
 
+  /* ---------------- Brand (pp.221-223) ---------------- */
+
+  /** Dialog defaults for a brand test: roll dice equal to the statistic, no pools. */
+  _brandDefaults(label, stat) {
+    const sys = this.system;
+    return {
+      label,
+      simple: true,
+      pool: null,
+      mode: "rank",
+      rank: sys.stats[stat],
+      rankLabel: game.i18n.localize(SINLESS.BRAND_STATS[stat]),
+      gear: 0,
+      bonus: 0,
+      penalty: sectorHeatPenalty(sys.sector.heat, stat),
+      kismet: 0,
+      kismetAvailable: 0,
+      hasKismet: false,
+      target: AGONARCH_TN,
+      reroll: 0,
+      threshold: "",
+      spendPool: false,
+      conflict: false,
+      poolValues: {},
+      showFiring: false,
+      firingMode: "none",
+      notes: [],
+      autoSuccesses: autoSuccesses([...sys.traits])
+    };
+  }
+
+  async rollBrandStat(stat) {
+    if (this.type !== "brand") return null;
+    return this._runTest(this._brandDefaults(game.i18n.localize(SINLESS.BRAND_STATS[stat]), stat));
+  }
+
+  /** Roll a sector action, count it against the turn and apply its heat. */
+  async rollBrandAction(key) {
+    const def = SINLESS.BRAND_ACTIONS[key];
+    if (this.type !== "brand" || !def) return null;
+    const label = game.i18n.localize(`SINLESS.BrandAction.${key}.label`);
+    const defaults = this._brandDefaults(label, def.stat);
+    defaults.notes = [game.i18n.localize(SINLESS.BRAND_STATS[def.stat])];
+    if (this.system.actionsLeft <= 0) {
+      ui.notifications.warn("SINLESS.Notify.noSectorActions", { localize: true });
+    }
+    const config = await testDialog(defaults);
+    if (!config) return null;
+    if (config.plan.impossible || config.plan.total <= 0) {
+      ui.notifications.warn("SINLESS.Test.impossible", { localize: true });
+      return null;
+    }
+    const updates = { "system.actionsUsed": this.system.actionsUsed + 1 };
+    let heatRaised = null;
+    if (def.heat) {
+      heatRaised = Math.min(4, this.system.sector.heat + def.heat);
+      updates["system.sector.heat"] = heatRaised;
+    }
+    await this.update(updates);
+    return performTest({
+      actor: this,
+      label,
+      pool: null,
+      plan: config.plan,
+      target: config.target,
+      reroll: config.reroll,
+      spendPool: false,
+      threshold: config.threshold,
+      notes: defaults.notes,
+      autoSuccesses: config.autoSuccesses,
+      extra: { effect: game.i18n.localize(`SINLESS.BrandAction.${key}.effect`), heatRaised }
+    });
+  }
+
+  /**
+   * End the sector turn (p.221): profit is banked, a shortfall is paid from the
+   * bank, and anything still unpaid is reported as unmet upkeep.
+   */
+  async endSectorTurn() {
+    if (this.type !== "brand") return null;
+    const sys = this.system;
+    const { marketCap, upkeep, net } = sys.finance;
+    let bank = sys.bank + net;
+    let unmet = 0;
+    if (bank < 0) {
+      unmet = -bank;
+      bank = 0;
+    }
+    await this.update({
+      "system.bank": bank,
+      "system.actionsUsed": 0,
+      "system.sectorTurn": sys.sectorTurn + 1
+    });
+    const content = await foundry.applications.handlebars.renderTemplate(
+      `systems/${SYSTEM_ID}/templates/chat/sector-turn.hbs`,
+      { turn: sys.sectorTurn, marketCap, upkeep, net, bank, unmet, heat: sys.sector.heat }
+    );
+    return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this }), content });
+  }
+
+  /** Add a character as a brand member. */
+  async addBrandMember(actor) {
+    if (this.type !== "brand" || actor?.type !== "character") return null;
+    if (this.system.members.includes(actor.id)) return this;
+    await actor.update({ "system.brand": this.name });
+    return this.update({ "system.members": [...this.system.members, actor.id] });
+  }
+
+  async removeBrandMember(id) {
+    return this.update({ "system.members": this.system.members.filter(m => m !== id) });
+  }
+
   /** Refresh all dice pools (start of a conflict round, p.85). */
   async refreshPools() {
+    if (!this.system.pools) return this;
     const updates = {};
     for (const key of Object.keys(this.system.pools)) updates[`system.pools.${key}.spent`] = 0;
     return this.update(updates);
