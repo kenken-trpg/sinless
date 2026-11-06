@@ -1,0 +1,158 @@
+{
+  "name": "体験01：戦闘 / Combat",
+  "type": "character",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "attributes": {
+      "str": {
+        "value": 6,
+        "max": 20
+      },
+      "bod": {
+        "value": 6,
+        "max": 20
+      },
+      "rea": {
+        "value": 6,
+        "max": 20
+      },
+      "int": {
+        "value": 6,
+        "max": 20
+      },
+      "wil": {
+        "value": 6,
+        "max": 20
+      },
+      "cha": {
+        "value": 6,
+        "max": 20
+      }
+    },
+    "heritage": "human",
+    "talent": "hedge",
+    "charismaPool": "resolve",
+    "creation": {
+      "active": false
+    },
+    "skills": {
+      "firearms": {
+        "rank": 4,
+        "spec": ""
+      },
+      "meleeWeapons": {
+        "rank": 3,
+        "spec": ""
+      },
+      "observation": {
+        "rank": 3,
+        "spec": ""
+      },
+      "athletics": {
+        "rank": 3,
+        "spec": ""
+      },
+      "drive": {
+        "rank": 3,
+        "spec": ""
+      },
+      "gunnery": {
+        "rank": 3,
+        "spec": ""
+      },
+      "negotiation": {
+        "rank": 2,
+        "spec": ""
+      }
+    },
+    "zuzu": 10000,
+    "kismet": {
+      "earned": 10,
+      "unspent": 10
+    },
+    "notes": "<p>公開サーバー動作確認用。作成予算に準拠した完成キャラクターではありません。/ Test fixture; not a rules-legal starting character.</p>"
+  },
+  "items": [
+    {
+      "name": "テスト銃 / Test gun",
+      "type": "weapon",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "category": "firearm",
+        "skill": "firearms",
+        "accuracy": 2,
+        "damage": "3",
+        "penetration": 2,
+        "weight": 1,
+        "metal": true,
+        "modes": "single, burst"
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト近接武器 / Test blade",
+      "type": "weapon",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "category": "melee",
+        "skill": "meleeWeapons",
+        "accuracy": 2,
+        "damage": "2",
+        "penetration": 2,
+        "weight": 1,
+        "metal": false,
+        "modes": "single, burst"
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト防具 / Test armor",
+      "type": "armor",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "ballistic": 3,
+        "impact": 2,
+        "equipped": true,
+        "weight": 1,
+        "metal": false
+      },
+      "effects": []
+    },
+    {
+      "name": "テストVCR / Test VCR",
+      "type": "vcr",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "bonusDice": 2,
+        "hardeningBonus": 1,
+        "equipped": true,
+        "nerveRig": true,
+        "zoeticCost": 1
+      },
+      "effects": []
+    }
+  ],
+  "effects": [],
+  "prototypeToken": {
+    "name": "体験01：戦闘 / Combat",
+    "actorLink": true,
+    "disposition": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  },
+  "flags": {
+    "exportSource": {
+      "system": "sinless",
+      "systemVersion": "0.13.0"
+    }
+  }
+}

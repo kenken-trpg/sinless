@@ -1,0 +1,165 @@
+{
+  "name": "体験03：デッカー / Decker",
+  "type": "character",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "attributes": {
+      "str": {
+        "value": 6,
+        "max": 20
+      },
+      "bod": {
+        "value": 6,
+        "max": 20
+      },
+      "rea": {
+        "value": 6,
+        "max": 20
+      },
+      "int": {
+        "value": 6,
+        "max": 20
+      },
+      "wil": {
+        "value": 6,
+        "max": 20
+      },
+      "cha": {
+        "value": 6,
+        "max": 20
+      }
+    },
+    "heritage": "human",
+    "talent": "hedge",
+    "charismaPool": "resolve",
+    "creation": {
+      "active": false
+    },
+    "skills": {
+      "hacking": {
+        "rank": 4,
+        "spec": ""
+      },
+      "electronicWarfare": {
+        "rank": 4,
+        "spec": ""
+      },
+      "programming": {
+        "rank": 3,
+        "spec": ""
+      },
+      "observation": {
+        "rank": 3,
+        "spec": ""
+      }
+    },
+    "zuzu": 10000,
+    "kismet": {
+      "earned": 10,
+      "unspent": 10
+    },
+    "notes": "<p>公開サーバー動作確認用。作成予算に準拠した完成キャラクターではありません。/ Test fixture; not a rules-legal starting character.</p>"
+  },
+  "items": [
+    {
+      "name": "テストデッキ / Test deck",
+      "type": "deck",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "mcp": 6,
+        "threads": 3,
+        "core": 1,
+        "io": 3,
+        "hardening": 3,
+        "equipped": true,
+        "nerveRig": true,
+        "weight": 1
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト攻撃 / Test derez",
+      "type": "software",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "rating": 3,
+        "skill": "hacking",
+        "action": "complex",
+        "io": "no",
+        "attack": true,
+        "digitalAttack": "derez",
+        "loaded": true
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト攻撃 / Test acid",
+      "type": "software",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "rating": 3,
+        "skill": "hacking",
+        "action": "complex",
+        "io": "no",
+        "attack": true,
+        "digitalAttack": "acid",
+        "loaded": true
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト攻撃 / Test strike",
+      "type": "software",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "rating": 3,
+        "skill": "hacking",
+        "action": "complex",
+        "io": "no",
+        "attack": true,
+        "digitalAttack": "strike",
+        "loaded": true
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト隠蔽 / Test shadow protocol",
+      "type": "software",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "rating": 2,
+        "skill": "hacking",
+        "reducesAlert": true,
+        "io": "yes",
+        "loaded": true,
+        "running": true
+      },
+      "effects": []
+    }
+  ],
+  "effects": [],
+  "prototypeToken": {
+    "name": "体験03：デッカー / Decker",
+    "actorLink": true,
+    "disposition": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  },
+  "flags": {
+    "exportSource": {
+      "system": "sinless",
+      "systemVersion": "0.13.0"
+    }
+  }
+}

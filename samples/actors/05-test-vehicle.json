@@ -1,0 +1,57 @@
+{
+  "name": "体験05：乗り物 / Vehicle",
+  "type": "vehicle",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "kind": "vehicle",
+    "frame": "none",
+    "mobility": "ground",
+    "body": 8,
+    "weaponWeight": 2,
+    "movement": 12,
+    "handling": 2,
+    "hardening": 3,
+    "armorBonus": {
+      "ballistic": 3,
+      "impact": 2
+    },
+    "controlMode": "vcr",
+    "controller": "",
+    "notes": "<p>体験01のキャラクターをシートへドロップしてリガーに設定してください。/ Drop Combat character onto this sheet to assign a rigger.</p>"
+  },
+  "items": [
+    {
+      "name": "テスト搭載銃 / Test mounted gun",
+      "type": "weapon",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "category": "vehicle",
+        "skill": "gunnery",
+        "accuracy": 2,
+        "damage": "3",
+        "penetration": 2,
+        "weight": 1,
+        "metal": true,
+        "modes": "single, burst"
+      },
+      "effects": []
+    }
+  ],
+  "effects": [],
+  "prototypeToken": {
+    "name": "体験05：乗り物 / Vehicle",
+    "actorLink": true,
+    "disposition": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  },
+  "flags": {
+    "exportSource": {
+      "system": "sinless",
+      "systemVersion": "0.13.0"
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "name": "体験04：訓練相手 / Training opponent",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "poolMax": {
+      "brawn": 8,
+      "finesse": 8,
+      "focus": 8,
+      "resolve": 8
+    },
+    "conditionMax": {
+      "physical": 10,
+      "stun": 10
+    },
+    "strength": 6,
+    "initiative": 10,
+    "agonarch": true,
+    "defenses": {
+      "dodge": 4,
+      "soak": 4,
+      "resist": 4
+    },
+    "notes": "<p>固定防御ダイスを使う訓練用NPC。/ Training NPC with fixed defense dice.</p>"
+  },
+  "items": [
+    {
+      "name": "訓練用銃 / Training gun",
+      "type": "weapon",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "category": "firearm",
+        "skill": "firearms",
+        "accuracy": 2,
+        "damage": "3",
+        "penetration": 2,
+        "weight": 1,
+        "metal": true,
+        "modes": "single, burst",
+        "attackDice": 6
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト防具 / Test armor",
+      "type": "armor",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "ballistic": 3,
+        "impact": 2,
+        "equipped": true,
+        "weight": 1,
+        "metal": false
+      },
+      "effects": []
+    }
+  ],
+  "effects": [],
+  "prototypeToken": {
+    "name": "体験04：訓練相手 / Training opponent",
+    "actorLink": false,
+    "disposition": -1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  },
+  "flags": {
+    "exportSource": {
+      "system": "sinless",
+      "systemVersion": "0.13.0"
+    }
+  }
+}
