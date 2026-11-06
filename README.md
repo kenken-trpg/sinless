@@ -23,6 +23,11 @@ this system contains no rules text.
 - NPCs can use bestiary defenses (critter rules): fixed dodge / soak / resist dice that never
   spend a pool. Leave a field empty to defend from the pool like a player character.
   NPC weapons can list fixed attack dice in the same way.
+- Character creation panel (new characters start in creation mode). It has priority selectors
+  (A–E) and live budgets for attribute points (with the 10/15 cost steps), skill points
+  (Martial Arts ×2, rituals included), knowledge (2×INT), etiquette (2×CHA) and zuzus (gear,
+  hired assets, prepaid lifestyle). It also checks rules (each priority used once,
+  heritage/magic priority, skills ≤ 6) and has Ghost Rating and seed money rolls.
 - Active Effects on actors and items. Item effects apply while armor is equipped and gear is
   carried; implant effects always apply. Useful keys: `system.attributes.str.value`,
   `system.pools.brawn.bonus`, `system.condition.physical.bonus`, `system.armorBonus.ballistic`,

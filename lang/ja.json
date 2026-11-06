@@ -838,6 +838,46 @@
       "effective": "アクティブ・エフェクト適用後の値",
       "keysTitle": "変更キー一覧",
       "keysHint": "効果の変更欄にはこのキーを使います（他の技能・プール・エチケットも同じ形式）。アイテムの効果は、防具なら装備中、装備品なら携帯中だけ適用されます。インプラントの効果は常に適用されます。"
+    },
+    "Creation": {
+      "title": "キャラクター作成",
+      "mode": "キャラクター作成モード",
+      "modeHint": "メインタブに、優先度ごとの予算とルールチェックを表示する作成パネルを出します。",
+      "category": {
+        "heritage": "出自",
+        "magic": "魔法",
+        "attributes": "能力値",
+        "skills": "技能",
+        "resources": "資金"
+      },
+      "budget": {
+        "attributes": "能力値ポイント",
+        "skills": "技能ポイント",
+        "knowledge": "知識（知力×2）",
+        "etiquettes": "エチケット（魅力×2）",
+        "resources": "ズズ"
+      },
+      "attributeAdjust": "能力値ポイント修正",
+      "attributeAdjustHint": "出自による能力値ポイントの増減。例：アップリフト犬は −1（p.48）。",
+      "otherSkills": "知識技能またはエチケット",
+      "issue": {
+        "priorityMissing": "優先度を選んでください：{categories}。",
+        "priorityDuplicate": "同じ優先度は一度しか使えません：{levels}。",
+        "heritagePriority": "この出自には、出自の優先度 {min} 以上が必要です。",
+        "talentPriority": "この魔法の才能には、魔法の優先度 {min} 以上が必要です。",
+        "attributeLow": "{key} は 1 以上が必要です。",
+        "attributeHigh": "{key} が最大値（{max}）を超えています。",
+        "skillHigh": "{key}：作成時は {max} を超える技能は取れません。",
+        "ritualHigh": "儀式：作成時は {max} を超えるランクは取れません。",
+        "overBudget": "{key}：予算を {over} 超えています。"
+      },
+      "extraAsset": "魅力 11 以上：維持費のかからないアセットを 1 つ追加で得ます。",
+      "rollGhost": "ゴースト・レーティングをロール（2d6）",
+      "rollSeed": "シードマネーをロール（4d6×100）",
+      "finish": "作成を完了",
+      "finishConfirm": "作成パネルを閉じますか？ 使い残したポイントと資金は失われます。作成モードは経歴タブで再びオンにできます。",
+      "ghostFlavor": "ゴースト・レーティング（2d6）",
+      "seedFlavor": "シードマネー（4d6 × 100ㄓ）"
     }
   }
 }

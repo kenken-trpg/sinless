@@ -1,0 +1,27 @@
+<details class="creation-panel" open>
+  <summary>{{localize "SINLESS.Creation.title"}}{{#if creation.ok}} <i class="fa-solid fa-circle-check ok"></i>{{else}} <i class="fa-solid fa-triangle-exclamation warn"></i>{{/if}}</summary>
+  <div class="priorities">
+    {{#each creation.priorities}}
+    <label>{{localize label}}
+      <select name="system.creation.priorities.{{key}}">{{selectOptions ../creation.priorityChoices selected=value}}</select>
+    </label>
+    {{/each}}
+    <label data-tooltip="{{localize "SINLESS.Creation.attributeAdjustHint"}}">{{localize "SINLESS.Creation.attributeAdjust"}}
+      <input type="number" name="system.creation.attributeAdjust" value="{{system.creation.attributeAdjust}}">
+    </label>
+  </div>
+  <ul class="budgets">
+    {{#each creation.budgets}}
+    <li class="{{#if over}}over{{/if}}"><span class="label">{{localize label}}</span> <strong>{{spentText}}</strong> / {{budgetText}}</li>
+    {{/each}}
+  </ul>
+  {{#if creation.issues.length}}
+  <ul class="issues">{{#each creation.issues}}<li>{{this}}</li>{{/each}}</ul>
+  {{/if}}
+  {{#if creation.extraAsset}}<p class="hint">{{localize "SINLESS.Creation.extraAsset"}}</p>{{/if}}
+  <div class="creation-buttons">
+    <button type="button" data-action="rollGhost"><i class="fa-solid fa-dice"></i> {{localize "SINLESS.Creation.rollGhost"}}</button>
+    <button type="button" data-action="rollSeedMoney"><i class="fa-solid fa-coins"></i> {{localize "SINLESS.Creation.rollSeed"}}</button>
+    <button type="button" data-action="finishCreation"><i class="fa-solid fa-flag-checkered"></i> {{localize "SINLESS.Creation.finish"}}</button>
+  </div>
+</details>

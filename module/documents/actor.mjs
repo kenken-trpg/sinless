@@ -12,6 +12,9 @@ export class SinlessActor extends Actor {
     if (this.type === "character" && data.prototypeToken?.actorLink === undefined) {
       this.updateSource({ "prototypeToken.actorLink": true });
     }
+    if (this.type === "character" && data.system?.creation?.active === undefined) {
+      this.updateSource({ "system.creation.active": true });
+    }
   }
 
   /** @override */

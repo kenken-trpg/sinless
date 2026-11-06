@@ -1,4 +1,5 @@
 <section class="tab main {{tab.cssClass}}" data-tab="main" data-group="primary">
+  {{#if creation}}{{> "systems/sinless/templates/actor/partials/creation-panel.hbs"}}{{/if}}
   {{#if attributes}}
   <div class="attributes">
     {{#each attributes}}

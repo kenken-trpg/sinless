@@ -63,7 +63,8 @@ Hooks.once("init", () => {
   foundry.applications.handlebars.loadTemplates([
     `systems/${SYSTEM_ID}/templates/actor/partials/item-list.hbs`,
     `systems/${SYSTEM_ID}/templates/actor/partials/condition-track.hbs`,
-    `systems/${SYSTEM_ID}/templates/actor/partials/effect-list.hbs`
+    `systems/${SYSTEM_ID}/templates/actor/partials/effect-list.hbs`,
+    `systems/${SYSTEM_ID}/templates/actor/partials/creation-panel.hbs`
   ]);
 });
 

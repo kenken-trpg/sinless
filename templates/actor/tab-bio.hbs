@@ -1,4 +1,9 @@
 <section class="tab bio {{tab.cssClass}}" data-tab="bio" data-group="primary">
+  {{#if fields.creation}}
+  <label class="checkbox creation-toggle" data-tooltip="{{localize "SINLESS.Creation.modeHint"}}">
+    <input type="checkbox" name="system.creation.active" {{checked system.creation.active}}> {{localize "SINLESS.Creation.mode"}}
+  </label>
+  {{/if}}
   {{#if fields.biography}}
   <h3>{{localize "SINLESS.Character.FIELDS.biography.label"}}</h3>
   {{formInput fields.biography value=system.biography enriched=enrichedBiography toggled=true}}

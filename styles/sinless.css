@@ -189,3 +189,17 @@
 .sinless.sheet .item-effects .effect .item-summary { grid-area: summary; }
 .sinless.sheet .item-effects .effect .item-controls { grid-area: controls; }
 .sinless.sheet.item .window-content { overflow-y: auto; }
+
+/* ---------- Character creation ---------- */
+.sinless.sheet .creation-panel { border: 1px solid var(--sl-accent, #c2185b); border-radius: 4px; padding: 0.25rem 0.5rem; margin-bottom: 0.5rem; }
+.sinless.sheet .creation-panel summary { font-weight: bold; cursor: pointer; }
+.sinless.sheet .creation-panel .ok { color: var(--sl-success, #2e7d32); }
+.sinless.sheet .creation-panel .warn { color: var(--sl-fail, #b71c1c); }
+.sinless.sheet .creation-panel .priorities { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.25rem 0.5rem; margin: 0.25rem 0; }
+.sinless.sheet .creation-panel .priorities label { display: flex; flex-direction: column; font-size: 0.8rem; }
+.sinless.sheet .creation-panel .budgets { list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; padding: 0; margin: 0.25rem 0; font-size: 0.85rem; }
+.sinless.sheet .creation-panel .budgets .over { color: var(--sl-fail, #b71c1c); }
+.sinless.sheet .creation-panel .issues { margin: 0.25rem 0; padding-left: 1.25rem; font-size: 0.8rem; color: var(--sl-fail, #b71c1c); }
+.sinless.sheet .creation-panel .hint { font-size: 0.8rem; margin: 0.25rem 0; }
+.sinless.sheet .creation-panel .creation-buttons { display: flex; gap: 0.5rem; margin: 0.25rem 0; }
+.sinless.sheet .creation-toggle { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; }

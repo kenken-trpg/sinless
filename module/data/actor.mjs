@@ -4,6 +4,7 @@ import {
 import {
   computePools, conditionTrackSize, woundPenalty, kismetPoolSize
 } from "../helpers/rules.mjs";
+import { PRIORITY_CATEGORIES, PRIORITY_LEVELS } from "../helpers/creation.mjs";
 
 const { NumberField, StringField, SchemaField, BooleanField, HTMLField } = foundry.data.fields;
 
@@ -136,6 +137,14 @@ export class CharacterData extends SinlessActorBase {
       }),
       initiativeBonus: int(0, { min: undefined }),
       movement: int(0),
+      // Character creation helper (pp.44-46).
+      creation: new SchemaField({
+        active: new BooleanField({ initial: false }),
+        priorities: new SchemaField(Object.fromEntries(PRIORITY_CATEGORIES.map(k => [k, new StringField({
+          required: true, blank: true, initial: "", choices: () => ({ "": "—", ...Object.fromEntries(PRIORITY_LEVELS.map(l => [l, l])) })
+        })]))),
+        attributeAdjust: int(0, { min: undefined })
+      }),
       biography: new HTMLField({ required: true, blank: true })
     };
   }

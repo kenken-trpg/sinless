@@ -838,6 +838,46 @@
       "effective": "Value after Active Effects",
       "keysTitle": "Attribute keys",
       "keysHint": "Use these keys in an effect's changes (other skills, pools and etiquettes follow the same pattern). Effects on items apply while armor is equipped and gear is carried; implant effects always apply."
+    },
+    "Creation": {
+      "title": "Character creation",
+      "mode": "Character creation mode",
+      "modeHint": "Show the creation panel with priority budgets and rule checks on the Main tab.",
+      "category": {
+        "heritage": "Heritage",
+        "magic": "Magic",
+        "attributes": "Attributes",
+        "skills": "Skills",
+        "resources": "Resources"
+      },
+      "budget": {
+        "attributes": "Attribute points",
+        "skills": "Skill points",
+        "knowledge": "Knowledge (2×INT)",
+        "etiquettes": "Etiquette (2×CHA)",
+        "resources": "Zuzus"
+      },
+      "attributeAdjust": "Attribute point adjustment",
+      "attributeAdjustHint": "Heritage change to the attribute points, e.g. −1 for an uplifted dog (p.48).",
+      "otherSkills": "Knowledge or etiquette",
+      "issue": {
+        "priorityMissing": "Choose a priority for: {categories}.",
+        "priorityDuplicate": "Each priority can be used only once: {levels}.",
+        "heritagePriority": "This heritage needs heritage priority {min} or better.",
+        "talentPriority": "This magical talent needs magic priority {min} or better.",
+        "attributeLow": "{key} must be at least 1.",
+        "attributeHigh": "{key} is above its maximum ({max}).",
+        "skillHigh": "{key}: no skill above {max} during creation.",
+        "ritualHigh": "Rituals: no rank above {max} during creation.",
+        "overBudget": "{key}: {over} over budget."
+      },
+      "extraAsset": "Charisma 11+: you gain one additional upkeep-free asset.",
+      "rollGhost": "Roll Ghost Rating (2d6)",
+      "rollSeed": "Roll seed money (4d6×100)",
+      "finish": "Finish creation",
+      "finishConfirm": "Hide the creation panel? Unspent points and cash are lost. You can turn creation mode back on in the Biography tab.",
+      "ghostFlavor": "Ghost Rating (2d6)",
+      "seedFlavor": "Seed money (4d6 × 100ㄓ)"
     }
   }
 }

@@ -1,6 +1,7 @@
 import { SYSTEM_ID, SINLESS, skillLabel } from "../config.mjs";
 import { currentTargetNumber } from "../settings.mjs";
 import { actorEffects, effectActions, lockOverriddenInputs, EFFECT_KEYS } from "./effects.mjs";
+import { creationReport, creationSpending, PRIORITY_CATEGORIES } from "../helpers/creation.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -175,7 +176,14 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 }
 
 export class CharacterSheet extends SinlessActorSheet {
-  static DEFAULT_OPTIONS = { classes: ["character"] };
+  static DEFAULT_OPTIONS = {
+    classes: ["character"],
+    actions: {
+      rollGhost: CharacterSheet.#onRollGhost,
+      rollSeedMoney: CharacterSheet.#onRollSeedMoney,
+      finishCreation: CharacterSheet.#onFinishCreation
+    }
+  };
 
   static PARTS = {
     header: { template: T("actor/character-header.hbs") },
@@ -211,7 +219,83 @@ export class CharacterSheet extends SinlessActorSheet {
     context.charismaPoolChoices = { "": "—", ...SINLESS.POOLS };
     const TextEditor = foundry.applications.ux.TextEditor.implementation;
     context.enrichedBiography = await TextEditor.enrichHTML(sys.biography, { relativeTo: this.actor, secrets: this.actor.isOwner });
+    if (sys.creation.active) context.creation = this.#creationContext();
     return context;
+  }
+
+  /** Budgets and rule problems for the creation panel (pp.44-46). */
+  #creationContext() {
+    const actor = this.actor;
+    const sys = actor.system;
+    const src = actor._source.system;
+    const loc = k => game.i18n.localize(k);
+    const fmt = (k, d) => game.i18n.format(k, d);
+    const items = actor.items.contents;
+    const report = creationReport({
+      priorities: sys.creation.priorities,
+      attributes: Object.fromEntries(Object.keys(SINLESS.ATTRIBUTES).map(k => [k, src.attributes?.[k]?.value ?? 1])),
+      attributeMax: Object.fromEntries(Object.keys(SINLESS.ATTRIBUTES).map(k => [k, sys.attributes[k].max])),
+      attributeAdjust: sys.creation.attributeAdjust,
+      skills: Object.fromEntries(Object.keys(SINLESS.SKILLS).map(k => [k, src.skills?.[k]?.rank ?? 0])),
+      rituals: items.filter(i => i.type === "ritual").map(i => i.system.rank),
+      knowledge: items.filter(i => i.type === "knowledge").map(i => i.system.rank),
+      etiquettes: Object.fromEntries(Object.keys(SINLESS.ETIQUETTES).map(k => [k, src.etiquettes?.[k]?.rank ?? 0])),
+      int: sys.attributes.int.value,
+      cha: sys.attributes.cha.value,
+      heritage: sys.heritage,
+      talent: sys.talent,
+      spent: creationSpending(items.map(i => ({
+        type: i.type, cost: i.system.cost, quantity: i.system.quantity, hireCost: i.system.hireCost, free: i.system.free
+      })), sys.lifestyle, sys.lifestyleMonths)
+    });
+    const num = n => (n === null ? "—" : n.toLocaleString(game.i18n.lang));
+    const describe = issue => {
+      const d = { ...issue.data };
+      if (d.categories) d.categories = d.categories.map(c => loc(`SINLESS.Creation.category.${c}`)).join(", ");
+      if (d.levels) d.levels = d.levels.join(", ");
+      if (issue.code === "attributeLow" || issue.code === "attributeHigh") d.key = loc(SINLESS.ATTRIBUTES[d.key]);
+      else if (issue.code === "skillHigh") d.key = d.key ? loc(skillLabel(d.key)) : loc("SINLESS.Creation.otherSkills");
+      else if (issue.code === "overBudget") d.key = loc(`SINLESS.Creation.budget.${d.key}`);
+      return fmt(`SINLESS.Creation.issue.${issue.code}`, d);
+    };
+    return {
+      priorities: PRIORITY_CATEGORIES.map(key => ({
+        key, label: `SINLESS.Creation.category.${key}`, value: sys.creation.priorities[key]
+      })),
+      priorityChoices: { "": "—", A: "A", B: "B", C: "C", D: "D", E: "E" },
+      budgets: report.budgets.map(b => ({
+        ...b, label: `SINLESS.Creation.budget.${b.key}`, spentText: num(b.spent), budgetText: num(b.budget)
+      })),
+      issues: report.issues.map(describe),
+      ok: report.ok,
+      extraAsset: sys.attributes.cha.value >= 11
+    };
+  }
+
+  static async #onRollGhost() {
+    const roll = await new Roll("2d6").evaluate();
+    await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: game.i18n.localize("SINLESS.Creation.ghostFlavor")
+    });
+    return this.actor.update({ "system.ghost": roll.total });
+  }
+
+  static async #onRollSeedMoney() {
+    const roll = await new Roll("4d6 * 100").evaluate();
+    await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: game.i18n.localize("SINLESS.Creation.seedFlavor")
+    });
+    return this.actor.update({ "system.zuzu": this.actor.system.zuzu + roll.total });
+  }
+
+  static async #onFinishCreation() {
+    const ok = await foundry.applications.api.DialogV2.confirm({
+      window: { title: "SINLESS.Creation.finish" },
+      content: `<p>${game.i18n.localize("SINLESS.Creation.finishConfirm")}</p>`
+    });
+    if (ok) return this.actor.update({ "system.creation.active": false });
   }
 
   async _preparePartContext(partId, context, options) {
