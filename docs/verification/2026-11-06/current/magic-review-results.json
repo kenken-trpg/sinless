@@ -1,0 +1,77 @@
+[
+  {
+    "name": "isolated fixtures ready",
+    "data": {
+      "userId": "jKKPvKazIQlAPVmy",
+      "caster": "ItuPSGSTVoZQuWGx",
+      "target": "87vqA7m7FbVWrsen",
+      "spirit": "BElv4gEi4bXOf6Qs",
+      "scene": "iLwHwY4tqZ668PmV",
+      "power": "Actor.ItuPSGSTVoZQuWGx.Item.0GsGtzyRChpBLI3c",
+      "world": "Item.p7ynZqBNnFc7HXIa",
+      "embedded": "Actor.ItuPSGSTVoZQuWGx.Item.PHGHpN2se7s1TW4X"
+    }
+  },
+  {
+    "name": "resource form saves classes A-E and market",
+    "data": "Item.p7ynZqBNnFc7HXIa"
+  },
+  {
+    "name": "resource form saves classes A-E and market",
+    "data": "Actor.ItuPSGSTVoZQuWGx.Item.PHGHpN2se7s1TW4X"
+  },
+  {
+    "name": "fixed NPC void resistance includes force",
+    "data": 6
+  },
+  {
+    "name": "spell dialog casts through ward and renders card"
+  },
+  {
+    "name": "player applies GM spell without message ownership",
+    "data": {
+      "owner": false,
+      "effects": [
+        {
+          "needed": 3,
+          "accumulated": 0,
+          "pool": "resolve",
+          "force": 3,
+          "caster": "MAGIC REVIEW 1793969202760 Caster"
+        }
+      ],
+      "receipts": 1
+    }
+  },
+  {
+    "name": "repeat application is ignored"
+  },
+  {
+    "name": "player accumulates resistance and removes effect",
+    "data": {
+      "accumulated": 1,
+      "left": 0
+    }
+  },
+  {
+    "name": "spirit placement applies force to token only and prevents duplicates",
+    "data": {
+      "count": 1,
+      "force": 3,
+      "sourceForce": 0,
+      "disposition": 1
+    }
+  },
+  {
+    "name": "no GM browser errors"
+  },
+  {
+    "name": "fixture cleanup",
+    "data": {
+      "actors": [],
+      "items": [],
+      "users": [],
+      "scenes": []
+    }
+  }
+]

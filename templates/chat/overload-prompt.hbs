@@ -1,9 +1,17 @@
 <div class="sinless-card sinless-overload-card">
   <header class="card-header">
-    <h3>{{localize "SINLESS.Overload.promptTitle" name=name}}</h3>
+    <h3>{{#if tests.length}}{{localize "SINLESS.Overload.promptTitle" name=name}}{{else}}{{localize "SINLESS.Sustained.promptTitle" name=name}}{{/if}}</h3>
   </header>
+  {{#if tests.length}}
   <p class="effect warn">{{localize "SINLESS.Overload.restricted"}}</p>
   {{#each tests}}
   <button type="button" data-sinless-action="overload" data-track="{{track}}"><i class="fa-solid fa-heart-pulse"></i> {{localize label}} ({{localize "SINLESS.Overload.needed" n=needed}})</button>
   {{/each}}
+  {{/if}}
+  {{#if spells.length}}
+  <p class="effect">{{localize "SINLESS.Sustained.promptHint"}}</p>
+  {{#each spells}}
+  <button type="button" data-sinless-action="resist-sustained" data-effect-uuid="{{uuid}}"><i class="fa-solid fa-hand-sparkles"></i> {{localize "SINLESS.Sustained.resistButton" spell=name n=accumulated needed=needed}}</button>
+  {{/each}}
+  {{/if}}
 </div>

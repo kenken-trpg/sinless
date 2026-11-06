@@ -90,3 +90,70 @@ export function summonResult(successes, force, spiritBag = 0) {
 export function amplificationCost(cost, isAmp) {
   return (Number(cost) || 0) * (isAmp ? 0.5 : 1);
 }
+
+/* ---------------- Ley lines, wards, continuous spells, spirits (pp.166-168, 179, 199) ---------------- */
+
+/** Where a magic user stands relative to a ley line or void line. */
+export const LEY_LINE_KINDS = Object.freeze(["none", "on", "adjacent", "void"]);
+
+/**
+ * Ley line dice for channeling, conjuring and sorcery (p.167): standing on the
+ * line gives twice its force in bonus dice, being within 2 m gives its force;
+ * a void line gives its force as penalty dice.
+ * @returns {{bonus: number, penalty: number}}
+ */
+export function leyLineDice(kind, force) {
+  const f = Math.max(0, Number(force) || 0);
+  switch (kind) {
+    case "on": return { bonus: 2 * f, penalty: 0 };
+    case "adjacent": return { bonus: f, penalty: 0 };
+    case "void": return { bonus: 0, penalty: f };
+    default: return { bonus: 0, penalty: 0 };
+  }
+}
+
+/** Targets in a void line add its force in bonus dice to resistance tests (p.167). */
+export function voidResistBonus(kind, force) {
+  return kind === "void" ? Math.max(0, Number(force) || 0) : 0;
+}
+
+/** Spells cast through a ward lose one success per point of its force (pp.168, 179). */
+export function wardedSuccesses(successes, wardForce) {
+  return Math.max(0, (Number(successes) || 0) - Math.max(0, Number(wardForce) || 0));
+}
+
+/**
+ * Shatter Ward (p.170): force + successes equal to or higher than the ward's
+ * force tears it down; otherwise the ward's force drops by one.
+ * @returns {{destroyed: boolean, ward: number}}
+ */
+export function shatterWardResult({ force = 0, successes = 0, ward = 0 } = {}) {
+  const w = Math.max(0, Number(ward) || 0);
+  if ((Number(force) || 0) + (Number(successes) || 0) >= w) return { destroyed: true, ward: 0 };
+  return { destroyed: false, ward: Math.max(0, w - 1) };
+}
+
+/** A spell lasts beyond the casting unless its duration is instantaneous (p.167). */
+export function isContinuous(duration) {
+  const d = String(duration ?? "").trim();
+  return !!d && !/instant|即時|瞬間/i.test(d);
+}
+
+/**
+ * Successes a target must accumulate to throw off a continuous spell: the
+ * caster's successes less the free resistance roll (p.167). Zero means it failed.
+ */
+export function sustainedNeeded(casterSuccesses, resisted = 0) {
+  return Math.max(0, (Number(casterSuccesses) || 0) - Math.max(0, Number(resisted) || 0));
+}
+
+/** Add one resistance roll to a continuous spell; it ends once the successes are reached. */
+export function resistSustained({ needed = 0, accumulated = 0 } = {}, successes = 0) {
+  const total = Math.max(0, accumulated) + Math.max(0, Number(successes) || 0);
+  return { accumulated: total, ended: total >= needed };
+}
+
+/** Spirits add their force in defense dice against physical attacks (p.199). */
+export function spiritDefenseBonus(force, attack) {
+  return attack === "physical" ? Math.max(0, Number(force) || 0) : 0;
+}

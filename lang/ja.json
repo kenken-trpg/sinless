@@ -438,6 +438,10 @@
           "shrinkMeters": {
             "label": "成功ごとのメートル"
           }
+        },
+        "spiritForce": {
+          "label": "精霊のフォース",
+          "hint": "召喚された精霊（p.199）：物理攻撃への防御ダイスにフォースを加える。0 なら精霊ではない。"
         }
       },
       "fixedDice": "ダイス数",
@@ -698,6 +702,14 @@
         "digitalAttack": {
           "label": "攻撃の自動処理",
           "hint": "ターゲットしたトークンに対して攻撃を処理する（pp.135-137）。"
+        },
+        "shatterWard": {
+          "label": "結界粉砕",
+          "hint": "フォース＋成功数を対象の結界と比べる（p.170）。"
+        },
+        "spiritActor": {
+          "label": "精霊のアクター",
+          "hint": "精霊が現れたときにシーンに置く NPC アクター（p.183）。"
         }
       }
     },
@@ -1565,6 +1577,60 @@
       "noPermission": "そのアクターの所有者ではありません。",
       "cohesionMax": "凝集マス数",
       "breakdown": "ダメージ {raw} − ハードニング {hardening} = {afterArmor} → ソーク後 {final}"
+    },
+    "LeyLine": {
+      "title": "レイライン",
+      "hint": "このキャラクターの位置（p.167）：レイラインの上ならフォースの 2 倍、2 m 以内ならフォースと同じ数のボーナス・ダイスを、チャネリング・召喚・ソーサリーに得る。ボイドラインではフォースがペナルティ・ダイスになり、呪文への抵抗にはボーナス・ダイスになる。",
+      "none": "なし",
+      "on": "レイラインの上",
+      "adjacent": "レイラインの近く（2 m 以内）",
+      "void": "ボイドラインの中",
+      "note": {
+        "on": "レイライン +{n}",
+        "adjacent": "レイラインの近く +{n}",
+        "void": "ボイドライン −{n}",
+        "voidResist": "ボイドライン +{n}"
+      }
+    },
+    "Ward": {
+      "cross": "越える結界（フォース）",
+      "crossHint": "術者と対象の間に結界があると、そのフォース 1 につき成功が 1 減る（pp.168, 179）。",
+      "target": "対象の結界（フォース）",
+      "targetHint": "結界粉砕：フォース＋成功数が結界のフォース以上なら結界は砕ける。そうでなければ結界のフォースが 1 下がる（p.170）。",
+      "crossedLine": "結界：成功 −{n}",
+      "destroyed": "結界（フォース {n}）は砕け散った！",
+      "weakened": "結界は持ちこたえた：フォース {from} → {to}。"
+    },
+    "Sustained": {
+      "line": "持続する呪文：対象は抵抗の成功を {n} 個（最初の無料の抵抗の分を引いた数）ためる必要がある。",
+      "applyTo": "{name} にかける",
+      "appliedTo": "{name}：処理済み。",
+      "title": "持続する呪文：{name}",
+      "apply": "呪文をかける",
+      "preview": "対象は振り払うために <strong>{n}</strong> 成功をためる必要がある。",
+      "resisted": "完全に抵抗した。呪文は効果を表さない。",
+      "resistedNote": "{name} は {spell} に完全に抵抗した。",
+      "placed": "{spell} が {name} にかかった。振り払うには {n} 成功が必要。",
+      "ended": "{name} は {spell} を振り払った。",
+      "progress": "{name} が {spell} に抵抗：{n} / {needed}。",
+      "promptTitle": "{name} の手番：持続する呪文",
+      "promptHint": "呪文の影響下で行動するか、複雑アクションで抵抗する（p.167）。",
+      "resistButton": "{spell} に抵抗（{n} / {needed}）",
+      "summary": "抵抗 {n} / {needed}",
+      "resistHint": "呪文に抵抗する（複雑アクション、p.167）"
+    },
+    "Spirit": {
+      "defenseNote": "精霊：物理攻撃にはフォースを加える（p.199）",
+      "place": "精霊をシーンに出す",
+      "placed": "精霊はシーンに現れた。",
+      "noActor": "精霊の NPC アクターが見つかりません。",
+      "cannotPlace": "トークンを置くには、シーンを表示していて、トークンを作成する権限が必要です。",
+      "tokenName": "{name}（F{force}）",
+      "placedBound": "{name} が現れた。{services} 回の奉仕で束縛されている。",
+      "placedWild": "{name} が制御されないまま現れた。行動はアゴナークが決める。",
+      "clear": "アクターとのリンクを外す",
+      "dropHint": "ここに NPC アクター（精霊のデータ）をドロップ。",
+      "npcOnly": "精霊としてリンクできるのは NPC アクターだけです。"
     }
   }
 }

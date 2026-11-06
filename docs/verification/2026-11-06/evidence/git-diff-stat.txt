@@ -1,0 +1,26 @@
+ README.ja.md                             |   4 ++
+ README.md                                |  10 +++
+ lang/en.json                             |  66 ++++++++++++++++++++
+ lang/ja.json                             |  66 ++++++++++++++++++++
+ module/apps/damage-dialog.mjs            |   2 +-
+ module/apps/digital-dialog.mjs           |   2 +-
+ module/apps/test-dialog.mjs              |   1 +
+ module/data/actor.mjs                    |  14 +++++
+ module/data/brand.mjs                    |   2 +-
+ module/data/item.mjs                     |   4 ++
+ module/dice/test-roll.mjs                |  42 +++++++++++--
+ module/documents/actor.mjs               | 101 ++++++++++++++++++++++++++-----
+ module/documents/combat.mjs              |   8 ++-
+ module/helpers/magic.mjs                 |  67 ++++++++++++++++++++
+ module/sheets/actor-sheet.mjs            |  10 +++
+ module/sheets/effects.mjs                |   4 +-
+ module/sheets/item-sheet.mjs             |  36 ++++++++++-
+ styles/sinless.css                       |   9 +++
+ templates/actor/npc-header.hbs           |   3 +
+ templates/actor/partials/effect-list.hbs |   2 +
+ templates/actor/tab-items.hbs            |   7 +++
+ templates/chat/overload-prompt.hbs       |  10 ++-
+ templates/chat/test-card.hbs             |  13 ++++
+ templates/dialog/test-dialog.hbs         |   6 ++
+ templates/item/details.hbs               |   9 +++
+ 25 files changed, 469 insertions(+), 29 deletions(-)

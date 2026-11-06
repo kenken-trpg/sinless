@@ -81,7 +81,7 @@ export async function digitalDialog(message, actor) {
 
   /** Roll the target's defense or soak and copy its successes into the field. */
   const rollInto = async (dialog, key) => {
-    const msg = await actor.rollDefense(key, { digital: true });
+    const msg = await actor.rollDefense(key, { attack: "digital" });
     if (!msg) return;
     const input = dialog.element.querySelector(`input[name="${key === "dodge" ? "defense" : key}"]`);
     if (input) input.value = messageSuccesses(msg);

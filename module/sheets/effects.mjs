@@ -28,7 +28,9 @@ function effectRow(effect, owner) {
     disabled: effect.disabled,
     suppressed: effect.isSuppressed,
     source: effect.parent === owner ? "" : effect.parent?.name ?? "",
-    changes: changes.filter(c => c.key).map(describeChange).join(" · ")
+    changes: changes.filter(c => c.key).map(describeChange).join(" · "),
+    // Continuous spell (p.167): resistance successes gathered so far.
+    sustained: effect.getFlag?.("sinless", "sustained") ?? null
   };
 }
 

@@ -84,6 +84,7 @@ export async function testDialog(defaults) {
       autoSuccesses: defaults.autoSuccesses ?? 0,
       firingMode: data.firingMode,
       force: defaults.force ? Math.clamp(n(data.force, defaults.force.value), 1, defaults.force.max) : null,
+      ward: defaults.ward ? Math.max(0, n(data.ward)) : 0,
       poolAvailable
     };
     config.plan = planTest(config);

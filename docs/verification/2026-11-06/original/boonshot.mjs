@@ -1,0 +1,10 @@
+import { joinGM } from "./lib.mjs";
+const out = process.argv[2];
+const { browser, page } = await joinGM({});
+await page.evaluate(() => document.querySelectorAll(".tour, .tour-overlay, #notifications li").forEach(e => e.remove()));
+await page.evaluate(async () => { const b = game.actors.getName("SMOKE D Ben"); await b.update({ "system.kismet.earned": 22, "system.kismet.boons": 0 }); });
+await page.evaluate(async () => { const { boonDialog } = await import("/systems/sinless/module/apps/advancement-dialog.mjs"); boonDialog(game.actors.getName("SMOKE D Ben")); });
+await page.waitForTimeout(1500);
+console.log(await page.evaluate(() => { const r = document.querySelector(".sinless-advance-dialog input[name=boon]"); const b = r.getBoundingClientRect(); const cs = getComputedStyle(r); const d = document.querySelector(".sinless-advance-dialog").getBoundingClientRect(); return JSON.stringify({ r: [b.x, b.y, b.width, b.height], display: cs.display, dialog: [d.x, d.y, d.width, d.height] }); }));
+await page.screenshot({ path: `${out}/adv-boon.png` });
+await browser.close();

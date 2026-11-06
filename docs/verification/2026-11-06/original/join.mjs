@@ -1,0 +1,10 @@
+import { chromium } from "/Users/mantanikenichi/mydevelop/voice-atlas/node_modules/playwright/index.mjs";
+const out = process.argv[2];
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1600, height: 1100 } });
+await page.goto("http://localhost:30000/join");
+await page.waitForTimeout(3000);
+console.log(page.url());
+console.log(await page.evaluate(() => [...document.querySelectorAll("select[name=userid] option")].map(o => o.value + ":" + o.textContent).join(" | ")));
+console.log(await page.evaluate(() => [...document.querySelectorAll("input, button")].map(e => `${e.tagName}:${e.name}:${e.type}:${e.textContent.trim().slice(0,20)}`).join(" | ")));
+await browser.close();

@@ -1,0 +1,28 @@
+import { chromium } from "/Users/mantanikenichi/mydevelop/voice-atlas/node_modules/playwright/index.mjs";
+const out = process.argv[2];
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+page.on("console", m => { if (["error","warning"].includes(m.type())) console.log("CONSOLE", m.type(), m.text().slice(0,300)); });
+await page.goto("http://localhost:30000/setup");
+await page.waitForTimeout(2500);
+await page.keyboard.press("Escape");
+await page.getByRole("button", { name: /Create World|ワールドの作成|ワールド作成/ }).click();
+await page.waitForTimeout(1500);
+await page.fill("input[name=title]", "Sinless Test");
+await page.fill("input[name=world-id]", "sinless-test");
+await page.evaluate(() => { const s = document.querySelector("select[name=system]"); s.value = "sinless"; s.dispatchEvent(new Event("change", {bubbles: true})); });
+await page.click("button[type=submit]");
+await page.waitForTimeout(4000);
+console.log("worlds:", await page.evaluate(() => game.worlds.map(w => w.id).join(",")));
+const res = await page.evaluate(async () => {
+  const r = await fetch("/setup", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ action: "launchWorld", world: "sinless-test" }) });
+  return r.status + " " + (await r.text()).slice(0, 300);
+});
+console.log("launch:", res);
+await page.waitForTimeout(5000);
+await page.goto("http://localhost:30000/join");
+await page.waitForTimeout(3000);
+console.log("url:", page.url());
+await page.screenshot({ path: out + "/join.png" });
+console.log(await page.evaluate(() => [...document.querySelectorAll("select option")].map(o => o.value + ":" + o.textContent).join(" | ")));
+await browser.close();

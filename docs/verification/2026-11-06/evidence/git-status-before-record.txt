@@ -1,0 +1,29 @@
+## main...origin/main
+ M README.ja.md
+ M README.md
+ M lang/en.json
+ M lang/ja.json
+ M module/apps/damage-dialog.mjs
+ M module/apps/digital-dialog.mjs
+ M module/apps/test-dialog.mjs
+ M module/data/actor.mjs
+ M module/data/brand.mjs
+ M module/data/item.mjs
+ M module/dice/test-roll.mjs
+ M module/documents/actor.mjs
+ M module/documents/combat.mjs
+ M module/helpers/magic.mjs
+ M module/sheets/actor-sheet.mjs
+ M module/sheets/effects.mjs
+ M module/sheets/item-sheet.mjs
+ M styles/sinless.css
+ M templates/actor/npc-header.hbs
+ M templates/actor/partials/effect-list.hbs
+ M templates/actor/tab-items.hbs
+ M templates/chat/overload-prompt.hbs
+ M templates/chat/test-card.hbs
+ M templates/dialog/test-dialog.hbs
+ M templates/item/details.hbs
+?? docs/
+?? module/apps/spell-effects.mjs
+?? test/magic2.test.mjs

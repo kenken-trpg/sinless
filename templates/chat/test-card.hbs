@@ -33,6 +33,17 @@
     {{#if (eq sum.outcome "success")}}<strong class="outcome success">{{localize "SINLESS.Card.success" threshold=threshold}}</strong>{{/if}}
     {{#if (eq sum.outcome "failure")}}<strong class="outcome failure">{{localize "SINLESS.Card.failure" threshold=threshold}}</strong>{{/if}}
   </div>
+  {{#if wardCrossed}}<p class="effect warn">{{localize "SINLESS.Ward.crossedLine" n=wardCrossed}}</p>{{/if}}
+  {{#if shatter}}<p class="effect{{#unless shatter.destroyed}} warn{{/unless}}">{{#if shatter.destroyed}}{{localize "SINLESS.Ward.destroyed" n=shatter.from}}{{else}}{{localize "SINLESS.Ward.weakened" from=shatter.from to=shatter.ward}}{{/if}}</p>{{/if}}
+  {{#if sustained}}
+  <div class="spell-result">
+    <p>{{localize "SINLESS.Sustained.line" n=sum.successes}}</p>
+    {{#each sustained}}
+    {{#if applied}}<p class="reroll-note">{{localize "SINLESS.Sustained.appliedTo" name=name}}</p>
+    {{else}}<button type="button" data-sinless-action="apply-sustained" data-target-uuid="{{uuid}}"><i class="fa-solid fa-wand-sparkles"></i> {{localize "SINLESS.Sustained.applyTo" name=name}}</button>{{/if}}
+    {{/each}}
+  </div>
+  {{/if}}
   {{#if extra.spell}}
   <div class="spell-result">
     <p>{{#if extra.spell.force}}{{localize "SINLESS.Magic.force"}} {{extra.spell.force}} · {{/if}}<span class="{{#if extra.spell.lethal}}lethal{{/if}}">{{localize "SINLESS.Magic.drainLine" n=extra.spell.drain}} ({{#if extra.spell.lethal}}{{localize "SINLESS.Magic.lethal"}}{{else}}{{localize "SINLESS.Condition.stun"}}{{/if}})</span></p>
@@ -43,6 +54,8 @@
   {{/if}}
   {{#if summon}}
   <p class="effect">{{localize (concat "SINLESS.Magic.summon." summon.outcome) n=summon.services needed=summon.needed}}</p>
+  {{#if summon.canPlace}}<button type="button" data-sinless-action="place-spirit"><i class="fa-solid fa-ghost"></i> {{localize "SINLESS.Spirit.place"}}</button>{{/if}}
+  {{#if extra.summon.placed}}<p class="reroll-note">{{localize "SINLESS.Spirit.placed"}}</p>{{/if}}
   {{/if}}
   {{#if vcrUsed}}<p class="reroll-note">{{localize "SINLESS.Rig.vcrUsed" n=vcrUsed}}</p>{{/if}}
   {{#if overdrive}}<p class="effect">{{localize "SINLESS.Rig.overdriveGain" n=overdrive.gain}}{{#if overdrive.inertia}} · {{localize "SINLESS.Rig.overdriveInertia"}}{{/if}}</p>{{/if}}

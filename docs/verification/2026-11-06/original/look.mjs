@@ -1,0 +1,17 @@
+import { joinGM } from "./lib.mjs";
+const out = process.argv[2];
+const { browser, page } = await joinGM({});
+page.setDefaultTimeout(8000);
+await page.evaluate(() => document.querySelectorAll(".tour, .tour-overlay, #notifications li").forEach(e => e.remove()));
+await page.evaluate(async () => { await game.actors.getName("SMOKE D Ben").update({ "system.combat.recoil": 1 }); game.actors.getName("SMOKE D Ben").sheet.render(true); });
+await page.waitForTimeout(1500);
+const box = await page.locator(".sinless.sheet .defenses").boundingBox();
+await page.screenshot({ path: `${out}/look-sheet.png`, clip: { x: box.x - 10, y: box.y - 10, width: box.width + 20, height: box.height + 20 } });
+await page.evaluate(() => { const b = game.actors.getName("SMOKE D Ben"); b.sheet.close(); b.rollWeapon(b.items.getName("Heavy Pistol")); });
+await page.waitForSelector(".sinless-test-dialog");
+await page.waitForTimeout(400);
+const fb = await page.locator(".sinless-test-dialog fieldset.combat-modifiers").boundingBox();
+await page.screenshot({ path: `${out}/look-dialog.png`, clip: { x: fb.x - 10, y: fb.y - 10, width: fb.width + 20, height: fb.height + 20 } });
+await page.click(".sinless-test-dialog button[data-action=cancel]");
+await page.evaluate(() => game.actors.getName("SMOKE D Ben").stabilize());
+await browser.close();

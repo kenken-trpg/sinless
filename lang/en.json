@@ -438,6 +438,10 @@
           "shrinkMeters": {
             "label": "Meters per success"
           }
+        },
+        "spiritForce": {
+          "label": "Spirit force",
+          "hint": "Summoned spirit (p.199): its force is added to defense dice against physical attacks. 0 = not a spirit."
         }
       },
       "fixedDice": "Dice",
@@ -698,6 +702,14 @@
         "digitalAttack": {
           "label": "Automated attack",
           "hint": "Resolves the attack against targeted tokens (pp.135-137)."
+        },
+        "shatterWard": {
+          "label": "Shatter Ward",
+          "hint": "Compares force + successes with a target ward (p.170)."
+        },
+        "spiritActor": {
+          "label": "Spirit actor",
+          "hint": "NPC actor placed on the scene when the spirit appears (p.183)."
         }
       }
     },
@@ -1565,6 +1577,60 @@
       "noPermission": "You do not own that actor.",
       "cohesionMax": "Cohesion boxes",
       "breakdown": "Damage {raw} − hardening {hardening} = {afterArmor} → after soak {final}"
+    },
+    "LeyLine": {
+      "title": "Ley line",
+      "hint": "Where this character stands (p.167): on a ley line +2× force dice, within 2 m +force dice to channeling, conjuring and sorcery; a void line gives its force as penalty dice and as bonus dice to resist spells.",
+      "none": "None",
+      "on": "On a ley line",
+      "adjacent": "Next to a ley line (2 m)",
+      "void": "In a void line",
+      "note": {
+        "on": "Ley line +{n}",
+        "adjacent": "Near a ley line +{n}",
+        "void": "Void line −{n}",
+        "voidResist": "Void line +{n}"
+      }
+    },
+    "Ward": {
+      "cross": "Ward crossed (force)",
+      "crossHint": "A ward between the caster and the target removes one success per point of force (pp.168, 179).",
+      "target": "Target ward (force)",
+      "targetHint": "Shatter Ward: force + successes at least the ward's force tears it down; otherwise the ward loses 1 force (p.170).",
+      "crossedLine": "Ward: −{n} successes",
+      "destroyed": "The ward (force {n}) is torn asunder!",
+      "weakened": "The ward holds: force {from} → {to}."
+    },
+    "Sustained": {
+      "line": "Continuous spell: targets must accumulate {n} resistance successes (less their free resistance roll).",
+      "applyTo": "Place on {name}",
+      "appliedTo": "{name}: done.",
+      "title": "Continuous spell: {name}",
+      "apply": "Place the spell",
+      "preview": "The target must accumulate <strong>{n}</strong> successes to throw it off.",
+      "resisted": "Fully resisted: the spell does not take effect.",
+      "resistedNote": "{name} resists {spell} completely.",
+      "placed": "{spell} takes hold of {name}: {n} successes needed to throw it off.",
+      "ended": "{name} throws off {spell}.",
+      "progress": "{name} resists {spell}: {n} / {needed}.",
+      "promptTitle": "{name}'s turn: continuous spells",
+      "promptHint": "Act under the spell, or spend a complex action to resist it (p.167).",
+      "resistButton": "Resist {spell} ({n} / {needed})",
+      "summary": "Resisted {n} / {needed}",
+      "resistHint": "Resist the spell (complex action, p.167)"
+    },
+    "Spirit": {
+      "defenseNote": "Spirit: force added against physical attacks (p.199)",
+      "place": "Place the spirit on the scene",
+      "placed": "The spirit is on the scene.",
+      "noActor": "The spirit's NPC actor cannot be found.",
+      "cannotPlace": "Placing tokens needs a viewed scene and permission to create tokens.",
+      "tokenName": "{name} (F{force})",
+      "placedBound": "{name} appears, bound for {services} service(s).",
+      "placedWild": "{name} appears uncontrolled: the Agonarch decides what it does.",
+      "clear": "Unlink the actor",
+      "dropHint": "Drop an NPC actor here (the spirit's stat block).",
+      "npcOnly": "Only NPC actors can be linked as spirits."
     }
   }
 }

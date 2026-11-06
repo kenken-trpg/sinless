@@ -126,6 +126,10 @@ export class PowerData extends SinlessItemBase {
       focus: int(0),
       fetish: int(0),
       spiritBag: int(0),
+      // Shatter Ward (p.170): compares force + successes with the target ward.
+      shatterWard: new BooleanField({ initial: false }),
+      // Spirits: the NPC actor placed on the scene when the spirit appears.
+      spiritActor: str(),
       zoeticCost: num(0, { step: 0.01 }),
       effect: str()
     };

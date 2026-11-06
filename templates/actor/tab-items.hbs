@@ -2,6 +2,13 @@
   {{#if (eq tab.id "gear")}}{{#if system.carryCapacity}}
   <p class="carry">{{localize "SINLESS.Carry" carried=system.carried capacity=system.carryCapacity}}{{#if system.encumbrance}} <strong class="warn">-{{system.encumbrance}}</strong>{{/if}}</p>
   {{/if}}{{/if}}
+  {{#if (or (eq tab.id "magic") (and (eq tab.id "gear") (eq actor.type "npc")))}}
+  <div class="ley-line" data-tooltip="{{localize "SINLESS.LeyLine.hint"}}">
+    <span class="label">{{localize "SINLESS.LeyLine.title"}}</span>
+    <select name="system.leyLine.kind">{{selectOptions leyLineChoices selected=system.leyLine.kind localize=true}}</select>
+    <label>{{localize "SINLESS.Magic.force"}} <input type="number" name="system.leyLine.force" value="{{system.leyLine.force}}" min="0"></label>
+  </div>
+  {{/if}}
   {{#each groups}}
   {{> "systems/sinless/templates/actor/partials/item-list.hbs" this}}
   {{/each}}

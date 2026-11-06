@@ -28,6 +28,13 @@ function etiquettesField() {
   })])));
 }
 
+const LEY_LINE_CHOICES = {
+  none: "SINLESS.LeyLine.none",
+  on: "SINLESS.LeyLine.on",
+  adjacent: "SINLESS.LeyLine.adjacent",
+  void: "SINLESS.LeyLine.void"
+};
+
 /** Shared fields and derived data for every acting entity. */
 class SinlessActorBase extends foundry.abstract.TypeDataModel {
   static LOCALIZATION_PREFIXES = ["SINLESS.Actor"];
@@ -57,6 +64,11 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
         recoil: int(0),
         recoilPrimed: new BooleanField({ initial: false }),
         recoilBonus: int(0, { min: undefined })
+      }),
+      // Ley line or void line the actor stands on (p.167): modifies magic tests.
+      leyLine: new SchemaField({
+        kind: new StringField({ required: true, initial: "none", choices: () => LEY_LINE_CHOICES }),
+        force: int(0)
       }),
       // Decking (ch.7): MCP dice spent this round and NAN influence radius in meters.
       // Shared so that NPC deckers can run decks too.
@@ -266,6 +278,8 @@ export class NpcData extends SinlessActorBase {
         required: true, nullable: true, integer: true, min: 0, initial: null
       })]))),
       agonarch: new BooleanField({ initial: true }),
+      // Spirits (p.199): force > 0 marks a summoned spirit; it adds force to defense against physical attacks.
+      spiritForce: int(0),
       // Network entities: ICE and daemons (pp.133, 205-206). Their stun track is the
       // cohesion track and takes all damage; hardening works as armor.
       network: new SchemaField({
