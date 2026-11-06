@@ -86,12 +86,21 @@
     {{formGroup fields.drain value=system.drain}}
     {{#if (eq system.category "spirit")}}
     {{formGroup fields.spiritBag value=system.spiritBag}}
+    <div class="form-group spirit-actor" data-drop="spirit">
+      <label data-tooltip="{{localize "SINLESS.Item.FIELDS.spiritActor.hint"}}">{{localize "SINLESS.Item.FIELDS.spiritActor.label"}}</label>
+      <div class="form-fields">
+        {{#if spiritActor}}<a class="content-link" data-action="openSpiritActor"><i class="fa-solid fa-ghost"></i> {{spiritActor.name}}</a>
+        <a data-action="clearSpiritActor" data-tooltip="{{localize "SINLESS.Spirit.clear"}}"><i class="fa-solid fa-xmark"></i></a>
+        {{else}}<span class="hint">{{localize "SINLESS.Spirit.dropHint"}}</span>{{/if}}
+      </div>
+    </div>
     {{else}}
     {{formGroup fields.resistPool value=system.resistPool localize=true}}
     {{formGroup fields.resistOptional value=system.resistOptional}}
     {{formGroup fields.damage value=system.damage}}
     {{formGroup fields.damageTrack value=system.damageTrack localize=true}}
     {{formGroup fields.area value=system.area}}
+    {{formGroup fields.shatterWard value=system.shatterWard}}
     {{/if}}
     {{formGroup fields.duration value=system.duration}}
     {{formGroup fields.focus value=system.focus}}

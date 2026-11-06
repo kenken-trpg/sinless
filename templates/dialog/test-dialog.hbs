@@ -16,6 +16,12 @@
     <input type="number" name="force" value="{{force.value}}" min="1" max="{{force.max}}">
   </div>
   {{/if}}
+  {{#if ward}}
+  <div class="form-group">
+    <label data-tooltip="{{#if ward.shatter}}{{localize "SINLESS.Ward.targetHint"}}{{else}}{{localize "SINLESS.Ward.crossHint"}}{{/if}}">{{#if ward.shatter}}{{localize "SINLESS.Ward.target"}}{{else}}{{localize "SINLESS.Ward.cross"}}{{/if}}</label>
+    <input type="number" name="ward" value="0" min="0">
+  </div>
+  {{/if}}
   <div class="form-group">
     <label>{{#if rankLabel}}{{rankLabel}}{{else}}{{localize "SINLESS.Test.rank"}}{{/if}}</label>
     <input type="number" name="rank" value="{{rank}}" min="0">

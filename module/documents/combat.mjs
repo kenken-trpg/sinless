@@ -54,14 +54,16 @@ export function registerCombatHooks() {
   });
 }
 
-/** Remind the owners of an actor with a full track to roll the overload test (p.97). */
+/** Remind the owners at the start of a turn: overload tests (p.97) and continuous spells to resist (p.167). */
 export async function promptOverload(actor) {
   const tests = actor.overloadTests ?? [];
+  // Continuous spells (p.167): each round the target may spend a complex action to resist.
+  const spells = (actor.sustainedSpells ?? []).map(s => ({ uuid: s.effect.uuid, name: s.effect.name, accumulated: s.accumulated, needed: s.needed }));
   const out = actor.statuses?.has("unconscious") || actor.statuses?.has(CONFIG.specialStatusEffects.DEFEATED);
-  if (!tests.length || out) return null;
+  if ((!tests.length && !spells.length) || out) return null;
   const content = await foundry.applications.handlebars.renderTemplate(
     `systems/${SYSTEM_ID}/templates/chat/overload-prompt.hbs`,
-    { name: actor.name, tests: tests.map(t => ({ ...t, label: `SINLESS.Overload.title.${t.track}` })) }
+    { name: actor.name, tests: tests.map(t => ({ ...t, label: `SINLESS.Overload.title.${t.track}` })), spells }
   );
   const owners = game.users.filter(u => actor.testUserPermission(u, "OWNER")).map(u => u.id);
   return ChatMessage.create({

@@ -93,7 +93,7 @@ export async function damageDialog(message, actor) {
   /** Roll a defense test for the defender and copy its successes into a field. */
   const rollInto = async (dialog, key) => {
     // "resist" fills the dodge field: resistance successes cancel the caster's successes.
-    const msg = key === "resist" ? await actor.rollResistance(weapon.resistPool) : await actor.rollDefense(key, { digital: false });
+    const msg = key === "resist" ? await actor.rollResistance(weapon.resistPool) : await actor.rollDefense(key, { attack: weapon.magic ? "magic" : "physical" });
     if (!msg) return;
     const input = dialog.element.querySelector(`input[name="${key === "resist" ? "dodge" : key}"]`);
     if (input) input.value = messageSuccesses(msg);

@@ -1,0 +1,30 @@
+import { joinGM } from "./lib.mjs";
+const { browser, page, logs } = await joinGM();
+const r = await page.evaluate(async () => {
+  for (const c of game.combats.contents) await c.delete();
+  for (const a of game.actors.filter(a => a.name.startsWith("SMOKE"))) await a.delete();
+  const scene = game.scenes.getName("SMOKE Scene");
+  await scene.deleteEmbeddedDocuments("Token", scene.tokens.map(t => t.id));
+  const a = await Actor.create({ name: "SMOKE Linked", type: "character", system: { attributes: { rea: { value: 9 }, int: { value: 7 }, bod: { value: 12 } }, skills: { firearms: { rank: 6 } } } });
+  const res = { actorLink: a.prototypeToken.actorLink };
+  const td = await a.getTokenDocument({ x: 100, y: 100 });
+  const [tok] = await scene.createEmbeddedDocuments("Token", [td.toObject()]);
+  const c = await Combat.create({ scene: scene.id, active: true });
+  await c.createEmbeddedDocuments("Combatant", [{ tokenId: tok.id, sceneId: scene.id, actorId: a.id }]);
+  await c.rollAll(); await c.startCombat();
+  res.inConflict = a.inConflict;
+  res.init = c.combatants.contents[0].initiative;
+  // simulate a conflict roll spending 8 finesse dice via the dialog defaults
+  const d = a._testDefaults({ label: "x", pool: "finesse", rank: 6, gear: 2 });
+  res.defaultsMode = d.mode; res.spendPool = d.spendPool;
+  await a.update({ "system.pools.finesse.spent": 8 });
+  res.finesseMid = a.system.pools.finesse.value;
+  await c.nextRound();
+  await new Promise(r => setTimeout(r, 1500));
+  res.finesseAfterRound = a.system.pools.finesse.value;
+  await c.delete();
+  return res;
+});
+console.log(JSON.stringify(r));
+console.log("LOGS\n" + logs.filter(l => !/completecompendium|eberron|dnd5e|WebGL|hardware acceleration/.test(l)).join("\n"));
+await browser.close();

@@ -103,6 +103,16 @@ this system contains no rules text.
   - Spirits are summoned with Conjuring + focus against force less the spirit bag. The card
     shows the services bound. Invoking a spirit applies drain equal to its force.
   - Amplifications cost Zoetic Potential (half for amps). Rituals can list a fixed drain.
+  - Continuous spells (p.167): the card places the spell on each target after its free
+    resistance roll. The target accumulates resistance successes (from its effects tab or the
+    turn-start prompt) until the spell is thrown off.
+  - Ley lines and void lines (p.167): each actor records where it stands; magic tests get
+    the bonus or penalty dice and void lines help resist spells.
+  - Wards (pp.168-170): the spell dialog takes the force of a ward crossed (successes lost) or,
+    for Shatter Ward, of the target ward (destroyed or weakened).
+  - Spirits as actors (pp.183, 199): link an NPC actor to a spirit power; the summoning card
+    lets the Agonarch place it next to the summoner with its force (bound: friendly,
+    uncontrolled: hostile). Spirits add their force to defense dice against physical attacks.
 - Drones and vehicles (ch.8), as their own actor type:
   - Body, weapon weight, movement, handling, hardening, armor, inertia, and the physical and
     integrity tracks. Body is also the soak dice.

@@ -17,6 +17,9 @@
       <label>{{#if isEntity}}{{localize "SINLESS.Digital.cohesionMax"}}{{else}}{{localize "SINLESS.Npc.FIELDS.conditionMax.stun.label"}}{{/if}}
         <input type="number" name="system.conditionMax.stun" value="{{system.conditionMax.stun}}" min="0">
       </label>
+      <label data-tooltip="{{localize "SINLESS.Npc.FIELDS.spiritForce.hint"}}">{{localize "SINLESS.Npc.FIELDS.spiritForce.label"}}
+        <input type="number" name="system.spiritForce" value="{{system.spiritForce}}" min="0">
+      </label>
       <label class="checkbox" data-tooltip="{{localize "SINLESS.Npc.FIELDS.agonarch.hint"}}">
         <input type="checkbox" name="system.agonarch" {{checked system.agonarch}}>
         {{localize "SINLESS.Npc.FIELDS.agonarch.label"}}

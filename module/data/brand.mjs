@@ -69,7 +69,7 @@ export class ResourceData extends foundry.abstract.TypeDataModel {
       source: str(),
       resourceType: str(),
       tags: new SetField(new StringField({ choices: () => Object.keys(RESOURCE_TAGS) })),
-      class: new StringField({ required: true, initial: "D", choices: () => Object.keys(RESOURCE_CLASSES) }),
+      class: new StringField({ required: true, initial: "D", choices: () => Object.fromEntries(Object.keys(RESOURCE_CLASSES).map(k => [k, k])) }),
       market: int(0),
       marketBonus: int(0, { min: undefined }),
       upkeep: int(0),

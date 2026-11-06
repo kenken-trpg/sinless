@@ -1,0 +1,10 @@
+import { chromium } from "/Users/mantanikenichi/mydevelop/voice-atlas/node_modules/playwright/index.mjs";
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+await page.goto("http://localhost:30000/setup");
+await page.waitForTimeout(3000);
+console.log(page.url());
+await page.screenshot({ path: process.argv[2] + "/setup.png" });
+const text = await page.evaluate(() => document.body.innerText.slice(0, 1500));
+console.log(text);
+await browser.close();

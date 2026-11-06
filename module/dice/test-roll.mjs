@@ -2,7 +2,7 @@ import { SYSTEM_ID, SINLESS } from "../config.mjs";
 import { resolveTest, rerollCount } from "../helpers/rules.mjs";
 import { splitDeckingDice, softwareAlert, nanHackResult, shrinkInfluence } from "../helpers/grid.mjs";
 import { overdriveGain, ramResult } from "../helpers/rigging.mjs";
-import { summonResult } from "../helpers/magic.mjs";
+import { summonResult, wardedSuccesses, shatterWardResult } from "../helpers/magic.mjs";
 import { permanentInjury } from "../helpers/condition.mjs";
 import { shadowAlert } from "../helpers/operation.mjs";
 import { applyChaseAction } from "../apps/chase.mjs";
@@ -110,7 +110,8 @@ function defendDialog(message, actor) {
 export function summarize(state) {
   const all = [...state.final, ...state.kismetAdded];
   const raw = all.filter(d => d >= state.target).length;
-  const successes = (state.untrained ? Math.floor(raw / 4) : raw) + (state.autoSuccesses ?? 0);
+  // A ward between the caster and the target removes successes (p.168).
+  const successes = wardedSuccesses((state.untrained ? Math.floor(raw / 4) : raw) + (state.autoSuccesses ?? 0), state.extra?.ward?.crossed ?? 0);
   let outcome = null;
   if (state.abf) outcome = "abf";
   else if (state.threshold !== null && state.threshold !== undefined) {
@@ -155,8 +156,18 @@ export async function renderCard(state) {
   }
   // Shadow test: alert raised while sneaking (p.236); an ABF counts as no success.
   if (x.shadow) context.shadowAlert = shadowAlert(state.abf ? 0 : sum.successes);
-  // Magic: spirit summoning outcome (p.183).
-  if (x.summon && !state.abf) context.summon = summonResult(sum.successes, x.summon.force, x.summon.bag);
+  // Magic: spirit summoning outcome (p.183); a linked spirit actor can be placed once.
+  if (x.summon && !state.abf) {
+    context.summon = summonResult(sum.successes, x.summon.force, x.summon.bag);
+    context.summon.canPlace = !!x.summon.spiritActor && context.summon.outcome !== "failed" && !x.summon.placed;
+  }
+  // Wards (pp.168-170): successes lost crossing one, or a Shatter Ward against one.
+  if (x.ward?.crossed) context.wardCrossed = x.ward.crossed;
+  if (x.ward?.target && !state.abf) context.shatter = { ...shatterWardResult({ force: x.ward.force, successes: sum.successes, ward: x.ward.target }), from: x.ward.target };
+  // Continuous spells (p.167): place the effect on each target once.
+  if (x.spell?.continuous && !state.abf && sum.successes > 0 && x.spell.targets?.length) {
+    context.sustained = x.spell.targets.map(t => ({ ...t, applied: (x.spell.applied ?? []).includes(t.uuid) }));
+  }
   // Rigging: overdrive movement and ramming damage to the ramming vehicle.
   if (x.overdrive && !state.abf) context.overdrive = { gain: overdriveGain(sum.successes), inertia: x.overdrive.inertia };
   if (x.ram && !state.abf) {
@@ -230,6 +241,29 @@ export function onRenderChatMessage(message, html) {
       continue;
     }
     guard(button, () => defendDialog(message, actor));
+  }
+  // Continuous spells: the target's owner (or GM) resists and takes the effect.
+  for (const button of html.querySelectorAll("[data-sinless-action='apply-sustained']")) {
+    const actor = fromUuidSync(button.dataset.targetUuid)?.actor ?? fromUuidSync(button.dataset.targetUuid);
+    if (!actor || !(game.user.isGM || actor.isOwner)) {
+      button.remove();
+      continue;
+    }
+    guard(button, async () => (await import("../apps/spell-effects.mjs")).applySustained(message, button.dataset.targetUuid));
+  }
+  for (const button of html.querySelectorAll("[data-sinless-action='resist-sustained']")) {
+    const effect = fromUuidSync(button.dataset.effectUuid);
+    const actor = effect?.parent;
+    if (!effect || !actor?.isOwner) {
+      button.remove();
+      continue;
+    }
+    guard(button, () => actor.resistSustainedSpell(effect));
+  }
+  const place = html.querySelector("[data-sinless-action='place-spirit']");
+  if (place) {
+    if (game.user.isGM) guard(place, async () => (await import("../apps/spell-effects.mjs")).placeSpirit(message));
+    else place.remove();
   }
   // RNID: the GM or the roller shrinks a targeted decker's influence once.
   for (const button of html.querySelectorAll("[data-sinless-action='apply-shrink']")) {

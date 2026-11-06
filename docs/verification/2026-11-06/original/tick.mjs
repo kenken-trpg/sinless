@@ -1,0 +1,20 @@
+import { joinGM } from "./lib.mjs";
+const { browser, page } = await joinGM({});
+const r = await page.evaluate(async () => {
+  for (const c of game.combats.contents) await c.delete();
+  const ben = game.actors.getName("SMOKE D Ben");
+  await ben.update({ "system.condition.bleedOut": 3 });
+  const t = canvas.tokens.placeables.find(t => t.name === "SMOKE D Ben");
+  const c = await Combat.create({ scene: canvas.scene.id, active: true });
+  await c.createEmbeddedDocuments("Combatant", [{ tokenId: t.id, sceneId: canvas.scene.id, actorId: t.actor.id }]);
+  const wait = () => new Promise(r => setTimeout(r, 1000));
+  const seq = [ben.system.condition.bleedOut];
+  await c.startCombat(); await wait(); seq.push(ben.system.condition.bleedOut);
+  await c.nextRound(); await wait(); seq.push(ben.system.condition.bleedOut);
+  await c.previousRound(); await wait(); seq.push(ben.system.condition.bleedOut);
+  await c.delete();
+  await ben.update({ "system.condition.bleedOut": null });
+  return seq;
+});
+console.log("bleedOut sequence (start, after start, next round, previous round):", JSON.stringify(r));
+await browser.close();

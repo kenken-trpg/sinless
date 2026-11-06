@@ -47,6 +47,7 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       resetInfluence: SinlessActorSheet.#onResetInfluence,
       setCohesion: SinlessActorSheet.#onSetCohesion,
       rollShrink: SinlessActorSheet.#onRollShrink,
+      resistSustained: SinlessActorSheet.#onResistSustained,
       ...effectActions
     }
   };
@@ -92,6 +93,9 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.effects = actorEffects(actor);
     context.effectKeys = EFFECT_KEYS;
     context.isEntity = actor.isEntity;
+    context.leyLineChoices = {
+      none: "SINLESS.LeyLine.none", on: "SINLESS.LeyLine.on", adjacent: "SINLESS.LeyLine.adjacent", void: "SINLESS.LeyLine.void"
+    };
     if (sys.grid) context.grid = this._gridContext();
     if (!sys.pools) return context;
 
@@ -183,6 +187,12 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (!deck) return;
     const n = Number(target.dataset.n);
     return deck.update({ "system.cohesion": deck.system.cohesion === n ? n - 1 : n });
+  }
+
+  /** Resist a continuous spell on this actor (p.167). */
+  static async #onResistSustained(event, target) {
+    const effect = fromUuidSync(target.closest("[data-effect-uuid]")?.dataset.effectUuid);
+    return effect ? this.actor.resistSustainedSpell(effect) : null;
   }
 
   /** RNID / enemy decker: shrink the targeted decker's influence (p.205). */

@@ -4,7 +4,7 @@ import { damageFormula, weaponArmorType, applyConditionDamage } from "../helpers
 import { currentTargetNumber, currentHeatBonus, getSetting } from "../settings.mjs";
 import { INTRUSION_PENALTY, NO_NERVE_RIG_PENALTY, influencePenalty, entityDefenseDice } from "../helpers/grid.mjs";
 import { CONTROL_PENALTY, effectiveControl, hotseatFeedback } from "../helpers/rigging.mjs";
-import { forceFormula, drainIsLethal } from "../helpers/magic.mjs";
+import { forceFormula, drainIsLethal, leyLineDice, voidResistBonus, isContinuous, resistSustained, spiritDefenseBonus } from "../helpers/magic.mjs";
 import {
   RANGED_CATEGORIES, RECOIL_CATEGORIES, firingAction, recoilAfterShot, recoilJammed, specMatches
 } from "../helpers/combat.mjs";
@@ -160,7 +160,14 @@ export class SinlessActor extends Actor {
    * Roll a pool for defense (dodge, soak, resist): no limit applies (p.29).
    * Opponents with bestiary defenses roll their listed dice instead (p.195).
    */
-  async rollDefense(key, { digital = true } = {}) {
+  /**
+   * @param {string} key
+   * @param {object} [o]
+   * @param {"physical"|"magic"|"digital"|null} [o.attack]  What is being defended against:
+   *   network entities double their dice against physical and magic attacks,
+   *   spirits add their force against physical attacks (pp.199, 205).
+   */
+  async rollDefense(key, { attack = null } = {}) {
     const def = SINLESS.DEFENSES[key];
     if (!def) return null;
     // Vehicles: a hot-seated rigger dodges with their own Finesse pool (p.144).
@@ -172,10 +179,11 @@ export class SinlessActor extends Actor {
     }
     let fixed = this.system.fixedDefense?.(key) ?? null;
     // Programs double their defense dice against physical and magical attacks (p.205).
-    if (fixed !== null && this.isEntity) fixed = entityDefenseDice(fixed, { entity: true, digital });
-    if (fixed !== null) return this._rollFixedDefense(key, fixed);
+    if (fixed !== null && this.isEntity && attack) fixed = entityDefenseDice(fixed, { entity: true, digital: attack === "digital" });
+    const spirit = spiritDefenseBonus(this.system.spiritForce, attack);
+    if (fixed !== null) return this._rollFixedDefense(key, fixed + spirit, spirit);
     const defaults = this._testDefaults({
-      label: game.i18n.localize(def.label), pool: def.pool, mode: "defense"
+      label: game.i18n.localize(def.label), pool: def.pool, mode: "defense", bonus: spirit
     });
     defaults.penalty = 0;
     defaults.spendPool = this.inConflict;
@@ -183,10 +191,11 @@ export class SinlessActor extends Actor {
   }
 
   /** Critter rules (p.195): roll the listed dice, no pool is spent. */
-  async _rollFixedDefense(key, dice) {
+  async _rollFixedDefense(key, dice, spirit = 0) {
     const label = game.i18n.localize(SINLESS.DEFENSES[key].label);
     const defaults = this._fixedDiceDefaults(label, dice);
     defaults.penalty = 0;
+    if (spirit) defaults.notes.push(game.i18n.localize("SINLESS.Spirit.defenseNote"));
     return this._runTest(defaults);
   }
 
@@ -713,9 +722,8 @@ export class SinlessActor extends Actor {
 
   async rollRitual(item) {
     const drain = forceFormula(item.system.drain, 0);
-    return this._runTest(this._testDefaults({
-      label: item.name, pool: item.system.pool, rank: item.system.rank
-    }), drain ? { spell: { drain, lethal: false, fetish: 0, label: item.name } } : {});
+    const defaults = this._testDefaults({ label: item.name, pool: item.system.pool, rank: item.system.rank, notes: [] });
+    return this._runTest(this._leyLineDefaults(defaults), drain ? { spell: { drain, lethal: false, fetish: 0, label: item.name } } : {});
   }
 
   /* ---------------- Magic (ch.9) ---------------- */
@@ -747,18 +755,30 @@ export class SinlessActor extends Actor {
       notes: [game.i18n.localize(skillLabel("sorcery")), sys.school].filter(Boolean)
     });
     defaults.force = { value: Math.max(1, sys.force), max: Math.max(1, sys.force), drain: sys.drain, zoetic: this.zoeticPotential };
+    defaults.ward = { shatter: sys.shatterWard };
+    this._leyLineDefaults(defaults);
     return this._runTest(defaults, async config => {
       const force = config.force ?? sys.force;
+      const targets = this._currentTargets();
+      const continuous = isContinuous(sys.duration) && !!sys.resistPool;
       const extra = {
         spell: {
           force,
           drain: forceFormula(sys.drain, force) ?? 0,
           lethal: drainIsLethal(force, this.zoeticPotential),
           fetish: sys.fetish,
-          label: item.name
+          label: item.name,
+          // Continuous spells (p.167): targets accumulate resistance successes to end them.
+          continuous,
+          resistPool: sys.resistPool,
+          duration: sys.duration,
+          img: item.img,
+          targets: continuous ? targets : []
         },
         effect: sys.effect
       };
+      // Wards (pp.168-170): a crossed ward removes successes; Shatter Ward targets one.
+      if (config.ward) extra.ward = sys.shatterWard ? { target: config.ward, force } : { crossed: config.ward };
       const damage = forceFormula(sys.damage, force);
       if (damage !== null) {
         Object.assign(extra, {
@@ -774,8 +794,7 @@ export class SinlessActor extends Actor {
           stun: sys.damageTrack === "stun",
           blast: false,
           resistPool: sys.resistPool,
-          targets: [...(game.user?.targets ?? [])].filter(t => t.actor && t.actor !== this)
-            .map(t => ({ uuid: t.document.uuid, name: t.name }))
+          targets
         });
       }
       return extra;
@@ -792,8 +811,9 @@ export class SinlessActor extends Actor {
       notes: [game.i18n.localize(skillLabel("conjuring"))]
     });
     defaults.force = { value: Math.max(1, sys.force), max: Math.max(1, sys.force), drain: "", zoetic: this.zoeticPotential };
+    this._leyLineDefaults(defaults);
     return this._runTest(defaults, config => ({
-      summon: { force: config.force ?? sys.force, bag: sys.spiritBag }
+      summon: { force: config.force ?? sys.force, bag: sys.spiritBag, spiritActor: sys.spiritActor, name: item.name }
     }));
   }
 
@@ -812,26 +832,82 @@ export class SinlessActor extends Actor {
   /** Channeling test to resist drain: Channeling + fetish rank from Resolve (p.167). */
   async rollChanneling(fetish = 0, label = null) {
     const { mode, rank, spec } = this._skillMode("channeling");
-    return this._runTest(this._testDefaults({
+    const defaults = this._testDefaults({
       label: label ?? game.i18n.localize("SINLESS.Magic.channeling"),
       pool: "resolve", mode, rank, gear: fetish, spec,
       notes: [game.i18n.localize(skillLabel("channeling"))]
-    }));
+    });
+    return this._runTest(this._leyLineDefaults(defaults));
+  }
+
+  /** Ley line bonus or void line penalty dice for a magic test (p.167). */
+  _leyLineDefaults(defaults) {
+    const ley = this.system.leyLine;
+    if (!ley || ley.kind === "none" || !ley.force) return defaults;
+    const { bonus, penalty } = leyLineDice(ley.kind, ley.force);
+    defaults.bonus += bonus;
+    defaults.penalty += penalty;
+    defaults.notes.push(game.i18n.format(`SINLESS.LeyLine.note.${ley.kind}`, { n: bonus || penalty }));
+    return defaults;
+  }
+
+  /**
+   * Resist a continuous spell placed on this actor (p.167): a complex action,
+   * successes accumulate until they reach the caster's successes.
+   * @param {ActiveEffect} effect
+   */
+  async resistSustainedSpell(effect) {
+    const data = effect?.getFlag(SYSTEM_ID, "sustained");
+    if (!data || effect.parent !== this || !this.isOwner || effect.disabled || effect.isSuppressed) return null;
+    const msg = await this.rollResistance(data.pool, { attack: "magic" });
+    if (!msg) return null;
+    const { summarize } = await import("../dice/test-roll.mjs");
+    const state = msg.getFlag(SYSTEM_ID, "test");
+    const r = resistSustained(data, state ? summarize(state).successes : 0);
+    const fmt = (k, d) => game.i18n.format(k, d);
+    let text;
+    if (r.ended) {
+      await effect.delete();
+      text = fmt("SINLESS.Sustained.ended", { name: this.name, spell: effect.name });
+    } else {
+      await effect.setFlag(SYSTEM_ID, "sustained", { ...data, accumulated: r.accumulated });
+      text = fmt("SINLESS.Sustained.progress", { name: this.name, spell: effect.name, n: r.accumulated, needed: data.needed });
+    }
+    return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this }), content: `<p class="sinless-note">${foundry.utils.escapeHTML(text)}</p>` });
+  }
+
+  /** Continuous spells on this actor that can still be resisted. */
+  get sustainedSpells() {
+    return this.effects.filter(e => !e.disabled && !e.isSuppressed && e.getFlag(SYSTEM_ID, "sustained")).map(e => ({ effect: e, ...e.getFlag(SYSTEM_ID, "sustained") }));
   }
 
   /**
    * Resist a spell with a pool (p.167), as many dice as wished, no limit.
    * Opponents with fixed bestiary defenses roll those instead.
    */
-  async rollResistance(pool) {
+  async rollResistance(pool, { attack = "magic" } = {}) {
     const fixedKey = { finesse: "dodge", brawn: "soak", resolve: "resist" }[pool];
-    if (fixedKey && this.system.fixedDefense?.(fixedKey) != null) return this.rollDefense(fixedKey);
+    const ley = this.system.leyLine;
+    const bonus = attack === "magic" && ley ? voidResistBonus(ley.kind, ley.force) : 0;
+    const fixed = fixedKey ? this.system.fixedDefense?.(fixedKey) : null;
+    if (fixed != null) {
+      const dice = this.isEntity ? entityDefenseDice(fixed, { entity: true, digital: attack === "digital" }) : fixed;
+      const defaults = this._fixedDiceDefaults(game.i18n.localize(SINLESS.DEFENSES[fixedKey].label), dice + bonus);
+      defaults.penalty = 0;
+      if (bonus) defaults.notes.push(game.i18n.format("SINLESS.LeyLine.note.voidResist", { n: bonus }));
+      return this._runTest(defaults);
+    }
     if (!this.system.pools?.[pool]) return null;
     const defaults = this._testDefaults({
       label: game.i18n.format("SINLESS.Magic.resist", { pool: game.i18n.localize(SINLESS.POOLS[pool]) }),
       pool, mode: "defense"
     });
     defaults.penalty = 0;
+    // Targets in a void line resist spells more easily (p.167).
+    if (bonus) {
+      defaults.bonus += bonus;
+      defaults.notes.push(game.i18n.format("SINLESS.LeyLine.note.voidResist", { n: bonus }));
+    }
     return this._runTest(defaults);
   }
 

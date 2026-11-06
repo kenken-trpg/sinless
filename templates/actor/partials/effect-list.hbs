@@ -12,8 +12,10 @@
       <a class="item-name" data-action="effectEdit">{{name}}{{#if source}} <span class="effect-source">({{source}})</span>{{/if}}</a>
       <span class="item-summary">
         {{#if suppressed}}<em>{{localize "SINLESS.Effect.suppressed"}}</em> · {{/if}}{{changes}}
+        {{#if sustained}}{{localize "SINLESS.Sustained.summary" n=sustained.accumulated needed=sustained.needed}}{{/if}}
       </span>
       <span class="item-controls">
+        {{#if sustained}}<a data-action="resistSustained" data-tooltip="{{localize "SINLESS.Sustained.resistHint"}}"><i class="fa-solid fa-hand-sparkles"></i></a>{{/if}}
         {{#if @root.editable}}
         <a data-action="effectToggle" class="{{#unless disabled}}active{{/unless}}" data-tooltip="{{localize "SINLESS.Effect.toggle"}}"><i class="fa-solid fa-power-off"></i></a>
         {{/if}}

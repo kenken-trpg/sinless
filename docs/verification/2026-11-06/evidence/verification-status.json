@@ -1,0 +1,68 @@
+{
+  "recorded_at": "2026-11-06T21:24:00+09:00",
+  "base_commit": "eb3a2a1",
+  "version": "0.12.0",
+  "checks": {
+    "unit": {
+      "passed": 124,
+      "failed": 0,
+      "skipped": 0
+    },
+    "i18n": "passed",
+    "syntax": {
+      "passed_files": 64
+    },
+    "diff_check": "passed"
+  },
+  "ui": {
+    "resource_options": "A B C D E; default D; console empty; full persistence retest incomplete",
+    "ja_sweep": {
+      "completed": false,
+      "passed": [
+        {
+          "type": "character",
+          "fields": 130
+        },
+        {
+          "type": "npc",
+          "fields": 107
+        },
+        {
+          "type": "network_entity",
+          "fields": 106
+        }
+      ]
+    },
+    "en_sweep": {
+      "completed": false,
+      "field_progress": [
+        20,
+        40,
+        60
+      ],
+      "passed_sheets": 0
+    },
+    "shoot": {
+      "completed": false,
+      "first_shot_recorded": true,
+      "failure": "dualWield checkbox operation timeout 8000ms"
+    },
+    "player": {
+      "completed": false,
+      "failure": "game.ready timeout 90000ms",
+      "passed_checks": 0
+    },
+    "combat": {
+      "executed": false
+    },
+    "regression_batch": {
+      "executed": false
+    }
+  },
+  "cleanup": {
+    "sweep": "not verified; interrupted finally may not complete",
+    "player": "finally reached JSON output; final live inventory not rechecked"
+  },
+  "source_changes_by_codex": "none; resource choice fix appeared from another writer while inspecting",
+  "commit_created": false
+}

@@ -1,0 +1,963 @@
+diff --git a/README.ja.md b/README.ja.md
+index 0f9193b..ef064a2 100644
+--- a/README.ja.md
++++ b/README.ja.md
+@@ -86,6 +86,10 @@ TRPG **Sinless** を Foundry Virtual Tabletop で遊ぶための、非公式の
+   - 術者はカードからドレインに抵抗する：「チャネリング＋フェティッシュ」で振り、朦朧ならさらにソークできる。朦朧は最低 1 マス埋まる。
+   - 精霊は「召喚術＋フォーカス」で召喚し、精霊のフォース（精霊バッグで減らせる）と比べる。カードに束縛した奉仕の回数を表示する。呼び出しはフォースと同じ値のドレイン。
+   - 増幅はゾエティック・ポテンシャルを消費する（アンプは半分）。儀式には固定のドレインを設定できる。
++  - 持続する呪文（p.167）：カードから各標的に呪文をかける。標的は最初に無料で抵抗し、その後は効果タブか手番開始時の通知から抵抗の成功をためて、必要数に達すると振り払う。
++  - レイラインとボイドライン（p.167）：アクターごとに位置を記録し、魔法の判定にボーナス／ペナルティ・ダイスを付ける。ボイドラインでは呪文への抵抗が有利になる。
++  - 結界（pp.168–170）：呪文のダイアログで、越える結界のフォース（成功が減る）か、結界粉砕なら対象の結界のフォース（砕けるか弱まる）を入れる。
++  - 精霊のアクター（pp.183, 199）：精霊の能力に NPC アクターをリンクすると、召喚のカードからアゴナークが召喚者の隣にフォース付きで置ける（束縛なら友好、制御できなければ敵対）。精霊は物理攻撃への防御ダイスにフォースを加える。
+ - ドローンと乗り物（第 8 章）。独立したアクター種別として扱う：
+   - ボディ、武装重量、移動、ハンドリング、ハードニング、アーマー、慣性、肉体と車体整合性のトラック。ボディはソークのダイス数でもある。
+   - キャラクターをシートにドロップするとリガーになる。リガーが機動・オーバードライブ・体当たり・搭載武器の判定を、運転／操縦または砲術で振る。上限にはハンドリングまたは精度を足す。
+diff --git a/README.md b/README.md
+index 6277321..bf4e548 100644
+--- a/README.md
++++ b/README.md
+@@ -103,6 +103,16 @@ this system contains no rules text.
+   - Spirits are summoned with Conjuring + focus against force less the spirit bag. The card
+     shows the services bound. Invoking a spirit applies drain equal to its force.
+   - Amplifications cost Zoetic Potential (half for amps). Rituals can list a fixed drain.
++  - Continuous spells (p.167): the card places the spell on each target after its free
++    resistance roll. The target accumulates resistance successes (from its effects tab or the
++    turn-start prompt) until the spell is thrown off.
++  - Ley lines and void lines (p.167): each actor records where it stands; magic tests get
++    the bonus or penalty dice and void lines help resist spells.
++  - Wards (pp.168-170): the spell dialog takes the force of a ward crossed (successes lost) or,
++    for Shatter Ward, of the target ward (destroyed or weakened).
++  - Spirits as actors (pp.183, 199): link an NPC actor to a spirit power; the summoning card
++    lets the Agonarch place it next to the summoner with its force (bound: friendly,
++    uncontrolled: hostile). Spirits add their force to defense dice against physical attacks.
+ - Drones and vehicles (ch.8), as their own actor type:
+   - Body, weapon weight, movement, handling, hardening, armor, inertia, and the physical and
+     integrity tracks. Body is also the soak dice.
+diff --git a/lang/en.json b/lang/en.json
+index 02ee73b..3d42eb1 100644
+--- a/lang/en.json
++++ b/lang/en.json
+@@ -438,6 +438,10 @@
+           "shrinkMeters": {
+             "label": "Meters per success"
+           }
++        },
++        "spiritForce": {
++          "label": "Spirit force",
++          "hint": "Summoned spirit (p.199): its force is added to defense dice against physical attacks. 0 = not a spirit."
+         }
+       },
+       "fixedDice": "Dice",
+@@ -698,6 +702,14 @@
+         "digitalAttack": {
+           "label": "Automated attack",
+           "hint": "Resolves the attack against targeted tokens (pp.135-137)."
++        },
++        "shatterWard": {
++          "label": "Shatter Ward",
++          "hint": "Compares force + successes with a target ward (p.170)."
++        },
++        "spiritActor": {
++          "label": "Spirit actor",
++          "hint": "NPC actor placed on the scene when the spirit appears (p.183)."
+         }
+       }
+     },
+@@ -1565,6 +1577,60 @@
+       "noPermission": "You do not own that actor.",
+       "cohesionMax": "Cohesion boxes",
+       "breakdown": "Damage {raw} − hardening {hardening} = {afterArmor} → after soak {final}"
++    },
++    "LeyLine": {
++      "title": "Ley line",
++      "hint": "Where this character stands (p.167): on a ley line +2× force dice, within 2 m +force dice to channeling, conjuring and sorcery; a void line gives its force as penalty dice and as bonus dice to resist spells.",
++      "none": "None",
++      "on": "On a ley line",
++      "adjacent": "Next to a ley line (2 m)",
++      "void": "In a void line",
++      "note": {
++        "on": "Ley line +{n}",
++        "adjacent": "Near a ley line +{n}",
++        "void": "Void line −{n}",
++        "voidResist": "Void line +{n}"
++      }
++    },
++    "Ward": {
++      "cross": "Ward crossed (force)",
++      "crossHint": "A ward between the caster and the target removes one success per point of force (pp.168, 179).",
++      "target": "Target ward (force)",
++      "targetHint": "Shatter Ward: force + successes at least the ward's force tears it down; otherwise the ward loses 1 force (p.170).",
++      "crossedLine": "Ward: −{n} successes",
++      "destroyed": "The ward (force {n}) is torn asunder!",
++      "weakened": "The ward holds: force {from} → {to}."
++    },
++    "Sustained": {
++      "line": "Continuous spell: targets must accumulate {n} resistance successes (less their free resistance roll).",
++      "applyTo": "Place on {name}",
++      "appliedTo": "{name}: done.",
++      "title": "Continuous spell: {name}",
++      "apply": "Place the spell",
++      "preview": "The target must accumulate <strong>{n}</strong> successes to throw it off.",
++      "resisted": "Fully resisted: the spell does not take effect.",
++      "resistedNote": "{name} resists {spell} completely.",
++      "placed": "{spell} takes hold of {name}: {n} successes needed to throw it off.",
++      "ended": "{name} throws off {spell}.",
++      "progress": "{name} resists {spell}: {n} / {needed}.",
++      "promptTitle": "{name}'s turn: continuous spells",
++      "promptHint": "Act under the spell, or spend a complex action to resist it (p.167).",
++      "resistButton": "Resist {spell} ({n} / {needed})",
++      "summary": "Resisted {n} / {needed}",
++      "resistHint": "Resist the spell (complex action, p.167)"
++    },
++    "Spirit": {
++      "defenseNote": "Spirit: force added against physical attacks (p.199)",
++      "place": "Place the spirit on the scene",
++      "placed": "The spirit is on the scene.",
++      "noActor": "The spirit's NPC actor cannot be found.",
++      "cannotPlace": "Placing tokens needs a viewed scene and permission to create tokens.",
++      "tokenName": "{name} (F{force})",
++      "placedBound": "{name} appears, bound for {services} service(s).",
++      "placedWild": "{name} appears uncontrolled: the Agonarch decides what it does.",
++      "clear": "Unlink the actor",
++      "dropHint": "Drop an NPC actor here (the spirit's stat block).",
++      "npcOnly": "Only NPC actors can be linked as spirits."
+     }
+   }
+ }
+diff --git a/lang/ja.json b/lang/ja.json
+index c467874..b759093 100644
+--- a/lang/ja.json
++++ b/lang/ja.json
+@@ -438,6 +438,10 @@
+           "shrinkMeters": {
+             "label": "成功ごとのメートル"
+           }
++        },
++        "spiritForce": {
++          "label": "精霊のフォース",
++          "hint": "召喚された精霊（p.199）：物理攻撃への防御ダイスにフォースを加える。0 なら精霊ではない。"
+         }
+       },
+       "fixedDice": "ダイス数",
+@@ -698,6 +702,14 @@
+         "digitalAttack": {
+           "label": "攻撃の自動処理",
+           "hint": "ターゲットしたトークンに対して攻撃を処理する（pp.135-137）。"
++        },
++        "shatterWard": {
++          "label": "結界粉砕",
++          "hint": "フォース＋成功数を対象の結界と比べる（p.170）。"
++        },
++        "spiritActor": {
++          "label": "精霊のアクター",
++          "hint": "精霊が現れたときにシーンに置く NPC アクター（p.183）。"
+         }
+       }
+     },
+@@ -1565,6 +1577,60 @@
+       "noPermission": "そのアクターの所有者ではありません。",
+       "cohesionMax": "凝集マス数",
+       "breakdown": "ダメージ {raw} − ハードニング {hardening} = {afterArmor} → ソーク後 {final}"
++    },
++    "LeyLine": {
++      "title": "レイライン",
++      "hint": "このキャラクターの位置（p.167）：レイラインの上ならフォースの 2 倍、2 m 以内ならフォースと同じ数のボーナス・ダイスを、チャネリング・召喚・ソーサリーに得る。ボイドラインではフォースがペナルティ・ダイスになり、呪文への抵抗にはボーナス・ダイスになる。",
++      "none": "なし",
++      "on": "レイラインの上",
++      "adjacent": "レイラインの近く（2 m 以内）",
++      "void": "ボイドラインの中",
++      "note": {
++        "on": "レイライン +{n}",
++        "adjacent": "レイラインの近く +{n}",
++        "void": "ボイドライン −{n}",
++        "voidResist": "ボイドライン +{n}"
++      }
++    },
++    "Ward": {
++      "cross": "越える結界（フォース）",
++      "crossHint": "術者と対象の間に結界があると、そのフォース 1 につき成功が 1 減る（pp.168, 179）。",
++      "target": "対象の結界（フォース）",
++      "targetHint": "結界粉砕：フォース＋成功数が結界のフォース以上なら結界は砕ける。そうでなければ結界のフォースが 1 下がる（p.170）。",
++      "crossedLine": "結界：成功 −{n}",
++      "destroyed": "結界（フォース {n}）は砕け散った！",
++      "weakened": "結界は持ちこたえた：フォース {from} → {to}。"
++    },
++    "Sustained": {
++      "line": "持続する呪文：対象は抵抗の成功を {n} 個（最初の無料の抵抗の分を引いた数）ためる必要がある。",
++      "applyTo": "{name} にかける",
++      "appliedTo": "{name}：処理済み。",
++      "title": "持続する呪文：{name}",
++      "apply": "呪文をかける",
++      "preview": "対象は振り払うために <strong>{n}</strong> 成功をためる必要がある。",
++      "resisted": "完全に抵抗した。呪文は効果を表さない。",
++      "resistedNote": "{name} は {spell} に完全に抵抗した。",
++      "placed": "{spell} が {name} にかかった。振り払うには {n} 成功が必要。",
++      "ended": "{name} は {spell} を振り払った。",
++      "progress": "{name} が {spell} に抵抗：{n} / {needed}。",
++      "promptTitle": "{name} の手番：持続する呪文",
++      "promptHint": "呪文の影響下で行動するか、複雑アクションで抵抗する（p.167）。",
++      "resistButton": "{spell} に抵抗（{n} / {needed}）",
++      "summary": "抵抗 {n} / {needed}",
++      "resistHint": "呪文に抵抗する（複雑アクション、p.167）"
++    },
++    "Spirit": {
++      "defenseNote": "精霊：物理攻撃にはフォースを加える（p.199）",
++      "place": "精霊をシーンに出す",
++      "placed": "精霊はシーンに現れた。",
++      "noActor": "精霊の NPC アクターが見つかりません。",
++      "cannotPlace": "トークンを置くには、シーンを表示していて、トークンを作成する権限が必要です。",
++      "tokenName": "{name}（F{force}）",
++      "placedBound": "{name} が現れた。{services} 回の奉仕で束縛されている。",
++      "placedWild": "{name} が制御されないまま現れた。行動はアゴナークが決める。",
++      "clear": "アクターとのリンクを外す",
++      "dropHint": "ここに NPC アクター（精霊のデータ）をドロップ。",
++      "npcOnly": "精霊としてリンクできるのは NPC アクターだけです。"
+     }
+   }
+ }
+diff --git a/module/apps/damage-dialog.mjs b/module/apps/damage-dialog.mjs
+index 33c9657..1ca2e9d 100644
+--- a/module/apps/damage-dialog.mjs
++++ b/module/apps/damage-dialog.mjs
+@@ -93,7 +93,7 @@ export async function damageDialog(message, actor) {
+   /** Roll a defense test for the defender and copy its successes into a field. */
+   const rollInto = async (dialog, key) => {
+     // "resist" fills the dodge field: resistance successes cancel the caster's successes.
+-    const msg = key === "resist" ? await actor.rollResistance(weapon.resistPool) : await actor.rollDefense(key, { digital: false });
++    const msg = key === "resist" ? await actor.rollResistance(weapon.resistPool) : await actor.rollDefense(key, { attack: weapon.magic ? "magic" : "physical" });
+     if (!msg) return;
+     const input = dialog.element.querySelector(`input[name="${key === "resist" ? "dodge" : key}"]`);
+     if (input) input.value = messageSuccesses(msg);
+diff --git a/module/apps/digital-dialog.mjs b/module/apps/digital-dialog.mjs
+index 321e26a..a5f13fa 100644
+--- a/module/apps/digital-dialog.mjs
++++ b/module/apps/digital-dialog.mjs
+@@ -81,7 +81,7 @@ export async function digitalDialog(message, actor) {
+ 
+   /** Roll the target's defense or soak and copy its successes into the field. */
+   const rollInto = async (dialog, key) => {
+-    const msg = await actor.rollDefense(key, { digital: true });
++    const msg = await actor.rollDefense(key, { attack: "digital" });
+     if (!msg) return;
+     const input = dialog.element.querySelector(`input[name="${key === "dodge" ? "defense" : key}"]`);
+     if (input) input.value = messageSuccesses(msg);
+diff --git a/module/apps/test-dialog.mjs b/module/apps/test-dialog.mjs
+index 97f5461..fd17f38 100644
+--- a/module/apps/test-dialog.mjs
++++ b/module/apps/test-dialog.mjs
+@@ -84,6 +84,7 @@ export async function testDialog(defaults) {
+       autoSuccesses: defaults.autoSuccesses ?? 0,
+       firingMode: data.firingMode,
+       force: defaults.force ? Math.clamp(n(data.force, defaults.force.value), 1, defaults.force.max) : null,
++      ward: defaults.ward ? Math.max(0, n(data.ward)) : 0,
+       poolAvailable
+     };
+     config.plan = planTest(config);
+diff --git a/module/data/actor.mjs b/module/data/actor.mjs
+index 5b57bad..29d936d 100644
+--- a/module/data/actor.mjs
++++ b/module/data/actor.mjs
+@@ -28,6 +28,13 @@ function etiquettesField() {
+   })])));
+ }
+ 
++const LEY_LINE_CHOICES = {
++  none: "SINLESS.LeyLine.none",
++  on: "SINLESS.LeyLine.on",
++  adjacent: "SINLESS.LeyLine.adjacent",
++  void: "SINLESS.LeyLine.void"
++};
++
+ /** Shared fields and derived data for every acting entity. */
+ class SinlessActorBase extends foundry.abstract.TypeDataModel {
+   static LOCALIZATION_PREFIXES = ["SINLESS.Actor"];
+@@ -58,6 +65,11 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
+         recoilPrimed: new BooleanField({ initial: false }),
+         recoilBonus: int(0, { min: undefined })
+       }),
++      // Ley line or void line the actor stands on (p.167): modifies magic tests.
++      leyLine: new SchemaField({
++        kind: new StringField({ required: true, initial: "none", choices: () => LEY_LINE_CHOICES }),
++        force: int(0)
++      }),
+       // Decking (ch.7): MCP dice spent this round and NAN influence radius in meters.
+       // Shared so that NPC deckers can run decks too.
+       grid: new SchemaField({
+@@ -266,6 +278,8 @@ export class NpcData extends SinlessActorBase {
+         required: true, nullable: true, integer: true, min: 0, initial: null
+       })]))),
+       agonarch: new BooleanField({ initial: true }),
++      // Spirits (p.199): force > 0 marks a summoned spirit; it adds force to defense against physical attacks.
++      spiritForce: int(0),
+       // Network entities: ICE and daemons (pp.133, 205-206). Their stun track is the
+       // cohesion track and takes all damage; hardening works as armor.
+       network: new SchemaField({
+diff --git a/module/data/brand.mjs b/module/data/brand.mjs
+index cd11a1c..9ba6bc7 100644
+--- a/module/data/brand.mjs
++++ b/module/data/brand.mjs
+@@ -69,7 +69,7 @@ export class ResourceData extends foundry.abstract.TypeDataModel {
+       source: str(),
+       resourceType: str(),
+       tags: new SetField(new StringField({ choices: () => Object.keys(RESOURCE_TAGS) })),
+-      class: new StringField({ required: true, initial: "D", choices: () => Object.keys(RESOURCE_CLASSES) }),
++      class: new StringField({ required: true, initial: "D", choices: () => Object.fromEntries(Object.keys(RESOURCE_CLASSES).map(k => [k, k])) }),
+       market: int(0),
+       marketBonus: int(0, { min: undefined }),
+       upkeep: int(0),
+diff --git a/module/data/item.mjs b/module/data/item.mjs
+index ee9ccb9..31bf269 100644
+--- a/module/data/item.mjs
++++ b/module/data/item.mjs
+@@ -126,6 +126,10 @@ export class PowerData extends SinlessItemBase {
+       focus: int(0),
+       fetish: int(0),
+       spiritBag: int(0),
++      // Shatter Ward (p.170): compares force + successes with the target ward.
++      shatterWard: new BooleanField({ initial: false }),
++      // Spirits: the NPC actor placed on the scene when the spirit appears.
++      spiritActor: str(),
+       zoeticCost: num(0, { step: 0.01 }),
+       effect: str()
+     };
+diff --git a/module/dice/test-roll.mjs b/module/dice/test-roll.mjs
+index 1668baa..426ecfe 100644
+--- a/module/dice/test-roll.mjs
++++ b/module/dice/test-roll.mjs
+@@ -2,7 +2,7 @@ import { SYSTEM_ID, SINLESS } from "../config.mjs";
+ import { resolveTest, rerollCount } from "../helpers/rules.mjs";
+ import { splitDeckingDice, softwareAlert, nanHackResult, shrinkInfluence } from "../helpers/grid.mjs";
+ import { overdriveGain, ramResult } from "../helpers/rigging.mjs";
+-import { summonResult } from "../helpers/magic.mjs";
++import { summonResult, wardedSuccesses, shatterWardResult } from "../helpers/magic.mjs";
+ import { permanentInjury } from "../helpers/condition.mjs";
+ import { shadowAlert } from "../helpers/operation.mjs";
+ import { applyChaseAction } from "../apps/chase.mjs";
+@@ -110,7 +110,8 @@ function defendDialog(message, actor) {
+ export function summarize(state) {
+   const all = [...state.final, ...state.kismetAdded];
+   const raw = all.filter(d => d >= state.target).length;
+-  const successes = (state.untrained ? Math.floor(raw / 4) : raw) + (state.autoSuccesses ?? 0);
++  // A ward between the caster and the target removes successes (p.168).
++  const successes = wardedSuccesses((state.untrained ? Math.floor(raw / 4) : raw) + (state.autoSuccesses ?? 0), state.extra?.ward?.crossed ?? 0);
+   let outcome = null;
+   if (state.abf) outcome = "abf";
+   else if (state.threshold !== null && state.threshold !== undefined) {
+@@ -155,8 +156,18 @@ export async function renderCard(state) {
+   }
+   // Shadow test: alert raised while sneaking (p.236); an ABF counts as no success.
+   if (x.shadow) context.shadowAlert = shadowAlert(state.abf ? 0 : sum.successes);
+-  // Magic: spirit summoning outcome (p.183).
+-  if (x.summon && !state.abf) context.summon = summonResult(sum.successes, x.summon.force, x.summon.bag);
++  // Magic: spirit summoning outcome (p.183); a linked spirit actor can be placed once.
++  if (x.summon && !state.abf) {
++    context.summon = summonResult(sum.successes, x.summon.force, x.summon.bag);
++    context.summon.canPlace = !!x.summon.spiritActor && context.summon.outcome !== "failed" && !x.summon.placed;
++  }
++  // Wards (pp.168-170): successes lost crossing one, or a Shatter Ward against one.
++  if (x.ward?.crossed) context.wardCrossed = x.ward.crossed;
++  if (x.ward?.target && !state.abf) context.shatter = { ...shatterWardResult({ force: x.ward.force, successes: sum.successes, ward: x.ward.target }), from: x.ward.target };
++  // Continuous spells (p.167): place the effect on each target once.
++  if (x.spell?.continuous && !state.abf && sum.successes > 0 && x.spell.targets?.length) {
++    context.sustained = x.spell.targets.map(t => ({ ...t, applied: (x.spell.applied ?? []).includes(t.uuid) }));
++  }
+   // Rigging: overdrive movement and ramming damage to the ramming vehicle.
+   if (x.overdrive && !state.abf) context.overdrive = { gain: overdriveGain(sum.successes), inertia: x.overdrive.inertia };
+   if (x.ram && !state.abf) {
+@@ -231,6 +242,29 @@ export function onRenderChatMessage(message, html) {
+     }
+     guard(button, () => defendDialog(message, actor));
+   }
++  // Continuous spells: the target's owner (or GM) resists and takes the effect.
++  for (const button of html.querySelectorAll("[data-sinless-action='apply-sustained']")) {
++    const actor = fromUuidSync(button.dataset.targetUuid)?.actor ?? fromUuidSync(button.dataset.targetUuid);
++    if (!actor || !(game.user.isGM || actor.isOwner)) {
++      button.remove();
++      continue;
++    }
++    guard(button, async () => (await import("../apps/spell-effects.mjs")).applySustained(message, button.dataset.targetUuid));
++  }
++  for (const button of html.querySelectorAll("[data-sinless-action='resist-sustained']")) {
++    const effect = fromUuidSync(button.dataset.effectUuid);
++    const actor = effect?.parent;
++    if (!effect || !actor?.isOwner) {
++      button.remove();
++      continue;
++    }
++    guard(button, () => actor.resistSustainedSpell(effect));
++  }
++  const place = html.querySelector("[data-sinless-action='place-spirit']");
++  if (place) {
++    if (game.user.isGM) guard(place, async () => (await import("../apps/spell-effects.mjs")).placeSpirit(message));
++    else place.remove();
++  }
+   // RNID: the GM or the roller shrinks a targeted decker's influence once.
+   for (const button of html.querySelectorAll("[data-sinless-action='apply-shrink']")) {
+     if (!(game.user.isGM || message.isOwner)) {
+diff --git a/module/documents/actor.mjs b/module/documents/actor.mjs
+index 543149c..3f9ecdb 100644
+--- a/module/documents/actor.mjs
++++ b/module/documents/actor.mjs
+@@ -4,7 +4,7 @@ import { damageFormula, weaponArmorType, applyConditionDamage } from "../helpers
+ import { currentTargetNumber, currentHeatBonus, getSetting } from "../settings.mjs";
+ import { INTRUSION_PENALTY, NO_NERVE_RIG_PENALTY, influencePenalty, entityDefenseDice } from "../helpers/grid.mjs";
+ import { CONTROL_PENALTY, effectiveControl, hotseatFeedback } from "../helpers/rigging.mjs";
+-import { forceFormula, drainIsLethal } from "../helpers/magic.mjs";
++import { forceFormula, drainIsLethal, leyLineDice, voidResistBonus, isContinuous, resistSustained, spiritDefenseBonus } from "../helpers/magic.mjs";
+ import {
+   RANGED_CATEGORIES, RECOIL_CATEGORIES, firingAction, recoilAfterShot, recoilJammed, specMatches
+ } from "../helpers/combat.mjs";
+@@ -160,7 +160,14 @@ export class SinlessActor extends Actor {
+    * Roll a pool for defense (dodge, soak, resist): no limit applies (p.29).
+    * Opponents with bestiary defenses roll their listed dice instead (p.195).
+    */
+-  async rollDefense(key, { digital = true } = {}) {
++  /**
++   * @param {string} key
++   * @param {object} [o]
++   * @param {"physical"|"magic"|"digital"|null} [o.attack]  What is being defended against:
++   *   network entities double their dice against physical and magic attacks,
++   *   spirits add their force against physical attacks (pp.199, 205).
++   */
++  async rollDefense(key, { attack = null } = {}) {
+     const def = SINLESS.DEFENSES[key];
+     if (!def) return null;
+     // Vehicles: a hot-seated rigger dodges with their own Finesse pool (p.144).
+@@ -172,10 +179,11 @@ export class SinlessActor extends Actor {
+     }
+     let fixed = this.system.fixedDefense?.(key) ?? null;
+     // Programs double their defense dice against physical and magical attacks (p.205).
+-    if (fixed !== null && this.isEntity) fixed = entityDefenseDice(fixed, { entity: true, digital });
+-    if (fixed !== null) return this._rollFixedDefense(key, fixed);
++    if (fixed !== null && this.isEntity && attack) fixed = entityDefenseDice(fixed, { entity: true, digital: attack === "digital" });
++    const spirit = spiritDefenseBonus(this.system.spiritForce, attack);
++    if (fixed !== null) return this._rollFixedDefense(key, fixed + spirit);
+     const defaults = this._testDefaults({
+-      label: game.i18n.localize(def.label), pool: def.pool, mode: "defense"
++      label: game.i18n.localize(def.label), pool: def.pool, mode: "defense", bonus: spirit
+     });
+     defaults.penalty = 0;
+     defaults.spendPool = this.inConflict;
+@@ -187,6 +195,7 @@ export class SinlessActor extends Actor {
+     const label = game.i18n.localize(SINLESS.DEFENSES[key].label);
+     const defaults = this._fixedDiceDefaults(label, dice);
+     defaults.penalty = 0;
++    if (this.system.spiritForce) defaults.notes.push(game.i18n.localize("SINLESS.Spirit.defenseNote"));
+     return this._runTest(defaults);
+   }
+ 
+@@ -713,9 +722,8 @@ export class SinlessActor extends Actor {
+ 
+   async rollRitual(item) {
+     const drain = forceFormula(item.system.drain, 0);
+-    return this._runTest(this._testDefaults({
+-      label: item.name, pool: item.system.pool, rank: item.system.rank
+-    }), drain ? { spell: { drain, lethal: false, fetish: 0, label: item.name } } : {});
++    const defaults = this._testDefaults({ label: item.name, pool: item.system.pool, rank: item.system.rank, notes: [] });
++    return this._runTest(this._leyLineDefaults(defaults), drain ? { spell: { drain, lethal: false, fetish: 0, label: item.name } } : {});
+   }
+ 
+   /* ---------------- Magic (ch.9) ---------------- */
+@@ -747,18 +755,30 @@ export class SinlessActor extends Actor {
+       notes: [game.i18n.localize(skillLabel("sorcery")), sys.school].filter(Boolean)
+     });
+     defaults.force = { value: Math.max(1, sys.force), max: Math.max(1, sys.force), drain: sys.drain, zoetic: this.zoeticPotential };
++    defaults.ward = { shatter: sys.shatterWard };
++    this._leyLineDefaults(defaults);
+     return this._runTest(defaults, async config => {
+       const force = config.force ?? sys.force;
++      const targets = this._currentTargets();
++      const continuous = isContinuous(sys.duration) && !!sys.resistPool;
+       const extra = {
+         spell: {
+           force,
+           drain: forceFormula(sys.drain, force) ?? 0,
+           lethal: drainIsLethal(force, this.zoeticPotential),
+           fetish: sys.fetish,
+-          label: item.name
++          label: item.name,
++          // Continuous spells (p.167): targets accumulate resistance successes to end them.
++          continuous,
++          resistPool: sys.resistPool,
++          duration: sys.duration,
++          img: item.img,
++          targets: continuous ? targets : []
+         },
+         effect: sys.effect
+       };
++      // Wards (pp.168-170): a crossed ward removes successes; Shatter Ward targets one.
++      if (config.ward) extra.ward = sys.shatterWard ? { target: config.ward, force } : { crossed: config.ward };
+       const damage = forceFormula(sys.damage, force);
+       if (damage !== null) {
+         Object.assign(extra, {
+@@ -774,8 +794,7 @@ export class SinlessActor extends Actor {
+           stun: sys.damageTrack === "stun",
+           blast: false,
+           resistPool: sys.resistPool,
+-          targets: [...(game.user?.targets ?? [])].filter(t => t.actor && t.actor !== this)
+-            .map(t => ({ uuid: t.document.uuid, name: t.name }))
++          targets
+         });
+       }
+       return extra;
+@@ -792,8 +811,9 @@ export class SinlessActor extends Actor {
+       notes: [game.i18n.localize(skillLabel("conjuring"))]
+     });
+     defaults.force = { value: Math.max(1, sys.force), max: Math.max(1, sys.force), drain: "", zoetic: this.zoeticPotential };
++    this._leyLineDefaults(defaults);
+     return this._runTest(defaults, config => ({
+-      summon: { force: config.force ?? sys.force, bag: sys.spiritBag }
++      summon: { force: config.force ?? sys.force, bag: sys.spiritBag, spiritActor: sys.spiritActor, name: item.name }
+     }));
+   }
+ 
+@@ -812,26 +832,75 @@ export class SinlessActor extends Actor {
+   /** Channeling test to resist drain: Channeling + fetish rank from Resolve (p.167). */
+   async rollChanneling(fetish = 0, label = null) {
+     const { mode, rank, spec } = this._skillMode("channeling");
+-    return this._runTest(this._testDefaults({
++    const defaults = this._testDefaults({
+       label: label ?? game.i18n.localize("SINLESS.Magic.channeling"),
+       pool: "resolve", mode, rank, gear: fetish, spec,
+       notes: [game.i18n.localize(skillLabel("channeling"))]
+-    }));
++    });
++    return this._runTest(this._leyLineDefaults(defaults));
++  }
++
++  /** Ley line bonus or void line penalty dice for a magic test (p.167). */
++  _leyLineDefaults(defaults) {
++    const ley = this.system.leyLine;
++    if (!ley || ley.kind === "none" || !ley.force) return defaults;
++    const { bonus, penalty } = leyLineDice(ley.kind, ley.force);
++    defaults.bonus += bonus;
++    defaults.penalty += penalty;
++    defaults.notes.push(game.i18n.format(`SINLESS.LeyLine.note.${ley.kind}`, { n: bonus || penalty }));
++    return defaults;
++  }
++
++  /**
++   * Resist a continuous spell placed on this actor (p.167): a complex action,
++   * successes accumulate until they reach the caster's successes.
++   * @param {ActiveEffect} effect
++   */
++  async resistSustainedSpell(effect) {
++    const data = effect?.getFlag(SYSTEM_ID, "sustained");
++    if (!data) return null;
++    const msg = await this.rollResistance(data.pool, { attack: "magic" });
++    if (!msg) return null;
++    const { summarize } = await import("../dice/test-roll.mjs");
++    const state = msg.getFlag(SYSTEM_ID, "test");
++    const r = resistSustained(data, state ? summarize(state).successes : 0);
++    const fmt = (k, d) => game.i18n.format(k, d);
++    let text;
++    if (r.ended) {
++      await effect.delete();
++      text = fmt("SINLESS.Sustained.ended", { name: this.name, spell: effect.name });
++    } else {
++      await effect.setFlag(SYSTEM_ID, "sustained", { ...data, accumulated: r.accumulated });
++      text = fmt("SINLESS.Sustained.progress", { name: this.name, spell: effect.name, n: r.accumulated, needed: data.needed });
++    }
++    return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this }), content: `<p class="sinless-note">${foundry.utils.escapeHTML(text)}</p>` });
++  }
++
++  /** Continuous spells on this actor that can still be resisted. */
++  get sustainedSpells() {
++    return this.effects.filter(e => e.getFlag(SYSTEM_ID, "sustained")).map(e => ({ effect: e, ...e.getFlag(SYSTEM_ID, "sustained") }));
+   }
+ 
+   /**
+    * Resist a spell with a pool (p.167), as many dice as wished, no limit.
+    * Opponents with fixed bestiary defenses roll those instead.
+    */
+-  async rollResistance(pool) {
++  async rollResistance(pool, { attack = "magic" } = {}) {
+     const fixedKey = { finesse: "dodge", brawn: "soak", resolve: "resist" }[pool];
+-    if (fixedKey && this.system.fixedDefense?.(fixedKey) != null) return this.rollDefense(fixedKey);
++    if (fixedKey && this.system.fixedDefense?.(fixedKey) != null) return this.rollDefense(fixedKey, { attack });
+     if (!this.system.pools?.[pool]) return null;
+     const defaults = this._testDefaults({
+       label: game.i18n.format("SINLESS.Magic.resist", { pool: game.i18n.localize(SINLESS.POOLS[pool]) }),
+       pool, mode: "defense"
+     });
+     defaults.penalty = 0;
++    // Targets in a void line resist spells more easily (p.167).
++    const ley = this.system.leyLine;
++    const bonus = ley ? voidResistBonus(ley.kind, ley.force) : 0;
++    if (bonus) {
++      defaults.bonus += bonus;
++      defaults.notes.push(game.i18n.format("SINLESS.LeyLine.note.voidResist", { n: bonus }));
++    }
+     return this._runTest(defaults);
+   }
+ 
+diff --git a/module/documents/combat.mjs b/module/documents/combat.mjs
+index 28daa04..dd14503 100644
+--- a/module/documents/combat.mjs
++++ b/module/documents/combat.mjs
+@@ -54,14 +54,16 @@ export function registerCombatHooks() {
+   });
+ }
+ 
+-/** Remind the owners of an actor with a full track to roll the overload test (p.97). */
++/** Remind the owners at the start of a turn: overload tests (p.97) and continuous spells to resist (p.167). */
+ export async function promptOverload(actor) {
+   const tests = actor.overloadTests ?? [];
++  // Continuous spells (p.167): each round the target may spend a complex action to resist.
++  const spells = (actor.sustainedSpells ?? []).map(s => ({ uuid: s.effect.uuid, name: s.effect.name, accumulated: s.accumulated, needed: s.needed }));
+   const out = actor.statuses?.has("unconscious") || actor.statuses?.has(CONFIG.specialStatusEffects.DEFEATED);
+-  if (!tests.length || out) return null;
++  if ((!tests.length && !spells.length) || out) return null;
+   const content = await foundry.applications.handlebars.renderTemplate(
+     `systems/${SYSTEM_ID}/templates/chat/overload-prompt.hbs`,
+-    { name: actor.name, tests: tests.map(t => ({ ...t, label: `SINLESS.Overload.title.${t.track}` })) }
++    { name: actor.name, tests: tests.map(t => ({ ...t, label: `SINLESS.Overload.title.${t.track}` })), spells }
+   );
+   const owners = game.users.filter(u => actor.testUserPermission(u, "OWNER")).map(u => u.id);
+   return ChatMessage.create({
+diff --git a/module/helpers/magic.mjs b/module/helpers/magic.mjs
+index a187ac7..13c065e 100644
+--- a/module/helpers/magic.mjs
++++ b/module/helpers/magic.mjs
+@@ -90,3 +90,70 @@ export function summonResult(successes, force, spiritBag = 0) {
+ export function amplificationCost(cost, isAmp) {
+   return (Number(cost) || 0) * (isAmp ? 0.5 : 1);
+ }
++
++/* ---------------- Ley lines, wards, continuous spells, spirits (pp.166-168, 179, 199) ---------------- */
++
++/** Where a magic user stands relative to a ley line or void line. */
++export const LEY_LINE_KINDS = Object.freeze(["none", "on", "adjacent", "void"]);
++
++/**
++ * Ley line dice for channeling, conjuring and sorcery (p.167): standing on the
++ * line gives twice its force in bonus dice, being within 2 m gives its force;
++ * a void line gives its force as penalty dice.
++ * @returns {{bonus: number, penalty: number}}
++ */
++export function leyLineDice(kind, force) {
++  const f = Math.max(0, Number(force) || 0);
++  switch (kind) {
++    case "on": return { bonus: 2 * f, penalty: 0 };
++    case "adjacent": return { bonus: f, penalty: 0 };
++    case "void": return { bonus: 0, penalty: f };
++    default: return { bonus: 0, penalty: 0 };
++  }
++}
++
++/** Targets in a void line add its force in bonus dice to resistance tests (p.167). */
++export function voidResistBonus(kind, force) {
++  return kind === "void" ? Math.max(0, Number(force) || 0) : 0;
++}
++
++/** Spells cast through a ward lose one success per point of its force (pp.168, 179). */
++export function wardedSuccesses(successes, wardForce) {
++  return Math.max(0, (Number(successes) || 0) - Math.max(0, Number(wardForce) || 0));
++}
++
++/**
++ * Shatter Ward (p.170): force + successes equal to or higher than the ward's
++ * force tears it down; otherwise the ward's force drops by one.
++ * @returns {{destroyed: boolean, ward: number}}
++ */
++export function shatterWardResult({ force = 0, successes = 0, ward = 0 } = {}) {
++  const w = Math.max(0, Number(ward) || 0);
++  if ((Number(force) || 0) + (Number(successes) || 0) >= w) return { destroyed: true, ward: 0 };
++  return { destroyed: false, ward: Math.max(0, w - 1) };
++}
++
++/** A spell lasts beyond the casting unless its duration is instantaneous (p.167). */
++export function isContinuous(duration) {
++  const d = String(duration ?? "").trim();
++  return !!d && !/instant|即時|瞬間/i.test(d);
++}
++
++/**
++ * Successes a target must accumulate to throw off a continuous spell: the
++ * caster's successes less the free resistance roll (p.167). Zero means it failed.
++ */
++export function sustainedNeeded(casterSuccesses, resisted = 0) {
++  return Math.max(0, (Number(casterSuccesses) || 0) - Math.max(0, Number(resisted) || 0));
++}
++
++/** Add one resistance roll to a continuous spell; it ends once the successes are reached. */
++export function resistSustained({ needed = 0, accumulated = 0 } = {}, successes = 0) {
++  const total = Math.max(0, accumulated) + Math.max(0, Number(successes) || 0);
++  return { accumulated: total, ended: total >= needed };
++}
++
++/** Spirits add their force in defense dice against physical attacks (p.199). */
++export function spiritDefenseBonus(force, attack) {
++  return attack === "physical" ? Math.max(0, Number(force) || 0) : 0;
++}
+diff --git a/module/sheets/actor-sheet.mjs b/module/sheets/actor-sheet.mjs
+index 79eef33..0066f66 100644
+--- a/module/sheets/actor-sheet.mjs
++++ b/module/sheets/actor-sheet.mjs
+@@ -47,6 +47,7 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2)
+       resetInfluence: SinlessActorSheet.#onResetInfluence,
+       setCohesion: SinlessActorSheet.#onSetCohesion,
+       rollShrink: SinlessActorSheet.#onRollShrink,
++      resistSustained: SinlessActorSheet.#onResistSustained,
+       ...effectActions
+     }
+   };
+@@ -92,6 +93,9 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2)
+     context.effects = actorEffects(actor);
+     context.effectKeys = EFFECT_KEYS;
+     context.isEntity = actor.isEntity;
++    context.leyLineChoices = {
++      none: "SINLESS.LeyLine.none", on: "SINLESS.LeyLine.on", adjacent: "SINLESS.LeyLine.adjacent", void: "SINLESS.LeyLine.void"
++    };
+     if (sys.grid) context.grid = this._gridContext();
+     if (!sys.pools) return context;
+ 
+@@ -185,6 +189,12 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2)
+     return deck.update({ "system.cohesion": deck.system.cohesion === n ? n - 1 : n });
+   }
+ 
++  /** Resist a continuous spell on this actor (p.167). */
++  static async #onResistSustained(event, target) {
++    const effect = fromUuidSync(target.closest("[data-effect-uuid]")?.dataset.effectUuid);
++    return effect ? this.actor.resistSustainedSpell(effect) : null;
++  }
++
+   /** RNID / enemy decker: shrink the targeted decker's influence (p.205). */
+   static async #onRollShrink() {
+     return this.actor.rollShrinkInfluence();
+diff --git a/module/sheets/effects.mjs b/module/sheets/effects.mjs
+index 8a28281..b359472 100644
+--- a/module/sheets/effects.mjs
++++ b/module/sheets/effects.mjs
+@@ -28,7 +28,9 @@ function effectRow(effect, owner) {
+     disabled: effect.disabled,
+     suppressed: effect.isSuppressed,
+     source: effect.parent === owner ? "" : effect.parent?.name ?? "",
+-    changes: changes.filter(c => c.key).map(describeChange).join(" · ")
++    changes: changes.filter(c => c.key).map(describeChange).join(" · "),
++    // Continuous spell (p.167): resistance successes gathered so far.
++    sustained: effect.getFlag?.("sinless", "sustained") ?? null
+   };
+ }
+ 
+diff --git a/module/sheets/item-sheet.mjs b/module/sheets/item-sheet.mjs
+index 40edea7..5951fb3 100644
+--- a/module/sheets/item-sheet.mjs
++++ b/module/sheets/item-sheet.mjs
+@@ -11,7 +11,11 @@ export class SinlessItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
+     position: { width: 520, height: 680 },
+     window: { resizable: true },
+     form: { submitOnChange: true },
+-    actions: { ...effectActions }
++    actions: {
++      ...effectActions,
++      openSpiritActor: SinlessItemSheet.#onOpenSpiritActor,
++      clearSpiritActor: SinlessItemSheet.#onClearSpiritActor
++    }
+   };
+ 
+   static PARTS = {
+@@ -32,6 +36,8 @@ export class SinlessItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
+     context.physical = "carried" in item.system;
+     context.effects = itemEffects(item);
+     context.effectKeys = EFFECT_KEYS;
++    // Spirits: the NPC actor that appears when the spirit is summoned.
++    if (item.type === "power" && item.system.spiritActor) context.spiritActor = fromUuidSync(item.system.spiritActor);
+     context.skillChoices = Object.fromEntries(Object.keys(SINLESS.SKILLS).map(k => [k, skillLabel(k)]));
+     const TextEditor = foundry.applications.ux.TextEditor.implementation;
+     context.enrichedDescription = await TextEditor.enrichHTML(item.system.description, {
+@@ -39,4 +45,32 @@ export class SinlessItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
+     });
+     return context;
+   }
++
++  /** @override Accept an NPC actor dropped on a spirit power. */
++  async _onRender(context, options) {
++    await super._onRender(context, options);
++    const zone = this.element.querySelector("[data-drop='spirit']");
++    if (!zone || !this.isEditable) return;
++    zone.addEventListener("dragover", ev => ev.preventDefault());
++    zone.addEventListener("drop", async ev => {
++      ev.preventDefault();
++      ev.stopPropagation();
++      const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(ev);
++      if (data?.type !== "Actor") return;
++      const actor = await fromUuid(data.uuid);
++      if (actor?.type !== "npc") {
++        ui.notifications.warn("SINLESS.Spirit.npcOnly", { localize: true });
++        return;
++      }
++      await this.item.update({ "system.spiritActor": actor.uuid });
++    });
++  }
++
++  static async #onOpenSpiritActor() {
++    (await fromUuid(this.item.system.spiritActor))?.sheet.render(true);
++  }
++
++  static async #onClearSpiritActor() {
++    return this.item.update({ "system.spiritActor": "" });
++  }
+ }
+diff --git a/styles/sinless.css b/styles/sinless.css
+index d0c2633..7fb06bd 100644
+--- a/styles/sinless.css
++++ b/styles/sinless.css
+@@ -350,3 +350,12 @@
+ .sinless.sheet .network-panel .network-fields label { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+ .sinless.sheet .network-panel .network-fields input { width: 4rem; flex: 0 0 4rem; }
+ .sinless.sheet .network-panel .hint { margin: 0.25rem 0; font-size: 0.8rem; }
++
++/* Ley lines (p.167) and spirit actor link */
++.sinless.sheet .ley-line { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; padding: 0.25rem 0.5rem; border: 1px solid var(--sl-border); border-radius: 4px; }
++.sinless.sheet .ley-line .label { font-weight: bold; margin-right: auto; }
++.sinless.sheet .ley-line select { width: auto; flex: 0 0 auto; }
++.sinless.sheet .ley-line label { display: flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
++.sinless.sheet .ley-line input { width: 3.5rem; }
++.sinless.sheet .spirit-actor .form-fields { display: flex; align-items: center; gap: 0.5rem; }
++.sinless.sheet .spirit-actor .hint { opacity: 0.7; font-size: 0.85rem; }
+diff --git a/templates/actor/npc-header.hbs b/templates/actor/npc-header.hbs
+index 6ad783f..c854a06 100644
+--- a/templates/actor/npc-header.hbs
++++ b/templates/actor/npc-header.hbs
+@@ -17,6 +17,9 @@
+       <label>{{#if isEntity}}{{localize "SINLESS.Digital.cohesionMax"}}{{else}}{{localize "SINLESS.Npc.FIELDS.conditionMax.stun.label"}}{{/if}}
+         <input type="number" name="system.conditionMax.stun" value="{{system.conditionMax.stun}}" min="0">
+       </label>
++      <label data-tooltip="{{localize "SINLESS.Npc.FIELDS.spiritForce.hint"}}">{{localize "SINLESS.Npc.FIELDS.spiritForce.label"}}
++        <input type="number" name="system.spiritForce" value="{{system.spiritForce}}" min="0">
++      </label>
+       <label class="checkbox" data-tooltip="{{localize "SINLESS.Npc.FIELDS.agonarch.hint"}}">
+         <input type="checkbox" name="system.agonarch" {{checked system.agonarch}}>
+         {{localize "SINLESS.Npc.FIELDS.agonarch.label"}}
+diff --git a/templates/actor/partials/effect-list.hbs b/templates/actor/partials/effect-list.hbs
+index 6176952..cc76d4e 100644
+--- a/templates/actor/partials/effect-list.hbs
++++ b/templates/actor/partials/effect-list.hbs
+@@ -12,8 +12,10 @@
+       <a class="item-name" data-action="effectEdit">{{name}}{{#if source}} <span class="effect-source">({{source}})</span>{{/if}}</a>
+       <span class="item-summary">
+         {{#if suppressed}}<em>{{localize "SINLESS.Effect.suppressed"}}</em> · {{/if}}{{changes}}
++        {{#if sustained}}{{localize "SINLESS.Sustained.summary" n=sustained.accumulated needed=sustained.needed}}{{/if}}
+       </span>
+       <span class="item-controls">
++        {{#if sustained}}<a data-action="resistSustained" data-tooltip="{{localize "SINLESS.Sustained.resistHint"}}"><i class="fa-solid fa-hand-sparkles"></i></a>{{/if}}
+         {{#if @root.editable}}
+         <a data-action="effectToggle" class="{{#unless disabled}}active{{/unless}}" data-tooltip="{{localize "SINLESS.Effect.toggle"}}"><i class="fa-solid fa-power-off"></i></a>
+         {{/if}}
+diff --git a/templates/actor/tab-items.hbs b/templates/actor/tab-items.hbs
+index b239dd4..dc28963 100644
+--- a/templates/actor/tab-items.hbs
++++ b/templates/actor/tab-items.hbs
+@@ -2,6 +2,13 @@
+   {{#if (eq tab.id "gear")}}{{#if system.carryCapacity}}
+   <p class="carry">{{localize "SINLESS.Carry" carried=system.carried capacity=system.carryCapacity}}{{#if system.encumbrance}} <strong class="warn">-{{system.encumbrance}}</strong>{{/if}}</p>
+   {{/if}}{{/if}}
++  {{#if (or (eq tab.id "magic") (and (eq tab.id "gear") (eq actor.type "npc")))}}
++  <div class="ley-line" data-tooltip="{{localize "SINLESS.LeyLine.hint"}}">
++    <span class="label">{{localize "SINLESS.LeyLine.title"}}</span>
++    <select name="system.leyLine.kind">{{selectOptions leyLineChoices selected=system.leyLine.kind localize=true}}</select>
++    <label>{{localize "SINLESS.Magic.force"}} <input type="number" name="system.leyLine.force" value="{{system.leyLine.force}}" min="0"></label>
++  </div>
++  {{/if}}
+   {{#each groups}}
+   {{> "systems/sinless/templates/actor/partials/item-list.hbs" this}}
+   {{/each}}
+diff --git a/templates/chat/overload-prompt.hbs b/templates/chat/overload-prompt.hbs
+index ebd6106..9619716 100644
+--- a/templates/chat/overload-prompt.hbs
++++ b/templates/chat/overload-prompt.hbs
+@@ -1,9 +1,17 @@
+ <div class="sinless-card sinless-overload-card">
+   <header class="card-header">
+-    <h3>{{localize "SINLESS.Overload.promptTitle" name=name}}</h3>
++    <h3>{{#if tests.length}}{{localize "SINLESS.Overload.promptTitle" name=name}}{{else}}{{localize "SINLESS.Sustained.promptTitle" name=name}}{{/if}}</h3>
+   </header>
++  {{#if tests.length}}
+   <p class="effect warn">{{localize "SINLESS.Overload.restricted"}}</p>
+   {{#each tests}}
+   <button type="button" data-sinless-action="overload" data-track="{{track}}"><i class="fa-solid fa-heart-pulse"></i> {{localize label}} ({{localize "SINLESS.Overload.needed" n=needed}})</button>
+   {{/each}}
++  {{/if}}
++  {{#if spells.length}}
++  <p class="effect">{{localize "SINLESS.Sustained.promptHint"}}</p>
++  {{#each spells}}
++  <button type="button" data-sinless-action="resist-sustained" data-effect-uuid="{{uuid}}"><i class="fa-solid fa-hand-sparkles"></i> {{localize "SINLESS.Sustained.resistButton" spell=name n=accumulated needed=needed}}</button>
++  {{/each}}
++  {{/if}}
+ </div>
+diff --git a/templates/chat/test-card.hbs b/templates/chat/test-card.hbs
+index 60b410d..ddc0479 100644
+--- a/templates/chat/test-card.hbs
++++ b/templates/chat/test-card.hbs
+@@ -33,6 +33,17 @@
+     {{#if (eq sum.outcome "success")}}<strong class="outcome success">{{localize "SINLESS.Card.success" threshold=threshold}}</strong>{{/if}}
+     {{#if (eq sum.outcome "failure")}}<strong class="outcome failure">{{localize "SINLESS.Card.failure" threshold=threshold}}</strong>{{/if}}
+   </div>
++  {{#if wardCrossed}}<p class="effect warn">{{localize "SINLESS.Ward.crossedLine" n=wardCrossed}}</p>{{/if}}
++  {{#if shatter}}<p class="effect{{#unless shatter.destroyed}} warn{{/unless}}">{{#if shatter.destroyed}}{{localize "SINLESS.Ward.destroyed" n=shatter.from}}{{else}}{{localize "SINLESS.Ward.weakened" from=shatter.from to=shatter.ward}}{{/if}}</p>{{/if}}
++  {{#if sustained}}
++  <div class="spell-result">
++    <p>{{localize "SINLESS.Sustained.line" n=sum.successes}}</p>
++    {{#each sustained}}
++    {{#if applied}}<p class="reroll-note">{{localize "SINLESS.Sustained.appliedTo" name=name}}</p>
++    {{else}}<button type="button" data-sinless-action="apply-sustained" data-target-uuid="{{uuid}}"><i class="fa-solid fa-wand-sparkles"></i> {{localize "SINLESS.Sustained.applyTo" name=name}}</button>{{/if}}
++    {{/each}}
++  </div>
++  {{/if}}
+   {{#if extra.spell}}
+   <div class="spell-result">
+     <p>{{#if extra.spell.force}}{{localize "SINLESS.Magic.force"}} {{extra.spell.force}} · {{/if}}<span class="{{#if extra.spell.lethal}}lethal{{/if}}">{{localize "SINLESS.Magic.drainLine" n=extra.spell.drain}} ({{#if extra.spell.lethal}}{{localize "SINLESS.Magic.lethal"}}{{else}}{{localize "SINLESS.Condition.stun"}}{{/if}})</span></p>
+@@ -43,6 +54,8 @@
+   {{/if}}
+   {{#if summon}}
+   <p class="effect">{{localize (concat "SINLESS.Magic.summon." summon.outcome) n=summon.services needed=summon.needed}}</p>
++  {{#if summon.canPlace}}<button type="button" data-sinless-action="place-spirit"><i class="fa-solid fa-ghost"></i> {{localize "SINLESS.Spirit.place"}}</button>{{/if}}
++  {{#if extra.summon.placed}}<p class="reroll-note">{{localize "SINLESS.Spirit.placed"}}</p>{{/if}}
+   {{/if}}
+   {{#if vcrUsed}}<p class="reroll-note">{{localize "SINLESS.Rig.vcrUsed" n=vcrUsed}}</p>{{/if}}
+   {{#if overdrive}}<p class="effect">{{localize "SINLESS.Rig.overdriveGain" n=overdrive.gain}}{{#if overdrive.inertia}} · {{localize "SINLESS.Rig.overdriveInertia"}}{{/if}}</p>{{/if}}
+diff --git a/templates/dialog/test-dialog.hbs b/templates/dialog/test-dialog.hbs
+index 9857e83..b0a1a2e 100644
+--- a/templates/dialog/test-dialog.hbs
++++ b/templates/dialog/test-dialog.hbs
+@@ -16,6 +16,12 @@
+     <input type="number" name="force" value="{{force.value}}" min="1" max="{{force.max}}">
+   </div>
+   {{/if}}
++  {{#if ward}}
++  <div class="form-group">
++    <label data-tooltip="{{#if ward.shatter}}{{localize "SINLESS.Ward.targetHint"}}{{else}}{{localize "SINLESS.Ward.crossHint"}}{{/if}}">{{#if ward.shatter}}{{localize "SINLESS.Ward.target"}}{{else}}{{localize "SINLESS.Ward.cross"}}{{/if}}</label>
++    <input type="number" name="ward" value="0" min="0">
++  </div>
++  {{/if}}
+   <div class="form-group">
+     <label>{{#if rankLabel}}{{rankLabel}}{{else}}{{localize "SINLESS.Test.rank"}}{{/if}}</label>
+     <input type="number" name="rank" value="{{rank}}" min="0">
+diff --git a/templates/item/details.hbs b/templates/item/details.hbs
+index c1116c5..7ea221c 100644
+--- a/templates/item/details.hbs
++++ b/templates/item/details.hbs
+@@ -86,12 +86,21 @@
+     {{formGroup fields.drain value=system.drain}}
+     {{#if (eq system.category "spirit")}}
+     {{formGroup fields.spiritBag value=system.spiritBag}}
++    <div class="form-group spirit-actor" data-drop="spirit">
++      <label data-tooltip="{{localize "SINLESS.Item.FIELDS.spiritActor.hint"}}">{{localize "SINLESS.Item.FIELDS.spiritActor.label"}}</label>
++      <div class="form-fields">
++        {{#if spiritActor}}<a class="content-link" data-action="openSpiritActor"><i class="fa-solid fa-ghost"></i> {{spiritActor.name}}</a>
++        <a data-action="clearSpiritActor" data-tooltip="{{localize "SINLESS.Spirit.clear"}}"><i class="fa-solid fa-xmark"></i></a>
++        {{else}}<span class="hint">{{localize "SINLESS.Spirit.dropHint"}}</span>{{/if}}
++      </div>
++    </div>
+     {{else}}
+     {{formGroup fields.resistPool value=system.resistPool localize=true}}
+     {{formGroup fields.resistOptional value=system.resistOptional}}
+     {{formGroup fields.damage value=system.damage}}
+     {{formGroup fields.damageTrack value=system.damageTrack localize=true}}
+     {{formGroup fields.area value=system.area}}
++    {{formGroup fields.shatterWard value=system.shatterWard}}
+     {{/if}}
+     {{formGroup fields.duration value=system.duration}}
+     {{formGroup fields.focus value=system.focus}}

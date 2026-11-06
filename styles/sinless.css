@@ -355,3 +355,12 @@
 .sinless.sheet .network-panel .network-fields label { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .sinless.sheet .network-panel .network-fields input { width: 4rem; flex: 0 0 4rem; }
 .sinless.sheet .network-panel .hint { margin: 0.25rem 0; font-size: 0.8rem; }
+
+/* Ley lines (p.167) and spirit actor link */
+.sinless.sheet .ley-line { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; padding: 0.25rem 0.5rem; border: 1px solid var(--sl-border); border-radius: 4px; }
+.sinless.sheet .ley-line .label { font-weight: bold; margin-right: auto; }
+.sinless.sheet .ley-line select { width: auto; flex: 0 0 auto; }
+.sinless.sheet .ley-line label { display: flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
+.sinless.sheet .ley-line input { width: 3.5rem; }
+.sinless.sheet .spirit-actor .form-fields { display: flex; align-items: center; gap: 0.5rem; }
+.sinless.sheet .spirit-actor .hint { opacity: 0.7; font-size: 0.85rem; }
