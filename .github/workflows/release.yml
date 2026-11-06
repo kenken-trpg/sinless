@@ -30,3 +30,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: node tools/release.mjs "${GITHUB_REF_NAME}"
+      - name: Announce to the Foundry package listing
+        # Skipped (with a log line) until the FOUNDRY_RELEASE_TOKEN secret is set.
+        env:
+          FOUNDRY_RELEASE_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+        run: node tools/foundry-release.mjs "${GITHUB_REF_NAME}"

@@ -107,6 +107,11 @@ verifies that the tag matches both manifests, and publishes `sinless.zip` and
 `system.json` as the GitHub release. To check a release locally without publishing:
 `npm run build && DRY_RUN=1 node tools/release.mjs v0.9.0`.
 
+Once the package is listed on foundryvtt.com, put its *Package Release Token* in the
+`FOUNDRY_RELEASE_TOKEN` repository secret (`gh secret set FOUNDRY_RELEASE_TOKEN`). The
+release workflow then announces each version to the listing through the Package Release
+API (`tools/foundry-release.mjs`). Without the secret, that step is skipped.
+
 ### Adding text
 
 Never hard-code display strings. Add the key to `lang/en.json` and `lang/ja.json`

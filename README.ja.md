@@ -95,5 +95,7 @@ git tag v0.9.0 && git push origin v0.9.0
 
 公開せずにローカルで確認するには：`npm run build && DRY_RUN=1 node tools/release.mjs v0.9.0`
 
+foundryvtt.com にパッケージが登録されたら、その *Package Release Token* をリポジトリの Secret `FOUNDRY_RELEASE_TOKEN` に入れてください（`gh secret set FOUNDRY_RELEASE_TOKEN`）。リリースのワークフローが Package Release API で各バージョンを一覧に通知します（`tools/foundry-release.mjs`）。Secret が未設定の間は、この段階を飛ばします。
+
 表示文字列は直接書かず、必ず `lang/en.json` と `lang/ja.json` の両方にキーを追加してください。
 訳語は暫定です。用語集の確定に合わせて `lang/ja.json` を更新してください。
