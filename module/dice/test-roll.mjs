@@ -1,6 +1,7 @@
 import { SYSTEM_ID } from "../config.mjs";
 import { resolveTest, rerollCount } from "../helpers/rules.mjs";
 import { splitDeckingDice, softwareAlert, nanHackResult } from "../helpers/grid.mjs";
+import { overdriveGain, ramResult } from "../helpers/rigging.mjs";
 import { adjustAlert } from "../settings.mjs";
 import { damageDialog, controlledDefenders } from "../apps/damage-dialog.mjs";
 
@@ -47,6 +48,9 @@ export async function performTest(o) {
     if (split.focus) updates[`system.pools.${o.pool}.spent`] = actor.system.pools[o.pool].spent + split.focus;
     if (split.mcp) updates["system.grid.mcpSpent"] = actor.system.grid.mcpSpent + split.mcp;
   }
+  // VCR bonus dice used on a hot-seated vehicle test (p.142).
+  const vcrUsed = Math.max(0, o.vcrUsed ?? 0);
+  if (vcrUsed && actor.system.rig) updates["system.rig.vcrSpent"] = actor.system.rig.vcrSpent + vcrUsed;
   if (plan.kismetDice > 0 && actor.system.kismet) {
     updates["system.kismet.spent"] = actor.system.kismet.spent + plan.kismetDice;
   }
@@ -69,7 +73,8 @@ export async function performTest(o) {
     abf: result.abf,
     kismetAdded: [],
     autoSuccesses: o.autoSuccesses ?? 0,
-    mcpUsed
+    mcpUsed,
+    vcrUsed
   };
 
   const rolls = [main.roll, rerolls.roll].filter(Boolean);
@@ -110,8 +115,15 @@ export async function renderCard(state) {
     // A hit needs successes, except explosives which always land somewhere (p.93).
     canDefend: !!state.extra?.weapon && !state.abf && (sum.successes > 0 || !!state.extra.blast)
   };
-  // Decking: alert raised and NAN influence gained, recomputed when Kismet dice are added.
+  // Rigging and decking results, recomputed when Kismet dice are added.
   const x = state.extra ?? {};
+  // Rigging: overdrive movement and ramming damage to the ramming vehicle.
+  if (x.overdrive && !state.abf) context.overdrive = { gain: overdriveGain(sum.successes), inertia: x.overdrive.inertia };
+  if (x.ram && !state.abf) {
+    const r = ramResult({ successes: sum.successes, body: 0, inertia: x.ram.inertia, targetBody: x.ram.targetBody, battleRam: x.ram.battleRam });
+    context.ram = { selfDamage: r.selfDamage, applied: !!x.ram.applied };
+  }
+  // Decking: alert raised and NAN influence gained.
   if (x.nan && !state.abf) {
     const r = nanHackResult(x.nan, sum.successes, x.io);
     context.grid = { gain: r.gain, alert: r.alert, nan: true };
@@ -172,6 +184,13 @@ export function onRenderChatMessage(message, html) {
     }
     guard(button, () => damageDialog(message, actor));
   }
+  // Ramming: the rigger applies the damage to their own vehicle once.
+  const ramSelf = html.querySelector("[data-sinless-action='apply-ram-self']");
+  if (ramSelf) {
+    if (message.isOwner) guard(ramSelf, () => applyRamSelf(message));
+    else ramSelf.remove();
+  }
+
   // Decking results: influence is applied by the roller, alert by the GM.
   const influence = html.querySelector("[data-sinless-action='apply-influence']");
   if (influence) {
@@ -213,5 +232,23 @@ async function applyGridResult(message, what) {
     x.alertNow = await adjustAlert(value);
     x.alertApplied = true;
   } else return;
+  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+}
+
+/** Apply ramming damage to the ramming vehicle (p.144). */
+async function applyRamSelf(message) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
+  const x = state?.extra;
+  if (!x?.ram || x.ram.applied) return;
+  const vehicle = await fromUuid(x.vehicleUuid);
+  const sum = summarize(state);
+  const { selfDamage } = ramResult({ successes: sum.successes, body: 0, inertia: x.ram.inertia, targetBody: x.ram.targetBody, battleRam: x.ram.battleRam });
+  if (vehicle && selfDamage) {
+    await vehicle.applyDamage({
+      hit: true, raw: selfDamage, armorReduction: 0, afterArmor: selfDamage, final: selfDamage,
+      track: "physical", stripped: [], source: game.i18n.localize("SINLESS.Rig.action.ram")
+    });
+  }
+  x.ram.applied = true;
   await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
 }

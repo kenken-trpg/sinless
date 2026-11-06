@@ -38,7 +38,18 @@ this system contains no rules text.
 - World settings for run difficulty (Veteran / Professional / Prime), operational heat,
   base condition boxes and wound penalties.
 - Item types: weapon, armor, gear, implant, spell/power, ritual, knowledge skill, asset, resource,
-  cyberdeck, software.
+  cyberdeck, software, vehicle control rig.
+- Drones and vehicles (ch.8), as their own actor type:
+  - Body, weapon weight, movement, handling, hardening, armor, inertia, and the physical and
+    integrity tracks. Body is also the soak dice.
+  - Drop a character on the sheet to make them the rigger. The rigger rolls maneuver,
+    overdrive, ram and mounted weapon tests with Drive/Fly or Gunnery, using handling or
+    accuracy as the limit.
+  - Penalties: control method (manual −4, VCR −2, hot-seat 0), vehicle damage and inertia.
+  - Hot-seated riggers add VCR bonus dice. They dodge for the vehicle and take its damage as
+    stun, less VCR hardening.
+  - Vehicles are immune to weapons whose penetration is below their armor.
+  - Ram cards compute both damages and clear inertia.
 - Decking (ch.7), from a Grid tab:
   - The equipped cyberdeck shows MCP dice, threads, core, I/O, nerve rig and a cohesion track.
   - Software tests use skill + software rating as the limit and Focus + MCP dice as the pool.

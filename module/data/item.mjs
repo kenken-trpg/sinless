@@ -197,3 +197,21 @@ export class SoftwareData extends SinlessItemBase {
     return this.costPerRating * Math.max(1, this.rating);
   }
 }
+
+/** Vehicle control rig (p.142). */
+export class VcrData extends SinlessItemBase {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      bonusDice: int(2),
+      hardeningBonus: int(0),
+      links: int(1),
+      core: new NumberField({ required: true, nullable: false, integer: true, initial: 1, choices: () => DECK_CORES }),
+      mods: int(1),
+      zoeticCost: num(0, { step: 0.01 }),
+      cost: int(0),
+      equipped: new BooleanField({ initial: true }),
+      nerveRig: new BooleanField({ initial: true })
+    };
+  }
+}

@@ -31,7 +31,7 @@ export async function damageDialog(message, actor) {
     hits,
     weapon,
     armor,
-    canRoll: actor.isOwner && !!actor.system.pools,
+    canRoll: actor.isOwner && (!!actor.system.pools || actor.type === "vehicle"),
     armorTypeChoices: { ballistic: "SINLESS.Armor.ballistic", impact: "SINLESS.Armor.impact" },
     trackChoices: choices(SINLESS.DAMAGE_TRACKS)
   });
@@ -51,7 +51,9 @@ export async function damageDialog(message, actor) {
       blast: !!data.blast,
       halve: !!data.halve,
       modifier: n(data.modifier),
-      soak: n(data.soak)
+      soak: n(data.soak),
+      multiplier: weapon.multiplier ?? 1,
+      vehicle: actor.type === "vehicle"
     });
     if (data.track === "physical" || data.track === "stun") result.track = data.track;
     result.source = state.label;
@@ -63,6 +65,10 @@ export async function damageDialog(message, actor) {
     if (!form) return;
     const r = read(form);
     const out = dialog.element.querySelector(".sinless-damage-preview");
+    if (r.immune) {
+      out.innerHTML = `<strong>${game.i18n.localize("SINLESS.Damage.immune")}</strong>`;
+      return;
+    }
     out.innerHTML = r.hit
       ? game.i18n.format("SINLESS.Damage.preview", {
         raw: r.raw,
@@ -120,6 +126,10 @@ export async function damageDialog(message, actor) {
     if (!result || typeof result !== "object") return null;
     if (!result.hit) {
       ui.notifications.info(game.i18n.format("SINLESS.Damage.missed", { name: actor.name }));
+      return null;
+    }
+    if (result.immune) {
+      ui.notifications.info(game.i18n.format("SINLESS.Damage.immuneNotice", { name: actor.name }));
       return null;
     }
     return actor.applyDamage(result);

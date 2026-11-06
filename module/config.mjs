@@ -200,6 +200,35 @@ export const SOFTWARE_IO = Object.freeze({
   optional: L("SoftwareIO.optional")
 });
 
+/* ---------------- Rigging (ch.8) ---------------- */
+
+export const VEHICLE_KINDS = Object.freeze({
+  drone: L("VehicleKind.drone"),
+  vehicle: L("VehicleKind.vehicle")
+});
+
+/** Drone frames (p.144); street vehicles use "none". */
+export const VEHICLE_FRAMES = Object.freeze({
+  none: L("VehicleFrame.none"),
+  micro: L("VehicleFrame.micro"),
+  mini: L("VehicleFrame.mini"),
+  small: L("VehicleFrame.small"),
+  medium: L("VehicleFrame.medium"),
+  large: L("VehicleFrame.large")
+});
+
+/** Ground vehicles use Drive, flying ones Fly (p.143). */
+export const VEHICLE_MOBILITY = Object.freeze({
+  ground: { label: L("Mobility.ground"), skill: "drive" },
+  air: { label: L("Mobility.air"), skill: "fly" }
+});
+
+export const CONTROL_MODES = Object.freeze({
+  manual: L("ControlMode.manual"),
+  vcr: L("ControlMode.vcr"),
+  hotseat: L("ControlMode.hotseat")
+});
+
 export const IMPLANT_KINDS = Object.freeze({
   cyber: L("ImplantKind.cyber"),
   bio: L("ImplantKind.bio")
@@ -306,6 +335,7 @@ export const SINLESS = {
   ATTRIBUTES, POOLS, SKILLS, SKILL_GROUPS, ETIQUETTES, HERITAGES, MAGIC_TALENTS,
   LIFESTYLES, DIFFICULTIES, AGONARCH_TN, HEAT_LEVELS, WEAPON_CATEGORIES, FIRING_MODES,
   ARMOR_LAYERS, ARMOR_TYPES, DAMAGE_TRACKS, INTRUSION_LEVELS, DECK_CORES, SOFTWARE_ACTIONS, SOFTWARE_IO,
+  VEHICLE_KINDS, VEHICLE_FRAMES, VEHICLE_MOBILITY, CONTROL_MODES,
   IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES,
   BRAND_STATS, BRAND_TRAITS, RESOURCE_TAGS, RESOURCE_CLASSES, SECTOR_HEAT, BRAND_ACTIONS
 };

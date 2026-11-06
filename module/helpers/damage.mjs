@@ -68,7 +68,10 @@ export function damageFormula(text, strength = 0) {
  * @param {boolean} [o.stun=false]   The weapon only deals stun damage.
  * @param {number} [o.soak=0]        Soak successes.
  * @param {number} [o.modifier=0]    Situational change to the damage (half blast, mist ...).
+ * @param {number} [o.multiplier=1] Damage multiplier (Battle Ram doubles ramming damage, p.149).
  * @param {boolean} [o.halve=false]  Half damage (2"-4" from a grenade, p.93).
+ * @param {boolean} [o.vehicle=false] Vehicles and drones take no damage at all from weapons
+ *                                   that cannot penetrate their ballistic armor (pp.144, 152).
  * @param {boolean} [o.blast=false]  Explosive: successes only reduce scatter, so they
  *                                   neither add damage nor can be dodged away (p.93).
  * @returns {{hit: boolean, net: number, raw: number, stripped: string[], armorReduction: number,
@@ -89,7 +92,7 @@ export function resolveDamage(o) {
     return { hit: false, net: 0, raw: 0, stripped: [], armorReduction: 0, afterArmor: 0, final: 0, track };
   }
 
-  let raw = n(o.base) + net;
+  let raw = (n(o.base) + net) * (Number(o.multiplier) || 1);
   if (o.halve) raw = Math.floor(raw / 2);
   raw += Number(o.modifier) || 0;
   raw = Math.max(0, raw);
@@ -107,8 +110,11 @@ export function resolveDamage(o) {
 
   const pen = n(o.penetration);
   let armorReduction;
+  if (armorType === "ballistic" && o.vehicle && armor.ballistic.highest > pen) {
+    return { hit: true, net, raw, stripped, armorReduction: raw, afterArmor: 0, final: 0, track: "physical", immune: true };
+  }
   if (armorType === "ballistic") {
-    if (!o.stun && armor.ballistic.highest > pen) track = "stun";
+    if (!o.stun && !o.vehicle && armor.ballistic.highest > pen) track = "stun";
     armorReduction = armor.ballistic.total;
   } else {
     armorReduction = Math.max(0, armor.impact.total - pen);

@@ -4,13 +4,15 @@ import { CharacterData, NpcData } from "./module/data/actor.mjs";
 import { BrandData, ResourceData } from "./module/data/brand.mjs";
 import {
   WeaponData, ArmorData, GearData, ImplantData, PowerData, RitualData, KnowledgeData, AssetData,
-  DeckData, SoftwareData
+  DeckData, SoftwareData, VcrData
 } from "./module/data/item.mjs";
+import { VehicleData } from "./module/data/vehicle.mjs";
 import { SinlessActor } from "./module/documents/actor.mjs";
 import { SinlessActiveEffect } from "./module/documents/active-effect.mjs";
 import { SinlessCombatant, registerCombatHooks } from "./module/documents/combat.mjs";
 import { CharacterSheet, NpcSheet } from "./module/sheets/actor-sheet.mjs";
 import { BrandSheet } from "./module/sheets/brand-sheet.mjs";
+import { VehicleSheet } from "./module/sheets/vehicle-sheet.mjs";
 import { SinlessItemSheet } from "./module/sheets/item-sheet.mjs";
 import { onRenderChatMessage } from "./module/dice/test-roll.mjs";
 import * as rules from "./module/helpers/rules.mjs";
@@ -24,7 +26,7 @@ Hooks.once("init", () => {
   CONFIG.Actor.documentClass = SinlessActor;
   CONFIG.ActiveEffect.documentClass = SinlessActiveEffect;
   CONFIG.Combatant.documentClass = SinlessCombatant;
-  Object.assign(CONFIG.Actor.dataModels, { character: CharacterData, npc: NpcData, brand: BrandData });
+  Object.assign(CONFIG.Actor.dataModels, { character: CharacterData, npc: NpcData, brand: BrandData, vehicle: VehicleData });
   Object.assign(CONFIG.Item.dataModels, {
     weapon: WeaponData,
     armor: ArmorData,
@@ -36,13 +38,15 @@ Hooks.once("init", () => {
     asset: AssetData,
     resource: ResourceData,
     deck: DeckData,
-    software: SoftwareData
+    software: SoftwareData,
+    vcr: VcrData
   });
 
   CONFIG.Actor.trackableAttributes = {
     character: { bar: ["condition.physical", "condition.stun"], value: ["ghost"] },
     npc: { bar: ["condition.physical", "condition.stun"], value: ["initiative"] },
-    brand: { bar: [], value: ["bank"] }
+    brand: { bar: [], value: ["bank"] },
+    vehicle: { bar: ["condition.physical", "condition.stun"], value: ["inertia"] }
   };
 
   const { DocumentSheetConfig } = foundry.applications.apps;
@@ -54,6 +58,9 @@ Hooks.once("init", () => {
   });
   DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BrandSheet, {
     types: ["brand"], makeDefault: true, label: "SINLESS.Sheet.brand"
+  });
+  DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
+    types: ["vehicle"], makeDefault: true, label: "SINLESS.Sheet.vehicle"
   });
   DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, SinlessItemSheet, {
     makeDefault: true, label: "SINLESS.Sheet.item"

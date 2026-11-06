@@ -36,6 +36,17 @@
     {{formGroup fields.nerveRig value=system.nerveRig}}
     {{formGroup fields.cohesion value=system.cohesion}}
   {{/if}}
+  {{#if isType.vcr}}
+    {{formGroup fields.bonusDice value=system.bonusDice}}
+    {{formGroup fields.hardeningBonus value=system.hardeningBonus}}
+    {{formGroup fields.links value=system.links}}
+    {{formGroup fields.core value=system.core localize=true}}
+    {{formGroup fields.mods value=system.mods}}
+    {{formGroup fields.zoeticCost value=system.zoeticCost}}
+    {{formGroup fields.cost value=system.cost}}
+    {{formGroup fields.equipped value=system.equipped}}
+    {{formGroup fields.nerveRig value=system.nerveRig}}
+  {{/if}}
   {{#if isType.software}}
     {{formGroup fields.rating value=system.rating}}
     {{formGroup fields.skill value=system.skill choices=skillChoices localize=true}}

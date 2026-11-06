@@ -48,6 +48,30 @@
   <p class="hint">{{localize "SINLESS.Grid.noDeckHint"}}</p>
   {{/if}}
 
+  {{#if rig}}
+  <div class="rig-panel">
+    <header>
+      <h3>{{#if rig.vcr}}{{rig.vcr.name}}{{else}}{{localize "SINLESS.Rig.title"}}{{/if}}</h3>
+      {{#if rig.vcr}}<span data-tooltip="{{localize "SINLESS.Rig.bonusHint"}}">{{localize "SINLESS.Rig.bonusDice"}} <strong>{{rig.bonus.value}}</strong> / {{rig.bonus.max}}</span>{{/if}}
+    </header>
+    {{#if rig.vcr}}
+    <div class="deck-stats">
+      <span>{{localize "SINLESS.Item.FIELDS.links.label"}} <strong class="{{#if rig.overLinks}}penalty{{/if}}">{{rig.vehicles.length}}</strong> / {{rig.vcr.system.links}}</span>
+      <span>{{localize "SINLESS.Item.FIELDS.hardeningBonus.label"}} <strong>+{{rig.vcr.system.hardeningBonus}}</strong></span>
+      <span>{{localize "SINLESS.Item.FIELDS.core.label"}} <strong>{{localize rig.coreLabel}}</strong></span>
+      <span>{{#if rig.vcr.system.nerveRig}}{{localize "SINLESS.Item.FIELDS.nerveRig.label"}}{{else}}{{localize "SINLESS.Grid.noNerveRig"}}{{/if}}</span>
+    </div>
+    {{/if}}
+    <ul class="vehicles">
+      {{#each rig.vehicles}}
+      <li data-vehicle-id="{{id}}"><img src="{{img}}" alt=""><a data-action="openVehicle">{{name}}</a> <span class="item-summary">{{localize control}}</span></li>
+      {{else}}
+      <li class="hint">{{localize "SINLESS.Rig.noVehicles"}}</li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+
   {{#each groups}}
   {{> "systems/sinless/templates/actor/partials/item-list.hbs" this}}
   {{/each}}

@@ -33,6 +33,12 @@
     {{#if (eq sum.outcome "success")}}<strong class="outcome success">{{localize "SINLESS.Card.success" threshold=threshold}}</strong>{{/if}}
     {{#if (eq sum.outcome "failure")}}<strong class="outcome failure">{{localize "SINLESS.Card.failure" threshold=threshold}}</strong>{{/if}}
   </div>
+  {{#if vcrUsed}}<p class="reroll-note">{{localize "SINLESS.Rig.vcrUsed" n=vcrUsed}}</p>{{/if}}
+  {{#if overdrive}}<p class="effect">{{localize "SINLESS.Rig.overdriveGain" n=overdrive.gain}}{{#if overdrive.inertia}} · {{localize "SINLESS.Rig.overdriveInertia"}}{{/if}}</p>{{/if}}
+  {{#if ram}}
+  <p class="effect">{{#if extra.ram.battleRam}}{{localize "SINLESS.Rig.battleRamNote"}} · {{/if}}{{#if (eq ram.selfDamage null)}}{{localize "SINLESS.Rig.ramSelfUnknown"}}{{else}}{{localize "SINLESS.Rig.ramSelf" n=ram.selfDamage}}{{/if}}</p>
+  {{#if ram.selfDamage}}{{#unless ram.applied}}<button type="button" data-sinless-action="apply-ram-self"><i class="fa-solid fa-car-burst"></i> {{localize "SINLESS.Rig.applyRamSelf" n=ram.selfDamage}}</button>{{/unless}}{{/if}}
+  {{/if}}
   {{#if mcpUsed}}<p class="reroll-note">{{localize "SINLESS.Grid.mcpUsed" n=mcpUsed}}</p>{{/if}}
   {{#if extra.effect}}<p class="effect">{{extra.effect}}</p>{{/if}}
   {{#if grid}}

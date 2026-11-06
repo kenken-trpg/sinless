@@ -3,6 +3,7 @@ import { autoSuccesses, sectorHeatPenalty } from "../helpers/brand.mjs";
 import { damageFormula, weaponArmorType, applyConditionDamage } from "../helpers/damage.mjs";
 import { currentTargetNumber, currentHeatBonus, getSetting } from "../settings.mjs";
 import { INTRUSION_PENALTY, NO_NERVE_RIG_PENALTY, influencePenalty } from "../helpers/grid.mjs";
+import { CONTROL_PENALTY, effectiveControl, hotseatFeedback } from "../helpers/rigging.mjs";
 import { testDialog } from "../apps/test-dialog.mjs";
 import { performTest } from "../dice/test-roll.mjs";
 
@@ -49,7 +50,7 @@ export class SinlessActor extends Actor {
     const sys = this.system;
     const conflict = this.inConflict;
     if (mode === "skill" && !conflict) mode = "rank";
-    const poolValues = Object.fromEntries(Object.entries(sys.pools).map(([k, p]) => [k, conflict ? p.value : p.max]));
+    const poolValues = Object.fromEntries(Object.entries(sys.pools ?? {}).map(([k, p]) => [k, conflict ? p.value : p.max]));
     let penalty = sys.totalPenalty ?? 0;
     // Lifestyle effects during a run (p.46).
     if (sys.lifestyle === "squatter") penalty += 1;
@@ -103,8 +104,24 @@ export class SinlessActor extends Actor {
       notes,
       extra,
       autoSuccesses: config.autoSuccesses,
-      mcpAvailable: config.pool === "focus" ? defaults.mcpAvailable ?? 0 : 0
+      mcpAvailable: config.pool === "focus" ? defaults.mcpAvailable ?? 0 : 0,
+      vcrUsed: defaults.vcrAvailable
+        ? Math.clamp((config.bonusField ?? 0) - (defaults.bonusBase ?? 0), 0, defaults.vcrAvailable)
+        : 0
     });
+  }
+
+  /** Mode and rank for a skill: defaulting to a grouped skill, or untrained use. */
+  _skillMode(skillKey) {
+    const def = SINLESS.SKILLS[skillKey];
+    let rank = this.system.skills?.[skillKey]?.rank ?? 0;
+    let mode = "skill";
+    if (rank <= 0) {
+      const g = this.groupRank(skillKey);
+      if (g > 0) { mode = "default"; rank = g; }
+      else if (!def?.trainedOnly) mode = "untrained";
+    }
+    return { mode, rank, pool: def?.pool ?? "focus" };
   }
 
   /** Roll an active skill. Chooses defaulting or untrained use automatically. */
@@ -135,6 +152,13 @@ export class SinlessActor extends Actor {
   async rollDefense(key) {
     const def = SINLESS.DEFENSES[key];
     if (!def) return null;
+    // Vehicles: a hot-seated rigger dodges with their own Finesse pool (p.144).
+    if (this.type === "vehicle" && key !== "soak") {
+      const rigger = this.vehicleController;
+      if (key === "dodge" && rigger && this.controlMode === "hotseat") return rigger.rollDefense("dodge");
+      ui.notifications.warn("SINLESS.Notify.vehicleNoDefense", { localize: true });
+      return null;
+    }
     const fixed = this.system.fixedDefense?.(key) ?? null;
     if (fixed !== null) return this._rollFixedDefense(key, fixed);
     const defaults = this._testDefaults({
@@ -191,6 +215,7 @@ export class SinlessActor extends Actor {
   async rollWeapon(item) {
     const sys = item.system;
     const skillKey = sys.skill;
+    if (this.type === "vehicle") return this.rollVehicleWeapon(item);
     if (this.type === "npc" && Number.isInteger(sys.attackDice)) {
       const defaults = this._fixedDiceDefaults(item.name, sys.attackDice, [game.i18n.localize(skillLabel(skillKey))]);
       return this._runTest(defaults, await this._weaponCardData(item));
@@ -269,6 +294,18 @@ export class SinlessActor extends Actor {
       "system.condition.stun.value": after.stun,
       "system.condition.overflow": after.overflow
     });
+    // Hot-seated rigger takes the vehicle's physical damage as stun, less VCR hardening (p.142).
+    if (this.type === "vehicle" && this.controlMode === "hotseat" && result.final > 0) {
+      const rigger = this.vehicleController;
+      const damage = after.physical - before.physical;
+      const feedback = hotseatFeedback(damage, rigger?.vcr?.system.hardeningBonus ?? 0);
+      if (rigger && feedback > 0) {
+        await rigger.applyDamage({
+          hit: true, raw: damage, armorReduction: damage - feedback, afterArmor: feedback, final: feedback,
+          track: "stun", stripped: [], source: game.i18n.format("SINLESS.Rig.feedback", { name: this.name })
+        });
+      }
+    }
     const strippedNames = [];
     for (const kind of result.stripped ?? []) {
       const name = await this._stripArmor(kind);
@@ -303,6 +340,120 @@ export class SinlessActor extends Actor {
       return game.i18n.localize("SINLESS.Damage.armorBonus");
     }
     return null;
+  }
+
+  /* ---------------- Rigging (ch.8) ---------------- */
+
+  /** The character controlling this vehicle. */
+  get vehicleController() {
+    const id = this.system.controller;
+    return id ? game.actors.get(id) ?? null : null;
+  }
+
+  /** A character's equipped vehicle control rig. */
+  get vcr() {
+    const id = this.system.rig?.vcrId;
+    return id ? this.items.get(id) : null;
+  }
+
+  /** Control method in effect for this vehicle (needs a VCR, hot-seating needs a nerve rig). */
+  get controlMode() {
+    if (this.type !== "vehicle") return null;
+    return effectiveControl(this.system.controlMode, this.vehicleController?.vcr?.system ?? null);
+  }
+
+  /** Vehicles controlled by this character. */
+  get controlledVehicles() {
+    return game.actors.filter(a => a.type === "vehicle" && a.system.controller === this.id);
+  }
+
+  async setVehicleController(actor) {
+    if (this.type !== "vehicle") return null;
+    if (actor && actor.type !== "character" && actor.type !== "npc") return null;
+    return this.update({ "system.controller": actor?.id ?? "" });
+  }
+
+  /**
+   * Test defaults for the rigger operating this vehicle: control method penalty,
+   * vehicle damage and inertia penalties, and VCR bonus dice when hot-seated.
+   */
+  _rigDefaults({ label, skillKey, gear = 0, notes = [] }) {
+    const rigger = this.vehicleController;
+    if (!rigger) {
+      ui.notifications.warn("SINLESS.Notify.noController", { localize: true });
+      return null;
+    }
+    if (!rigger.isOwner) {
+      ui.notifications.warn("SINLESS.Notify.notController", { localize: true });
+      return null;
+    }
+    const { mode, rank, pool } = rigger._skillMode(skillKey);
+    const control = this.controlMode;
+    const defaults = rigger._testDefaults({
+      label, pool, mode, rank, gear,
+      notes: [game.i18n.localize(skillLabel(skillKey)), this.name, game.i18n.localize(SINLESS.CONTROL_MODES[control]), ...notes]
+    });
+    const v = this.system;
+    defaults.penalty += CONTROL_PENALTY[control] + v.totalPenalty;
+    if (v.inertiaPenalty) defaults.notes.push(game.i18n.format("SINLESS.Rig.inertiaNote", { n: v.inertiaPenalty }));
+    if (control === "hotseat") {
+      const vcrDice = rigger.system.rig?.bonus?.value ?? 0;
+      defaults.bonusBase = defaults.bonus;
+      defaults.vcrAvailable = vcrDice;
+      defaults.bonus += vcrDice;
+      if (vcrDice) defaults.notes.push(game.i18n.format("SINLESS.Rig.vcrNote", { n: vcrDice }));
+    }
+    return { rigger, defaults };
+  }
+
+  /**
+   * Drive/Fly + handling tests (pp.143-144).
+   * @param {"maneuver"|"overdrive"|"ram"} kind
+   */
+  async rollVehicleTest(kind = "maneuver") {
+    if (this.type !== "vehicle") return null;
+    const v = this.system;
+    const label = `${game.i18n.localize(`SINLESS.Rig.action.${kind}`)}: ${this.name}`;
+    const prepared = this._rigDefaults({ label, skillKey: v.skill, gear: v.handling });
+    if (!prepared) return null;
+    const { rigger, defaults } = prepared;
+    const extra = { vehicleUuid: this.uuid };
+    if (kind === "overdrive") extra.overdrive = { inertia: v.kind === "vehicle" };
+    if (kind === "ram") {
+      const target = [...(game.user?.targets ?? [])].map(t => t.actor).find(a => a && a !== this);
+      const targetBody = target?.type === "vehicle" ? target.system.body
+        : target?.system.attributes?.bod?.value ?? null;
+      Object.assign(extra, {
+        weapon: true,
+        damage: v.body + 2 * v.inertia,
+        damageText: game.i18n.localize("SINLESS.Rig.ramDamage"),
+        damageFormula: "",
+        damageNote: "",
+        penetration: 0,
+        armorType: "impact",
+        energy: false,
+        stun: false,
+        blast: false,
+        multiplier: v.battleRam ? 2 : 1,
+        targets: [...(game.user?.targets ?? [])].filter(t => t.actor && t.actor !== this)
+          .map(t => ({ uuid: t.document.uuid, name: t.name })),
+        ram: { inertia: v.inertia, targetBody, battleRam: v.battleRam }
+      });
+    }
+    const message = await rigger._runTest(defaults, extra);
+    // Ramming removes all inertia (p.144).
+    if (message && kind === "ram" && v.inertia) await this.update({ "system.inertia": 0 });
+    return message;
+  }
+
+  /** Fire a mounted weapon: the rigger's Gunnery + accuracy (p.143). */
+  async rollVehicleWeapon(item) {
+    const sys = item.system;
+    const prepared = this._rigDefaults({ label: `${item.name} (${this.name})`, skillKey: sys.skill || "gunnery", gear: sys.accuracy });
+    if (!prepared) return null;
+    const { rigger, defaults } = prepared;
+    defaults.showFiring = ["firearm", "energy", "heavy", "vehicle"].includes(sys.category);
+    return rigger._runTest(defaults, await this._weaponCardData(item));
   }
 
   /* ---------------- Decking (ch.7) ---------------- */
@@ -560,6 +711,7 @@ export class SinlessActor extends Actor {
     const updates = {};
     for (const key of Object.keys(this.system.pools)) updates[`system.pools.${key}.spent`] = 0;
     if (this.system.grid) updates["system.grid.mcpSpent"] = 0;
+    if (this.system.rig) updates["system.rig.vcrSpent"] = 0;
     return this.update(updates);
   }
 

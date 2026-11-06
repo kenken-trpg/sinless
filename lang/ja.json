@@ -3,7 +3,8 @@
     "Actor": {
       "character": "シンレス",
       "npc": "NPC",
-      "brand": "ブランド"
+      "brand": "ブランド",
+      "vehicle": "ドローン／乗り物"
     },
     "Item": {
       "weapon": "武器",
@@ -16,7 +17,8 @@
       "asset": "アセット",
       "resource": "リソース",
       "deck": "サイバーデッキ",
-      "software": "ソフトウェア"
+      "software": "ソフトウェア",
+      "vcr": "車両制御リグ（VCR）"
     }
   },
   "SINLESS": {
@@ -218,7 +220,8 @@
       "character": "Sinless キャラクターシート",
       "npc": "Sinless NPCシート",
       "item": "Sinless アイテムシート",
-      "brand": "Sinless ブランドシート"
+      "brand": "Sinless ブランドシート",
+      "vehicle": "シンレス乗り物シート"
     },
     "Setting": {
       "difficulty": {
@@ -258,7 +261,10 @@
       "noDefender": "防御するには、自分が操作するトークンを選択してください。",
       "noDeck": "デッキング判定にはサイバーデッキを装備してください。",
       "noNan": "このソフトウェアにはネットワーク・アクセス・ノードの掌握が必要です。",
-      "noHackingProgram": "ソフトウェアのうち 1 つを基本ハッキング・プログラムに指定してください。"
+      "noHackingProgram": "ソフトウェアのうち 1 つを基本ハッキング・プログラムに指定してください。",
+      "vehicleNoDefense": "この乗り物はその防御ができません（回避にはホットシート中のリガーが必要）。",
+      "noController": "先にこの乗り物にリガーを設定してください。",
+      "notController": "この乗り物のリガーを操作する権限がありません。"
     },
     "Test": {
       "roll": "ロール",
@@ -605,6 +611,18 @@
         },
         "running": {
           "label": "実行中（I/O）"
+        },
+        "bonusDice": {
+          "label": "ボーナスダイス",
+          "hint": "ホットシート中の乗り物判定に使える、ラウンドごとの無料ダイス。"
+        },
+        "hardeningBonus": {
+          "label": "ハードニング・ボーナス",
+          "hint": "ホットシート・フィードバックのダメージを減らす。"
+        },
+        "links": {
+          "label": "リンク",
+          "hint": "同時に制御できる乗り物・ドローンの数。"
         }
       }
     },
@@ -892,7 +910,9 @@
       "stripped": "アーマー損耗：{armor}",
       "armorBonus": "アーマー補正",
       "physicalFull": "肉体トラックが満杯：毎ターン単純アクション 1 回のみ。毎ターン剛力判定で {n} 成功が必要。失敗すると意識を失い出血する。",
-      "stunFull": "朦朧トラックが満杯：毎ターン単純アクション 1 回のみ。毎ターン剛力判定で {n} 成功が必要。失敗すると意識を失う。"
+      "stunFull": "朦朧トラックが満杯：毎ターン単純アクション 1 回のみ。毎ターン剛力判定で {n} 成功が必要。失敗すると意識を失う。",
+      "immune": "ダメージなし：武器が乗り物のアーマーを貫通できない。",
+      "immuneNotice": "{name} には効かない：武器がアーマーを貫通できない。"
     },
     "Effect": {
       "title": "アクティブ・エフェクト",
@@ -1001,6 +1021,113 @@
       "alertNow": "現在のアラート：{n}",
       "applyInfluence": "影響範囲を +{n} m 拡張",
       "applyAlert": "アラートを +{n}"
+    },
+    "VehicleKind": {
+      "drone": "ドローン",
+      "vehicle": "乗り物"
+    },
+    "VehicleFrame": {
+      "none": "—",
+      "micro": "マイクロ",
+      "mini": "ミニ",
+      "small": "スモール",
+      "medium": "ミディアム",
+      "large": "ラージ"
+    },
+    "Mobility": {
+      "ground": "地上（運転）",
+      "air": "飛行（操縦）"
+    },
+    "ControlMode": {
+      "manual": "手動",
+      "vcr": "VCR",
+      "hotseat": "ホットシート"
+    },
+    "Vehicle": {
+      "FIELDS": {
+        "kind": {
+          "label": "種別"
+        },
+        "frame": {
+          "label": "フレーム"
+        },
+        "mobility": {
+          "label": "移動形態"
+        },
+        "body": {
+          "label": "ボディ",
+          "hint": "肉体トラックの長さで、ソークのダイス数でもある。"
+        },
+        "weaponWeight": {
+          "label": "武装重量（WW）",
+          "hint": "ドローンに搭載できる武器の重量。"
+        },
+        "movement": {
+          "label": "移動（m）"
+        },
+        "handling": {
+          "label": "ハンドリング",
+          "hint": "運転／操縦判定の上限を上げる。"
+        },
+        "hardening": {
+          "label": "ハードニング"
+        },
+        "cargo": {
+          "label": "積載"
+        },
+        "inertia": {
+          "label": "慣性",
+          "hint": "乗り物は 1 につき −1 ダイス。オーバードライブの移動で増え、体当たりで 0 になる（pp.143–144）。"
+        },
+        "cost": {
+          "label": "価格（ㄓ）"
+        },
+        "battleRam": {
+          "label": "バトルラム",
+          "hint": "体当たりで与えるダメージ 2 倍、受けるダメージ半分（p.149）。"
+        },
+        "controller": {
+          "label": "リガー"
+        },
+        "controlMode": {
+          "label": "操作方法"
+        },
+        "penalty": {
+          "label": "状況ペナルティ"
+        },
+        "notes": {
+          "label": "メモ"
+        }
+      },
+      "integrity": "車体整合性",
+      "penaltyHint": "ダメージ 3 マスごとに −1、慣性（乗り物）、状況ペナルティ。",
+      "dodgeHint": "回避できるのはホットシート中のリガーだけで、自分の技巧プールで振る（p.144）。",
+      "controlHint": "手動 −4、VCR −2、ホットシート 0。装備中の VCR が必要で、ホットシートにはナーヴリグも必要（p.142）。",
+      "removeController": "制御を解除",
+      "dropController": "キャラクターをここにドロップすると、そのキャラクターがリガーになります。",
+      "mounted": "搭載武器の重量 {weight} / {limit}"
+    },
+    "Rig": {
+      "title": "リギング",
+      "feedback": "{name} からのホットシート・フィードバック",
+      "inertiaNote": "慣性 −{n}",
+      "vcrNote": "VCR ダイス +{n}",
+      "action": {
+        "maneuver": "機動",
+        "overdrive": "オーバードライブ",
+        "ram": "体当たり"
+      },
+      "ramDamage": "ボディ＋慣性×2",
+      "vcrUsed": "使用した VCR ダイス：{n}",
+      "overdriveGain": "オーバードライブ：このラウンドの移動アクションごとに +{n} m",
+      "overdriveInertia": "オーバードライブの移動 1 回ごとに慣性 +1",
+      "battleRamNote": "バトルラム：与えるダメージ 2 倍",
+      "ramSelfUnknown": "自車へのダメージ：相手のボディ − 成功数 − 慣性",
+      "ramSelf": "自車へのダメージ：{n}",
+      "applyRamSelf": "自車に {n} ダメージを適用",
+      "bonusHint": "ホットシート中の乗り物判定に使える無料のボーナスダイス。ラウンドごとに回復（p.142）。",
+      "bonusDice": "VCR ダイス",
+      "noVehicles": "乗り物がありません。ドローンや乗り物のシートにこのキャラクターをドロップしてください。"
     }
   }
 }

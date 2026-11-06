@@ -142,6 +142,10 @@ export class CharacterData extends SinlessActorBase {
         mcpSpent: int(0),
         influence: int(0)
       }),
+      // Rigging (ch.8): VCR bonus dice spent this round.
+      rig: new SchemaField({
+        vcrSpent: int(0)
+      }),
       // Character creation helper (pp.44-46).
       creation: new SchemaField({
         active: new BooleanField({ initial: false }),
@@ -175,6 +179,7 @@ export class CharacterData extends SinlessActorBase {
 
     this._prepareZoetic();
     this._prepareDeck();
+    this._prepareRig();
     this.carryCapacity = this.attributes.str.value;
     this.carried = this.parent.items.reduce(
       (sum, i) => sum + (i.system.carried ? (i.system.weight ?? 0) * (i.system.quantity ?? 1) : 0), 0
@@ -191,13 +196,21 @@ export class CharacterData extends SinlessActorBase {
     this.grid.mcp = { max, value: Math.max(0, max - this.grid.mcpSpent) };
   }
 
+  /** Equipped VCR and its free bonus dice for vehicle tests (p.142). */
+  _prepareRig() {
+    const vcr = this.parent.items.find(i => i.type === "vcr" && i.system.equipped) ?? null;
+    const max = vcr?.system.bonusDice ?? 0;
+    this.rig.vcrId = vcr?.id ?? null;
+    this.rig.bonus = { max, value: Math.max(0, max - this.rig.vcrSpent) };
+  }
+
   /** Zoetic Potential (pp.34, 37, 45). */
   _prepareZoetic() {
     const base = HERITAGES[this.heritage]?.zoetic ?? 6;
     let implantLoss = 0;
     let gearLoss = 0;
     for (const item of this.parent.items) {
-      if (item.type === "implant") implantLoss += item.system.zoeticCost;
+      if (item.type === "implant" || item.type === "vcr") implantLoss += item.system.zoeticCost;
       else if (item.system.carried && item.system.metal) gearLoss += 1;
     }
     const raw = base + this.zoetic.bonus - implantLoss;

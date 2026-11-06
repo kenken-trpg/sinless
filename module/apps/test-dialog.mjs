@@ -33,6 +33,7 @@ export async function testDialog(defaults) {
       rank: n(data.rank),
       gear: n(data.gear),
       bonus: n(data.bonus) + firingBonus,
+      bonusField: n(data.bonus),
       penalty: n(data.penalty),
       kismet: Math.min(n(data.kismet), defaults.kismetAvailable ?? 0),
       poolDice: data.poolDice === "" || data.poolDice === null || data.poolDice === undefined ? undefined : n(data.poolDice),

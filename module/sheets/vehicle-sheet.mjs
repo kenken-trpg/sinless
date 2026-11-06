@@ -1,0 +1,95 @@
+import { SYSTEM_ID, SINLESS } from "../config.mjs";
+import { CONTROL_PENALTY } from "../helpers/rigging.mjs";
+import { SinlessActorSheet } from "./actor-sheet.mjs";
+
+const T = path => `systems/${SYSTEM_ID}/templates/${path}`;
+const labels = obj => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, typeof v === "string" ? v : v.label]));
+
+/** Sheet for drones and vehicles (ch.8). */
+export class VehicleSheet extends SinlessActorSheet {
+  static DEFAULT_OPTIONS = {
+    classes: ["vehicle"],
+    position: { width: 720, height: 760 },
+    actions: {
+      rollVehicleTest: VehicleSheet.#onRollVehicleTest,
+      adjustInertia: VehicleSheet.#onAdjustInertia,
+      openController: VehicleSheet.#onOpenController,
+      removeController: VehicleSheet.#onRemoveController
+    }
+  };
+
+  static PARTS = {
+    header: { template: T("actor/vehicle-header.hbs") },
+    tabs: { template: "templates/generic/tab-navigation.hbs" },
+    main: { template: T("actor/vehicle-main.hbs"), scrollable: [""] },
+    effects: { template: T("actor/tab-effects.hbs"), scrollable: [""] },
+    bio: { template: T("actor/tab-bio.hbs"), scrollable: [""] }
+  };
+
+  static TABS = {
+    primary: {
+      tabs: [{ id: "main" }, { id: "effects" }, { id: "bio" }],
+      initial: "main",
+      labelPrefix: "SINLESS.Tab"
+    }
+  };
+
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const actor = this.actor;
+    const sys = actor.system;
+    context.kindChoices = SINLESS.VEHICLE_KINDS;
+    context.frameChoices = SINLESS.VEHICLE_FRAMES;
+    context.mobilityChoices = labels(SINLESS.VEHICLE_MOBILITY);
+    context.controlChoices = SINLESS.CONTROL_MODES;
+    const boxes = (value, max) => Array.from({ length: max }, (_, i) => ({
+      n: i + 1, filled: i < value, mark: (i + 1) % 3 === 0
+    }));
+    context.physicalBoxes = boxes(sys.condition.physical.value, sys.condition.physical.max);
+    context.stunBoxes = boxes(sys.condition.stun.value, sys.condition.stun.max);
+
+    const rigger = actor.vehicleController;
+    const control = actor.controlMode;
+    context.rigger = rigger;
+    context.control = {
+      label: SINLESS.CONTROL_MODES[control],
+      penalty: CONTROL_PENALTY[control],
+      downgraded: control !== sys.controlMode
+    };
+    context.skillLabel = `SINLESS.Skill.${sys.skill}`;
+    // Weapon weight: drones list WW; vehicles carry 1 weight per 3 Body (pp.144, 151).
+    context.weaponLimit = sys.kind === "drone" ? sys.weaponWeight : Math.floor(sys.body / 3);
+    context.overweight = sys.mountedWeight > context.weaponLimit;
+    context.groups = ["weapon", "gear"].map(type => ({ type, label: `TYPES.Item.${type}`, items: context.items[type] ?? [] }));
+    return context;
+  }
+
+  async _preparePartContext(partId, context, options) {
+    context = await super._preparePartContext(partId, context, options);
+    if (partId in context.tabs) context.tab = context.tabs[partId];
+    return context;
+  }
+
+  /** Dropping a character on the sheet makes it the controlling rigger. */
+  async _onDropActor(event, actor) {
+    if (!this.isEditable) return null;
+    return this.actor.setVehicleController(actor);
+  }
+
+  static async #onRollVehicleTest(event, target) {
+    return this.actor.rollVehicleTest(target.dataset.kind);
+  }
+
+  static async #onAdjustInertia(event, target) {
+    const value = Math.max(0, this.actor.system.inertia + Number(target.dataset.delta));
+    return this.actor.update({ "system.inertia": value });
+  }
+
+  static async #onOpenController() {
+    this.actor.vehicleController?.sheet.render(true);
+  }
+
+  static async #onRemoveController() {
+    return this.actor.setVehicleController(null);
+  }
+}

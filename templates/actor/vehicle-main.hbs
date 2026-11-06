@@ -1,0 +1,76 @@
+<section class="tab main {{tab.cssClass}}" data-tab="main" data-group="primary">
+  <div class="vehicle-stats">
+    <label>{{localize "SINLESS.Vehicle.FIELDS.body.label"}}<input type="number" name="system.body" value="{{system.body}}" min="0"></label>
+    {{#if (eq system.kind "drone")}}
+    <label data-tooltip="{{localize "SINLESS.Vehicle.FIELDS.weaponWeight.hint"}}">{{localize "SINLESS.Vehicle.FIELDS.weaponWeight.label"}}<input type="number" name="system.weaponWeight" value="{{system.weaponWeight}}" min="0"></label>
+    {{else}}
+    <label>{{localize "SINLESS.Vehicle.FIELDS.cargo.label"}}<input type="number" name="system.cargo" value="{{system.cargo}}" min="0"></label>
+    {{/if}}
+    <label>{{localize "SINLESS.Vehicle.FIELDS.movement.label"}}<input type="number" name="system.movement" value="{{system.movement}}" min="0"></label>
+    <label data-tooltip="{{localize "SINLESS.Vehicle.FIELDS.handling.hint"}}">{{localize "SINLESS.Vehicle.FIELDS.handling.label"}}<input type="number" name="system.handling" value="{{system.handling}}" min="0"></label>
+    <label>{{localize "SINLESS.Vehicle.FIELDS.hardening.label"}}<input type="number" name="system.hardening" value="{{system.hardening}}" min="0"></label>
+    <label>{{localize "SINLESS.Armor.ballistic"}}<input type="number" name="system.armorBonus.ballistic" value="{{system.armorBonus.ballistic}}" min="0"></label>
+    <label>{{localize "SINLESS.Armor.impact"}}<input type="number" name="system.armorBonus.impact" value="{{system.armorBonus.impact}}" min="0"></label>
+    {{#if (eq system.kind "vehicle")}}
+    <div class="inertia" data-tooltip="{{localize "SINLESS.Vehicle.FIELDS.inertia.hint"}}">
+      <span class="label">{{localize "SINLESS.Vehicle.FIELDS.inertia.label"}}</span>
+      <a data-action="adjustInertia" data-delta="-1"><i class="fa-solid fa-minus"></i></a>
+      <strong>{{system.inertia}}</strong>
+      <a data-action="adjustInertia" data-delta="1"><i class="fa-solid fa-plus"></i></a>
+    </div>
+    {{/if}}
+  </div>
+
+  <div class="status-row">
+    <div class="condition">
+      {{> "systems/sinless/templates/actor/partials/condition-track.hbs" track="physical" label="SINLESS.Condition.physical" boxes=physicalBoxes}}
+      {{> "systems/sinless/templates/actor/partials/condition-track.hbs" track="stun" label="SINLESS.Vehicle.integrity" boxes=stunBoxes}}
+      <div class="condition-footer">
+        <span class="penalty" data-tooltip="{{localize "SINLESS.Vehicle.penaltyHint"}}">
+          {{localize "SINLESS.Condition.penalty"}}: <strong>{{#if system.totalPenalty}}−{{system.totalPenalty}}{{else}}0{{/if}}</strong>
+        </span>
+        <label data-tooltip="{{localize "SINLESS.Actor.FIELDS.penalty.hint"}}">{{localize "SINLESS.Actor.FIELDS.penalty.label"}}
+          <input type="number" name="system.penalty" value="{{system.penalty}}" min="0">
+        </label>
+        <label class="checkbox" data-tooltip="{{localize "SINLESS.Vehicle.FIELDS.battleRam.hint"}}">
+          <input type="checkbox" name="system.battleRam" {{checked system.battleRam}}> {{localize "SINLESS.Vehicle.FIELDS.battleRam.label"}}
+        </label>
+      </div>
+    </div>
+    <div class="defenses">
+      <button type="button" class="defense" data-action="rollDefense" data-defense="soak">
+        <i class="fa-solid fa-shield-halved"></i> {{localize "SINLESS.Defense.soak"}} ({{system.soakDice}})
+      </button>
+      <button type="button" class="defense" data-action="rollDefense" data-defense="dodge" data-tooltip="{{localize "SINLESS.Vehicle.dodgeHint"}}">
+        <i class="fa-solid fa-person-running"></i> {{localize "SINLESS.Defense.dodge"}}
+      </button>
+    </div>
+  </div>
+
+  <div class="rigger-panel">
+    <h3>{{localize "SINLESS.Vehicle.FIELDS.controller.label"}}</h3>
+    {{#if rigger}}
+    <div class="rigger">
+      <img src="{{rigger.img}}" alt="" data-action="openController">
+      <a data-action="openController">{{rigger.name}}</a>
+      <select name="system.controlMode">{{selectOptions controlChoices selected=system.controlMode localize=true}}</select>
+      <span class="{{#if control.downgraded}}warn{{/if}}" data-tooltip="{{localize "SINLESS.Vehicle.controlHint"}}">
+        {{localize control.label}}{{#if control.penalty}} −{{control.penalty}}{{/if}}
+      </span>
+      {{#if editable}}<a data-action="removeController" data-tooltip="{{localize "SINLESS.Vehicle.removeController"}}"><i class="fa-solid fa-link-slash"></i></a>{{/if}}
+    </div>
+    <div class="rig-actions">
+      <button type="button" data-action="rollVehicleTest" data-kind="maneuver"><i class="fa-solid fa-route"></i> {{localize "SINLESS.Rig.action.maneuver"}} ({{localize skillLabel}})</button>
+      <button type="button" data-action="rollVehicleTest" data-kind="overdrive"><i class="fa-solid fa-gauge-high"></i> {{localize "SINLESS.Rig.action.overdrive"}}</button>
+      <button type="button" data-action="rollVehicleTest" data-kind="ram"><i class="fa-solid fa-car-burst"></i> {{localize "SINLESS.Rig.action.ram"}}</button>
+    </div>
+    {{else}}
+    <p class="hint">{{localize "SINLESS.Vehicle.dropController"}}</p>
+    {{/if}}
+  </div>
+
+  <p class="carry">{{localize "SINLESS.Vehicle.mounted" weight=system.mountedWeight limit=weaponLimit}}{{#if overweight}} <strong class="warn">!</strong>{{/if}}</p>
+  {{#each groups}}
+  {{> "systems/sinless/templates/actor/partials/item-list.hbs" this}}
+  {{/each}}
+</section>

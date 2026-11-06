@@ -10,7 +10,7 @@ const T = path => `systems/${SYSTEM_ID}/templates/${path}`;
 
 const ITEM_GROUPS = {
   gear: ["weapon", "armor", "gear", "implant"],
-  grid: ["deck", "software"],
+  grid: ["deck", "software", "vcr"],
   magic: ["power", "ritual"],
   social: ["asset", "knowledge"]
 };
@@ -188,6 +188,7 @@ export class CharacterSheet extends SinlessActorSheet {
       adjustAlert: CharacterSheet.#onAdjustAlert,
       resetInfluence: CharacterSheet.#onResetInfluence,
       setCohesion: CharacterSheet.#onSetCohesion,
+      openVehicle: CharacterSheet.#onOpenVehicle,
       rollSeedMoney: CharacterSheet.#onRollSeedMoney,
       finishCreation: CharacterSheet.#onFinishCreation
     }
@@ -230,6 +231,7 @@ export class CharacterSheet extends SinlessActorSheet {
     context.enrichedBiography = await TextEditor.enrichHTML(sys.biography, { relativeTo: this.actor, secrets: this.actor.isOwner });
     if (sys.creation.active) context.creation = this.#creationContext();
     context.grid = this.#gridContext();
+    context.rig = this.#rigContext();
     return context;
   }
 
@@ -261,6 +263,27 @@ export class CharacterSheet extends SinlessActorSheet {
       n: i + 1, filled: i < d.cohesion, mark: (i + 1) % 3 === 0
     }));
     return ctx;
+  }
+
+  /** VCR and controlled vehicles for the Grid tab (ch.8). */
+  #rigContext() {
+    const actor = this.actor;
+    const vcr = actor.vcr;
+    const vehicles = actor.controlledVehicles.map(v => ({
+      id: v.id, name: v.name, img: v.img, control: SINLESS.CONTROL_MODES[v.controlMode]
+    }));
+    if (!vcr && !vehicles.length) return null;
+    return {
+      vcr,
+      bonus: actor.system.rig.bonus,
+      coreLabel: vcr ? SINLESS.DECK_CORES[vcr.system.core] : "",
+      vehicles,
+      overLinks: vcr ? vehicles.length > vcr.system.links : false
+    };
+  }
+
+  static async #onOpenVehicle(event, target) {
+    game.actors.get(target.closest("[data-vehicle-id]")?.dataset.vehicleId)?.sheet.render(true);
   }
 
   static async #onRollNanHack(event, target) {

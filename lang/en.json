@@ -3,7 +3,8 @@
     "Actor": {
       "character": "Sinless",
       "npc": "NPC",
-      "brand": "Brand"
+      "brand": "Brand",
+      "vehicle": "Drone / Vehicle"
     },
     "Item": {
       "weapon": "Weapon",
@@ -16,7 +17,8 @@
       "asset": "Asset",
       "resource": "Resource",
       "deck": "Cyberdeck",
-      "software": "Software"
+      "software": "Software",
+      "vcr": "Vehicle Control Rig"
     }
   },
   "SINLESS": {
@@ -218,7 +220,8 @@
       "character": "Sinless Character Sheet",
       "npc": "Sinless NPC Sheet",
       "item": "Sinless Item Sheet",
-      "brand": "Sinless Brand Sheet"
+      "brand": "Sinless Brand Sheet",
+      "vehicle": "Sinless Vehicle Sheet"
     },
     "Setting": {
       "difficulty": {
@@ -258,7 +261,10 @@
       "noDefender": "Select a token you control to defend.",
       "noDeck": "Equip a cyberdeck to make decking tests.",
       "noNan": "This software needs control of a network access node.",
-      "noHackingProgram": "Mark one software item as the base hacking program."
+      "noHackingProgram": "Mark one software item as the base hacking program.",
+      "vehicleNoDefense": "This vehicle cannot make that defense (dodging needs a hot-seated rigger).",
+      "noController": "Assign a rigger to this vehicle first.",
+      "notController": "You do not control this vehicle's rigger."
     },
     "Test": {
       "roll": "Roll",
@@ -605,6 +611,18 @@
         },
         "running": {
           "label": "Running (I/O)"
+        },
+        "bonusDice": {
+          "label": "Bonus dice",
+          "hint": "Free dice per round for vehicle tests while hot-seated."
+        },
+        "hardeningBonus": {
+          "label": "Hardening bonus",
+          "hint": "Reduces hot-seat feedback damage."
+        },
+        "links": {
+          "label": "Links",
+          "hint": "Vehicles or drones controlled at once."
         }
       }
     },
@@ -892,7 +910,9 @@
       "stripped": "Armor stripped: {armor}",
       "armorBonus": "Armor bonus",
       "physicalFull": "Physical track full: one simple action per turn. Brawn test each turn needs {n} successes or fall unconscious and bleed out.",
-      "stunFull": "Stun track full: one simple action per turn. Brawn test each turn needs {n} successes or fall unconscious."
+      "stunFull": "Stun track full: one simple action per turn. Brawn test each turn needs {n} successes or fall unconscious.",
+      "immune": "No damage: the weapon cannot penetrate the vehicle's armor.",
+      "immuneNotice": "{name} is immune: the weapon cannot penetrate its armor."
     },
     "Effect": {
       "title": "Active Effects",
@@ -1001,6 +1021,113 @@
       "alertNow": "Alert is now {n}.",
       "applyInfluence": "Extend influence +{n} m",
       "applyAlert": "Raise alert +{n}"
+    },
+    "VehicleKind": {
+      "drone": "Drone",
+      "vehicle": "Vehicle"
+    },
+    "VehicleFrame": {
+      "none": "—",
+      "micro": "Micro",
+      "mini": "Mini",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "Mobility": {
+      "ground": "Ground (Drive)",
+      "air": "Air (Fly)"
+    },
+    "ControlMode": {
+      "manual": "Manual",
+      "vcr": "VCR",
+      "hotseat": "Hot-seat"
+    },
+    "Vehicle": {
+      "FIELDS": {
+        "kind": {
+          "label": "Type"
+        },
+        "frame": {
+          "label": "Frame"
+        },
+        "mobility": {
+          "label": "Mobility"
+        },
+        "body": {
+          "label": "Body",
+          "hint": "Physical track length and soak dice."
+        },
+        "weaponWeight": {
+          "label": "Weapon weight (WW)",
+          "hint": "Weight of weapons the drone can mount."
+        },
+        "movement": {
+          "label": "Movement (m)"
+        },
+        "handling": {
+          "label": "Handling",
+          "hint": "Raises the limit of Drive/Fly tests."
+        },
+        "hardening": {
+          "label": "Hardening"
+        },
+        "cargo": {
+          "label": "Cargo"
+        },
+        "inertia": {
+          "label": "Inertia",
+          "hint": "Street vehicles: −1 die per point. Gained by overdrive moves; ramming clears it (pp.143-144)."
+        },
+        "cost": {
+          "label": "Cost (ㄓ)"
+        },
+        "battleRam": {
+          "label": "Battle Ram",
+          "hint": "Double damage dealt and half damage taken when ramming (p.149)."
+        },
+        "controller": {
+          "label": "Rigger"
+        },
+        "controlMode": {
+          "label": "Control"
+        },
+        "penalty": {
+          "label": "Situational penalty"
+        },
+        "notes": {
+          "label": "Notes"
+        }
+      },
+      "integrity": "Integrity",
+      "penaltyHint": "−1 die per 3 damage boxes, inertia (vehicles) and situational penalty.",
+      "dodgeHint": "Only a hot-seated rigger can dodge, using their own Finesse pool (p.144).",
+      "controlHint": "Manual −4, VCR −2, hot-seat 0. Needs an equipped VCR; hot-seating also needs a nerve rig (p.142).",
+      "removeController": "Release control",
+      "dropController": "Drop a character here to make them the controlling rigger.",
+      "mounted": "Mounted weapon weight {weight} / {limit}"
+    },
+    "Rig": {
+      "title": "Rigging",
+      "feedback": "Hot-seat feedback from {name}",
+      "inertiaNote": "Inertia −{n}",
+      "vcrNote": "VCR dice +{n}",
+      "action": {
+        "maneuver": "Maneuver",
+        "overdrive": "Overdrive",
+        "ram": "Ram"
+      },
+      "ramDamage": "Body + 2×inertia",
+      "vcrUsed": "VCR dice used: {n}",
+      "overdriveGain": "Overdrive: +{n} m on every movement action this round",
+      "overdriveInertia": "+1 inertia per overdrive move",
+      "battleRamNote": "Battle Ram: double damage dealt",
+      "ramSelfUnknown": "Damage to your vehicle: target Body − successes − inertia",
+      "ramSelf": "Damage to your vehicle: {n}",
+      "applyRamSelf": "Apply {n} damage to your vehicle",
+      "bonusHint": "Free bonus dice for vehicle tests while hot-seated; refresh each round (p.142).",
+      "bonusDice": "VCR dice",
+      "noVehicles": "No vehicles. Drop this character on a drone or vehicle sheet."
     }
   }
 }
