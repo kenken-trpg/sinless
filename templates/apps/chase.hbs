@@ -1,0 +1,75 @@
+<div class="sinless-chase-body">
+  {{#if active}}
+  <header class="chase-status">
+    <span class="turn">{{localize "SINLESS.Chase.turn" n=turn}}</span>
+    <span class="legs" data-tooltip="{{localize "SINLESS.Chase.legsHint"}}">
+      {{localize "SINLESS.Chase.legs"}}
+      {{#each legMarks}}<i class="fa-{{#if done}}solid{{else}}regular{{/if}} fa-circle"></i>{{/each}}
+      <a data-action="leg" data-delta="-1"><i class="fa-solid fa-minus"></i></a>
+      <a data-action="leg" data-delta="1"><i class="fa-solid fa-plus"></i></a>
+    </span>
+  </header>
+  {{#if outcomeLabel}}<p class="outcome">{{localize outcomeLabel}}</p>{{/if}}
+  {{/if}}
+
+  <section class="chase-vehicle" data-drop="vehicle">
+    <h3>{{localize "SINLESS.Chase.playerVehicle"}}</h3>
+    {{#if vehicle}}
+    <p><a data-action="openActor" data-uuid="{{vehicle.uuid}}">{{vehicle.name}}</a> {{#if vehicle.integrity}}<span class="hint">({{localize "SINLESS.Condition.physical"}} {{vehicle.integrity}})</span>{{/if}}
+      {{#if vehicle.wrecked}}<strong class="warn">{{localize "SINLESS.Chase.wrecked"}}</strong>{{/if}}</p>
+    {{else}}<p class="hint">{{localize "SINLESS.Chase.dropVehicle"}}</p>{{/if}}
+    <button type="button" data-action="setVehicle"><i class="fa-solid fa-car"></i> {{localize "SINLESS.Chase.useSelected"}}</button>
+  </section>
+
+  {{#if active}}
+  <section class="chase-paths">
+    <h3>{{localize "SINLESS.Chase.pathsTitle"}}</h3>
+    <div class="paths">
+      {{#each pathViews}}
+      <div class="path{{#if primary}} primary{{/if}}">
+        <header>
+          <strong>{{localize "SINLESS.Chase.path" name=name}}</strong>
+          {{#if primary}}<span class="badge">{{localize "SINLESS.Chase.primary"}}</span>{{else}}<a data-action="primary" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.makePrimary"}}"><i class="fa-solid fa-arrows-turn-to-dots"></i></a>{{/if}}
+        </header>
+        <p class="count">{{localize "SINLESS.Chase.cardsLeft" n=count}}</p>
+        <div class="top-card{{#if top.revealed}} revealed{{/if}}{{#if top.leg}} leg{{/if}}">
+          {{#if top}}{{#if top.revealed}}{{#if top.leg}}<strong>{{localize "SINLESS.Chase.legCard"}}</strong> {{/if}}{{top.text}}{{else}}<i class="fa-solid fa-question"></i>{{/if}}{{else}}—{{/if}}
+        </div>
+        <div class="path-actions">
+          <a data-action="reveal" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.reveal"}}"><i class="fa-solid fa-eye"></i></a>
+          <a data-action="burn" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.burn"}}"><i class="fa-solid fa-fire"></i></a>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    <button type="button" class="flip" data-action="flip" {{#if ended}}disabled{{/if}}><i class="fa-solid fa-forward-step"></i> {{localize "SINLESS.Chase.endTurn"}}</button>
+  </section>
+  {{/if}}
+
+  <section class="chase-enemies" data-drop="enemy">
+    <h3>{{localize "SINLESS.Chase.enemies"}}</h3>
+    <p class="hint">{{localize "SINLESS.Chase.enemiesHint"}}</p>
+    <ol>
+      {{#each enemyViews}}
+      <li class="{{#if wrecked}}wrecked{{/if}}{{#if (eq range "out")}} out{{/if}}">
+        <a class="name" data-action="openActor" data-uuid="{{uuid}}">{{name}}</a>
+        <a data-action="moveEnemy" data-index="{{index}}" data-delta="-1" data-tooltip="{{localize "SINLESS.Chase.closeIn"}}"><i class="fa-solid fa-angles-left"></i></a>
+        <select name="enemies.{{index}}.range">{{selectOptions ../rangeChoices selected=range localize=true}}</select>
+        <a data-action="moveEnemy" data-index="{{index}}" data-delta="1" data-tooltip="{{localize "SINLESS.Chase.fallBack"}}"><i class="fa-solid fa-angles-right"></i></a>
+        <label data-tooltip="{{localize "SINLESS.Chase.flyingHint"}}"><input type="checkbox" name="enemies.{{index}}.flying" {{checked flying}}> <i class="fa-solid fa-helicopter"></i></label>
+        {{#if wrecked}}<span class="warn">{{localize "SINLESS.Chase.wrecked"}}</span>{{else if attackable}}<i class="fa-solid fa-crosshairs" data-tooltip="{{localize "SINLESS.Chase.attackable"}}"></i>{{/if}}
+        <a data-action="removeEnemy" data-index="{{index}}"><i class="fa-solid fa-trash"></i></a>
+      </li>
+      {{/each}}
+    </ol>
+    <button type="button" data-action="addEnemies"><i class="fa-solid fa-plus"></i> {{localize "SINLESS.Chase.addEnemies"}}</button>
+  </section>
+
+  <footer class="chase-footer">
+    {{#if active}}
+    <button type="button" data-action="end"><i class="fa-solid fa-flag-checkered"></i> {{localize "SINLESS.Chase.end"}}</button>
+    {{else}}
+    <button type="button" data-action="start"><i class="fa-solid fa-flag"></i> {{localize "SINLESS.Chase.start"}}</button>
+    {{/if}}
+  </footer>
+</div>

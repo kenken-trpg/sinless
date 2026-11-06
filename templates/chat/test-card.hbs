@@ -55,7 +55,7 @@
   {{#if grid}}
   <div class="grid-result">
     {{#if grid.nan}}<p>{{localize "SINLESS.Grid.influenceGain" n=grid.gain}}</p>{{/if}}
-    <p>{{localize "SINLESS.Grid.alertRaise" n=grid.alert}}{{#if extra.alertNote}} <span class="formula">({{extra.alertNote}})</span>{{/if}}{{#if extra.shadow}} <span class="formula">{{localize "SINLESS.Grid.shadowReduced" n=extra.shadow}}</span>{{/if}}</p>
+    <p>{{localize "SINLESS.Grid.alertRaise" n=grid.alert}}{{#if extra.alertNote}} <span class="formula">({{extra.alertNote}})</span>{{/if}}{{#if extra.shadow}} <span class="formula">{{localize "SINLESS.Grid.shadowReduced" n=extra.shadow}}</span>{{/if}}{{#if extra.sensor}} <span class="formula">{{localize "SINLESS.Digital.sensorAdded" n=extra.sensor}}</span>{{/if}}</p>
     {{#if extra.alertApplied}}<p class="effect">{{localize "SINLESS.Grid.alertNow" n=extra.alertNow}}</p>{{/if}}
     {{#if grid.nan}}{{#unless extra.influenceApplied}}{{#if grid.gain}}
     <button type="button" data-sinless-action="apply-influence"><i class="fa-solid fa-tower-broadcast"></i> {{localize "SINLESS.Grid.applyInfluence" n=grid.gain}}</button>
@@ -64,6 +64,16 @@
     <button type="button" data-sinless-action="apply-alert"><i class="fa-solid fa-bell"></i> {{localize "SINLESS.Grid.applyAlert" n=grid.alert}}</button>
     {{/if}}{{/unless}}
   </div>
+  {{/if}}
+  {{#if extra.chase}}
+  <p class="effect{{#unless chase.success}} warn{{/unless}}">{{localize (concat "SINLESS.Chase.action." extra.chase.action)}}{{#if extra.chase.targetName}} ({{extra.chase.targetName}}){{/if}}: {{#if chase.success}}{{localize "SINLESS.Chase.success"}}{{else}}{{localize "SINLESS.Chase.failure"}}{{/if}}</p>
+  {{#if extra.chase.applied}}<p class="effect">{{localize "SINLESS.Chase.applied"}}</p>
+  {{else if chase.applicable}}<button type="button" data-sinless-action="apply-chase"><i class="fa-solid fa-car-side"></i> {{localize "SINLESS.Chase.apply"}}</button>{{/if}}
+  {{/if}}
+  {{#if extra.shadow}}
+  <p class="effect">{{localize "SINLESS.Operation.shadowAlert" n=shadowAlert}}</p>
+  {{#if extra.shadowApplied}}<p class="effect">{{localize "SINLESS.Grid.alertNow" n=extra.alertNow}}</p>
+  {{else}}{{#if shadowAlert}}<button type="button" data-sinless-action="apply-shadow-alert"><i class="fa-solid fa-bell"></i> {{localize "SINLESS.Grid.applyAlert" n=shadowAlert}}</button>{{/if}}{{/if}}
   {{/if}}
   {{#if extra.overload}}
   {{#if overloadFailed}}
@@ -82,7 +92,20 @@
   {{/if}}{{/if}}
   {{/if}}
   {{#if extra.heatRaised}}<p class="effect warn">{{localize "SINLESS.Card.heatRaised" heat=extra.heatRaised}}</p>{{/if}}
+  {{#if shrink}}
+  <div class="grid-result">
+    <p class="effect">{{localize "SINLESS.Digital.shrinkLine" n=shrink.loss}}</p>
+    {{#each shrink.targets}}
+    {{#if applied}}<p class="reroll-note">{{localize "SINLESS.Digital.shrinkApplied" name=name}}</p>
+    {{else}}<button type="button" data-sinless-action="apply-shrink" data-target-uuid="{{uuid}}"><i class="fa-solid fa-compress"></i> {{localize "SINLESS.Digital.applyShrink" name=name n=../shrink.loss}}</button>{{/if}}
+    {{else}}<p class="reroll-note">{{localize "SINLESS.Digital.shrinkNoTarget"}}</p>
+    {{/each}}
+  </div>
+  {{/if}}
   {{#if extra.weapon}}
+  {{#if extra.digital}}
+  <p class="weapon-line">{{localize (concat "SINLESS.Digital.line." extra.digital) damage=extra.damage rating=extra.rating ignore=extra.ignoreHardening}}</p>
+  {{else}}
   <p class="weapon-line">
     {{#if extra.blast}}{{localize "SINLESS.Card.damageBlast" damage=extra.damage}}{{else}}{{localize "SINLESS.Card.damage" damage=extra.damage}}{{/if}}
     {{#if extra.magic}}{{#if extra.resistPool}}· {{localize "SINLESS.Magic.resistedBy" pool=(localize (concat "SINLESS.Pool." extra.resistPool))}}{{/if}}{{else}}· {{localize (concat "SINLESS.Armor." extra.armorType)}} · {{localize "SINLESS.Item.FIELDS.penetration.label"}} {{extra.penetration}}{{/if}}
@@ -90,6 +113,7 @@
     {{#if extra.damageFormula}}<span class="formula">({{extra.damageText}} → {{extra.damageFormula}})</span>{{/if}}
     {{#if extra.damageNote}}<span class="formula">+ {{extra.damageNote}}</span>{{/if}}
   </p>
+  {{/if}}
   {{#if extra.recoil}}
   <p class="recoil-line">{{localize "SINLESS.Combat.recoilStatus" tokens=extra.recoil.tokens capacity=extra.recoil.capacity}}{{#if extra.recoil.gained}} (+{{extra.recoil.gained}}){{/if}}</p>
   {{#if extra.recoil.jammed}}<p class="effect warn">{{localize "SINLESS.Combat.recoilMiss"}}</p>{{/if}}

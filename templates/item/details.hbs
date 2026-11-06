@@ -16,6 +16,8 @@
     {{formGroup fields.rangeMax value=system.rangeMax}}
     {{formGroup fields.ammo value=system.ammo}}
     {{formGroup fields.alert value=system.alert}}
+    {{formGroup fields.digital value=system.digital}}
+    {{formGroup fields.ignoreHardening value=system.ignoreHardening}}
   {{/if}}
   {{#if isType.armor}}
     {{formGroup fields.layer value=system.layer localize=true}}
@@ -56,6 +58,7 @@
     {{formGroup fields.base value=system.base}}
     {{formGroup fields.requiresNan value=system.requiresNan}}
     {{formGroup fields.attack value=system.attack}}
+    {{formGroup fields.digitalAttack value=system.digitalAttack localize=true}}
     {{formGroup fields.alert value=system.alert}}
     {{formGroup fields.alertPerSuccess value=system.alertPerSuccess}}
     {{formGroup fields.alertNote value=system.alertNote}}

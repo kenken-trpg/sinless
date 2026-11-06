@@ -46,6 +46,33 @@ this system contains no rules text.
     asset, skill mastery 6→7; every second boon also magic item, skill guru 7→8 or pool
     resilience (a permanent free Kismet die on tests with that pool).
   - Everything is logged on the sheet and in chat; the last entry can be undone with a refund.
+- Operation tracker for the Agonarch (the spy icon in the token controls; pp.80–81, 235–236):
+  - Run difficulty, operational heat stars and the alert level in one window. Rising heat is
+    announced to everyone with its effects; four stars roll 2d6 rounds until the HTR team
+    arrives. A "Discovered" button sets at least one star.
+  - Alert responses with thresholds: the Agonarch is told when the alert crosses them. Alert
+    over 50 sets two stars of heat.
+  - Shadow skill test cards have a GM button to raise the alert (+2 / +1 / +0 by successes).
+  - End operation: sector heat for a brand (two stars roll 1d6), camera fallout per character
+    (Ghost Rating losses applied), paydata / relic caches valued by difficulty, reminders for
+    permanent injury tests; then alert and heat reset.
+- Lifestyle upkeep (p.46): ending a brand's sector turn makes each member pay their lifestyle
+  (a pre-purchased month first, otherwise the monthly cost in zuzus) and lists anyone who
+  cannot pay. Characters also have buttons next to their lifestyle to pay a turn and to
+  pre-purchase months.
+- Car chase board for the Agonarch (the car icon in the token controls; pp.151–152, 230–232):
+  - Start a chase with the legs (3 / 4 / 5) and paths (2 / 3) for the difficulty and a deck
+    of path options typed one per line ("+" marks a leg completed card); the deck is shuffled
+    and dealt into face-down paths.
+  - Flip the primary path at the end of each turn, reveal cards (scouting), discard cards and
+    change the primary path. Every flip is announced in chat.
+  - Pursuers move between engaged / close / falling back / distant / out; flyers always stay
+    close. Wrecked vehicles (full physical track) drop out.
+  - Vehicle sheets get the rigger chase actions while a chase runs (It's a trap!, Book it!,
+    Change / Switch / Plot the route); maneuver against a targeted pursuer needs its handling.
+    Successful cards have a GM button to apply them to the board.
+  - The chase ends when all legs are completed, no pursuer remains, or the players' vehicle
+    is wrecked.
 - NPCs can use bestiary defenses (critter rules): fixed dodge / soak / resist dice that never
   spend a pool. Leave a field empty to defend from the pool like a player character.
   NPC weapons can list fixed attack dice in the same way.
@@ -96,6 +123,15 @@ this system contains no rules text.
   - Device hacks, brute force and stealth NAN hacks. Cards compute influence gained (with the
     40 m range penalty) and alert raised (less Shadow Protocols). Buttons apply the influence
     (roller) and raise the world alert level (GM).
+  - Digital combat: weapons flagged as digital (ICE) are reduced by the target's hardening
+    (deck, vehicle or entity) instead of armor and hit hot-seated deckers' physical track.
+    Attack software can be set to De-rez (1d6 per net success to cohesion), Acid Burn
+    (lowers hardening) or Electric Strike (1d6 + successes stun, ×2 against machines).
+  - Network entities (ICE, daemons): NPCs with a cohesion track only, hardening as armor,
+    doubled defense dice against physical and magic attacks, and a crash when the track fills.
+    Sensor daemons on the scene add their alert to every grid action; RNIDs roll to shrink a
+    targeted decker's influence field.
+  - NPCs get the Grid tab too, so enemy deckers can run decks and software.
 - Brand actor for sector play: five statistics, brand traits, market cap / upkeep / bank,
   sector heat effects, sector action tests (with heat and Competence), end-of-turn banking,
   resources with damage / influence tracks, members and asset tests rolled by the best member.

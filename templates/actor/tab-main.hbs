@@ -19,8 +19,12 @@
 
   <div class="status-row">
     <div class="condition">
+      {{#if isEntity}}
+      {{> "systems/sinless/templates/actor/partials/condition-track.hbs" track="stun" label="SINLESS.Grid.cohesion" boxes=stunBoxes}}
+      {{else}}
       {{> "systems/sinless/templates/actor/partials/condition-track.hbs" track="physical" label="SINLESS.Condition.physical" boxes=physicalBoxes}}
       {{> "systems/sinless/templates/actor/partials/condition-track.hbs" track="stun" label="SINLESS.Condition.stun" boxes=stunBoxes}}
+      {{/if}}
       <div class="condition-footer">
         <label>{{localize "SINLESS.Condition.overflow"}}
           <input type="number" name="system.condition.overflow" value="{{system.condition.overflow}}" min="0">

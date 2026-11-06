@@ -1,4 +1,26 @@
 <section class="tab grid {{tab.cssClass}}" data-tab="grid" data-group="primary">
+  {{#if grid.network}}
+  <div class="network-panel">
+    <header>
+      <h3>{{localize "SINLESS.Digital.entityTitle"}}</h3>
+      <label class="checkbox" data-tooltip="{{localize "SINLESS.Npc.FIELDS.network.entity.hint"}}">
+        <input type="checkbox" name="system.network.entity" {{checked grid.network.entity}}> {{localize "SINLESS.Npc.FIELDS.network.entity.label"}}
+      </label>
+    </header>
+    <div class="network-fields">
+      <label>{{localize "SINLESS.Npc.FIELDS.network.hardening.label"}} <input type="number" name="system.network.hardening" value="{{grid.network.hardening}}" min="0"></label>
+      <label data-tooltip="{{localize "SINLESS.Npc.FIELDS.network.alertAura.hint"}}">{{localize "SINLESS.Npc.FIELDS.network.alertAura.label"}} <input type="number" name="system.network.alertAura" value="{{grid.network.alertAura}}" min="0"></label>
+      <label data-tooltip="{{localize "SINLESS.Npc.FIELDS.network.shrinkDice.hint"}}">{{localize "SINLESS.Npc.FIELDS.network.shrinkDice.label"}} <input type="number" name="system.network.shrinkDice" value="{{grid.network.shrinkDice}}" min="0"></label>
+      <label>{{localize "SINLESS.Npc.FIELDS.network.shrinkMeters.label"}} <input type="number" name="system.network.shrinkMeters" value="{{grid.network.shrinkMeters}}" min="0"> m</label>
+    </div>
+    {{#if grid.network.entity}}<p class="hint">{{localize "SINLESS.Digital.entityHint"}}</p>{{/if}}
+    {{#if grid.network.shrinkDice}}
+    <div class="hack-buttons">
+      <button type="button" data-action="rollShrink"><i class="fa-solid fa-compress"></i> {{localize "SINLESS.Digital.shrinkButton" n=grid.network.shrinkDice}}</button>
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
   <div class="grid-status">
     <div class="grid-box">
       <span class="label">{{localize "SINLESS.Grid.intrusion"}}</span>
@@ -45,7 +67,7 @@
     </div>
   </div>
   {{else}}
-  <p class="hint">{{localize "SINLESS.Grid.noDeckHint"}}</p>
+  {{#unless grid.network.entity}}<p class="hint">{{localize "SINLESS.Grid.noDeckHint"}}</p>{{/unless}}
   {{/if}}
 
   {{#if rig}}

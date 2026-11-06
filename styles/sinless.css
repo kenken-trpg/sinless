@@ -278,3 +278,75 @@
 .sinless-advance-dialog .sinless-advance .talisman { display: flex; align-items: center; gap: 6px; }
 .sinless-advance-dialog .sinless-advance label > input[type="radio"],
 .sinless-advance-dialog .sinless-advance label > input[type="checkbox"] { flex: 0 0 auto; width: 1rem; height: 1rem; margin: 0; }
+
+/* Operation tracker (pp.80-81, 235-236) */
+.sinless-operation .sinless-operation-body { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.25rem; }
+.sinless-operation h3 { margin: 0.25rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--sl-border, #888); }
+.sinless-operation h4 { margin: 0.4rem 0 0.1rem; font-size: 0.95rem; }
+.sinless-operation .hint { font-size: 0.85em; opacity: 0.8; margin: 0.1rem 0; }
+.sinless-operation .stars { display: flex; align-items: center; gap: 6px; font-size: 1.4rem; }
+.sinless-operation .stars .star { color: #888; }
+.sinless-operation .stars .star.on { color: #f9a825; }
+.sinless-operation .stars button { margin-left: auto; width: auto; font-size: 0.85rem; padding: 0 8px; }
+.sinless-operation .warn { color: var(--sl-fail, #b71c1c); font-weight: bold; }
+.sinless-operation .alert-row { display: flex; align-items: center; gap: 4px; }
+.sinless-operation .alert-row button { flex: 0 0 2.5rem; width: 2.5rem; }
+.sinless-operation .alert-row input { flex: 0 0 4rem; width: 4rem; text-align: center; font-size: 1.2rem; }
+.sinless-operation .alert-row .hint { margin-left: 6px; }
+.sinless-operation .responses { list-style: none; margin: 0.25rem 0; padding: 0; }
+.sinless-operation .responses li { display: flex; align-items: center; gap: 4px; margin: 2px 0; }
+.sinless-operation .responses li .threshold { flex: 0 0 3.5rem; width: 3.5rem; text-align: center; }
+.sinless-operation .responses li.active input { border-color: var(--sl-fail, #b71c1c); }
+.sinless-operation .responses li.active .fa-triangle-exclamation { color: var(--sl-fail, #b71c1c); }
+.sinless-operation .op-footer button { width: 100%; }
+.sinless-fallout .camera { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+.sinless-fallout .camera input { flex: 0 0 auto; width: 1rem; height: 1rem; margin: 0; }
+.sinless-operation-card ul { margin: 0.25rem 0; padding-left: 1.2rem; }
+
+/* Lifestyle upkeep (p.46) */
+.sinless.sheet .header-grid .inline .lifestyle-action { flex: 0 0 auto; padding: 0 2px; opacity: 0.8; }
+.sinless.sheet .header-grid .inline .lifestyle-action:hover { opacity: 1; }
+.sinless-card.sector-turn .lifestyles { margin: 0.2rem 0; padding-left: 1.2rem; }
+.sinless-card.sector-turn .lifestyles .warn { color: var(--sl-fail, #b71c1c); }
+
+/* Car chase board (pp.151-152, 230-232) */
+.sinless-chase .sinless-chase-body { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.25rem; }
+.sinless-chase h3 { margin: 0.25rem 0; font-size: 1.05rem; border-bottom: 1px solid var(--sl-border, #888); }
+.sinless-chase .hint { font-size: 0.85em; opacity: 0.8; margin: 0.1rem 0; }
+.sinless-chase .warn { color: var(--sl-fail, #b71c1c); font-weight: bold; }
+.sinless-chase .chase-status { display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+.sinless-chase .chase-status .legs i.fa-circle { color: #f9a825; margin: 0 1px; }
+.sinless-chase .chase-status .legs a { margin-left: 4px; font-size: 0.8em; }
+.sinless-chase .outcome { padding: 0.3rem; border: 2px solid #f9a825; border-radius: 4px; font-weight: bold; text-align: center; }
+.sinless-chase .paths { display: flex; gap: 6px; }
+.sinless-chase .path { flex: 1; padding: 0.3rem; border: 1px solid var(--sl-border, #888); border-radius: 4px; display: flex; flex-direction: column; gap: 4px; }
+.sinless-chase .path.primary { border: 2px solid #f9a825; }
+.sinless-chase .path header { display: flex; justify-content: space-between; align-items: center; }
+.sinless-chase .path .badge { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: #f9a825; color: #000; }
+.sinless-chase .path .count { margin: 0; font-size: 0.85em; opacity: 0.8; }
+.sinless-chase .path .top-card { min-height: 3.2rem; padding: 0.25rem; border: 1px dashed var(--sl-border, #888); border-radius: 4px; font-size: 0.85em; display: flex; align-items: center; justify-content: center; text-align: center; }
+.sinless-chase .path .top-card.revealed { border-style: solid; }
+.sinless-chase .path .top-card.leg { border-color: #43a047; }
+.sinless-chase .path .path-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.sinless-chase .flip { width: 100%; margin-top: 4px; }
+.sinless-chase .chase-enemies ol { list-style: none; margin: 0.25rem 0; padding: 0; }
+.sinless-chase .chase-enemies li { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+.sinless-chase .chase-enemies li .name { flex: 1; }
+.sinless-chase .chase-enemies li select { flex: 0 0 8rem; width: 8rem; }
+.sinless-chase .chase-enemies li label { display: flex; align-items: center; gap: 2px; }
+.sinless-chase .chase-enemies li label input { flex: 0 0 auto; width: 1rem; height: 1rem; margin: 0; }
+.sinless-chase .chase-enemies li.out, .sinless-chase .chase-enemies li.wrecked { opacity: 0.55; }
+.sinless-chase [data-drop] { border-radius: 4px; }
+.sinless-chase .chase-footer button { width: 100%; }
+.sinless-chase-setup textarea { width: 100%; font-family: inherit; }
+.sinless.sheet .chase-actions { flex-wrap: wrap; align-items: center; }
+
+/* Network entities: ICE and daemons (ch.7, p.205) */
+.sinless.sheet .network-panel { border: 1px dashed var(--sl-accent, #c2185b); border-radius: 4px; padding: 0.25rem 0.5rem; margin-bottom: 0.5rem; }
+.sinless.sheet .network-panel header { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+.sinless.sheet .network-panel h3 { margin: 0; border: none; }
+.sinless.sheet .network-panel label.checkbox { display: flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
+.sinless.sheet .network-panel .network-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.25rem 1rem; margin: 0.25rem 0; }
+.sinless.sheet .network-panel .network-fields label { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.sinless.sheet .network-panel .network-fields input { width: 4rem; flex: 0 0 4rem; }
+.sinless.sheet .network-panel .hint { margin: 0.25rem 0; font-size: 0.8rem; }

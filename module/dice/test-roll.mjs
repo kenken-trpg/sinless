@@ -1,11 +1,14 @@
 import { SYSTEM_ID, SINLESS } from "../config.mjs";
 import { resolveTest, rerollCount } from "../helpers/rules.mjs";
-import { splitDeckingDice, softwareAlert, nanHackResult } from "../helpers/grid.mjs";
+import { splitDeckingDice, softwareAlert, nanHackResult, shrinkInfluence } from "../helpers/grid.mjs";
 import { overdriveGain, ramResult } from "../helpers/rigging.mjs";
 import { summonResult } from "../helpers/magic.mjs";
 import { permanentInjury } from "../helpers/condition.mjs";
+import { shadowAlert } from "../helpers/operation.mjs";
+import { applyChaseAction } from "../apps/chase.mjs";
 import { adjustAlert } from "../settings.mjs";
 import { damageDialog, controlledDefenders } from "../apps/damage-dialog.mjs";
+import { digitalDialog } from "../apps/digital-dialog.mjs";
 
 const CARD_TEMPLATE = `systems/${SYSTEM_ID}/templates/chat/test-card.hbs`;
 
@@ -91,6 +94,18 @@ export async function performTest(o) {
   });
 }
 
+/** Alert raised by a decking card: NAN hack or software, plus sensor daemons (pp.134, 205). */
+function gridAlert(x, successes) {
+  if (x.nan) return nanHackResult(x.nan, successes, x.io).alert + Math.max(0, x.sensor ?? 0);
+  return softwareAlert(x, successes, x.shadow, x.sensor);
+}
+
+/** Defend with the dialog that fits the attack: digital or physical. */
+function defendDialog(message, actor) {
+  const x = message.getFlag(SYSTEM_ID, "test")?.extra;
+  return x?.digital ? digitalDialog(message, actor) : damageDialog(message, actor);
+}
+
 /** Recompute success totals for a stored card state. */
 export function summarize(state) {
   const all = [...state.final, ...state.kismetAdded];
@@ -133,6 +148,13 @@ export async function renderCard(state) {
       attributeLabel: x.injury.attribute ? SINLESS.ATTRIBUTES[x.injury.attribute] ?? x.injury.attribute : null
     };
   }
+  // Car chase action (pp.231-232): success against the needed successes.
+  if (x.chase) {
+    const success = !state.abf && sum.successes >= x.chase.needed;
+    context.chase = { success, applicable: (success || x.chase.action === "trap") && !x.chase.applied };
+  }
+  // Shadow test: alert raised while sneaking (p.236); an ABF counts as no success.
+  if (x.shadow) context.shadowAlert = shadowAlert(state.abf ? 0 : sum.successes);
   // Magic: spirit summoning outcome (p.183).
   if (x.summon && !state.abf) context.summon = summonResult(sum.successes, x.summon.force, x.summon.bag);
   // Rigging: overdrive movement and ramming damage to the ramming vehicle.
@@ -144,9 +166,16 @@ export async function renderCard(state) {
   // Decking: alert raised and NAN influence gained.
   if (x.nan && !state.abf) {
     const r = nanHackResult(x.nan, sum.successes, x.io);
-    context.grid = { gain: r.gain, alert: r.alert, nan: true };
+    context.grid = { gain: r.gain, alert: gridAlert(x, sum.successes), nan: true };
   } else if (x.software && !state.abf) {
-    context.grid = { alert: softwareAlert(x, sum.successes, x.shadow), nan: false };
+    context.grid = { alert: gridAlert(x, sum.successes), nan: false };
+  }
+  // RNID: each success shrinks the targeted deckers' influence (p.205).
+  if (x.shrink && !state.abf) {
+    context.shrink = {
+      loss: sum.successes * (x.shrink.meters ?? 2),
+      targets: (x.shrink.targets ?? []).map(t => ({ ...t, applied: (x.shrink.applied ?? []).includes(t.uuid) }))
+    };
   }
   return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, context);
 }
@@ -200,7 +229,15 @@ export function onRenderChatMessage(message, html) {
       button.remove();
       continue;
     }
-    guard(button, () => damageDialog(message, actor));
+    guard(button, () => defendDialog(message, actor));
+  }
+  // RNID: the GM or the roller shrinks a targeted decker's influence once.
+  for (const button of html.querySelectorAll("[data-sinless-action='apply-shrink']")) {
+    if (!(game.user.isGM || message.isOwner)) {
+      button.remove();
+      continue;
+    }
+    guard(button, () => applyShrink(message, button.dataset.targetUuid));
   }
   // Drain: the caster resists and applies it once, even if the spell failed (p.167).
   const drain = html.querySelector("[data-sinless-action='resist-drain']");
@@ -237,6 +274,16 @@ export function onRenderChatMessage(message, html) {
     }
     guard(button, () => actor.rollOverload(button.dataset.track));
   }
+  const chase = html.querySelector("[data-sinless-action='apply-chase']");
+  if (chase) {
+    if (game.user.isGM) guard(chase, () => applyChaseResult(message));
+    else chase.remove();
+  }
+  const shadow = html.querySelector("[data-sinless-action='apply-shadow-alert']");
+  if (shadow) {
+    if (game.user.isGM) guard(shadow, () => applyShadowAlert(message));
+    else shadow.remove();
+  }
   for (const action of ["apply-overload", "apply-organ"]) {
     const button = html.querySelector(`[data-sinless-action='${action}']`);
     if (!button) continue;
@@ -252,7 +299,7 @@ export function onRenderChatMessage(message, html) {
         ui.notifications.warn("SINLESS.Notify.noDefender", { localize: true });
         return;
       }
-      for (const actor of defenders) await damageDialog(message, actor);
+      for (const actor of defenders) await defendDialog(message, actor);
     });
   }
 }
@@ -269,10 +316,54 @@ async function applyGridResult(message, what) {
     await actor?.addInfluence(gain);
     x.influenceApplied = true;
   } else if (what === "alert" && !x.alertApplied) {
-    const value = x.nan ? nanHackResult(x.nan, sum.successes, x.io).alert : softwareAlert(x, sum.successes, x.shadow);
+    const value = gridAlert(x, sum.successes);
     x.alertNow = await adjustAlert(value);
     x.alertApplied = true;
   } else return;
+  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+}
+
+/** Shrink the influence of a targeted decker (RNID, p.205) and mark the target done. */
+async function applyShrink(message, uuid) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
+  const x = state?.extra;
+  if (!x?.shrink || (x.shrink.applied ?? []).includes(uuid)) return;
+  const actor = fromUuidSync(uuid)?.actor ?? fromUuidSync(uuid);
+  if (!actor?.system.grid) return;
+  if (!actor.isOwner) {
+    ui.notifications.warn("SINLESS.Digital.noPermission", { localize: true });
+    return;
+  }
+  const r = shrinkInfluence(actor.system.grid.influence, summarize(state).successes, x.shrink.meters);
+  await actor.update({ "system.grid.influence": r.influence });
+  x.shrink.applied = [...(x.shrink.applied ?? []), uuid];
+  x.shrink.results = { ...(x.shrink.results ?? {}), [uuid.replaceAll(".", "_")]: r.influence };
+  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+  const text = game.i18n.format(r.influence > 0 ? "SINLESS.Digital.shrunk" : "SINLESS.Digital.shrunkOut", { name: actor.name, loss: r.loss, n: r.influence });
+  return ChatMessage.create({ speaker: message.speaker, content: `<p class="sinless-note">${foundry.utils.escapeHTML(text)}</p>` });
+}
+
+/** Apply a chase action from a test card to the chase board once. */
+async function applyChaseResult(message) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
+  const x = state?.extra;
+  if (!x?.chase || x.chase.applied) return;
+  const sum = summarize(state);
+  const success = !state.abf && sum.successes >= x.chase.needed;
+  const applied = await applyChaseAction(x.chase.action, { success, targetUuid: x.chase.targetUuid });
+  if (!applied) return;
+  x.chase.applied = true;
+  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+}
+
+/** Raise the alert level by a shadow test's result once (p.236). */
+async function applyShadowAlert(message) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
+  const x = state?.extra;
+  if (!x?.shadow || x.shadowApplied) return;
+  const sum = summarize(state);
+  x.alertNow = await adjustAlert(shadowAlert(state.abf ? 0 : sum.successes));
+  x.shadowApplied = true;
   await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
 }
 

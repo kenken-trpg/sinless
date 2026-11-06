@@ -58,6 +58,12 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
         recoilPrimed: new BooleanField({ initial: false }),
         recoilBonus: int(0, { min: undefined })
       }),
+      // Decking (ch.7): MCP dice spent this round and NAN influence radius in meters.
+      // Shared so that NPC deckers can run decks too.
+      grid: new SchemaField({
+        mcpSpent: int(0),
+        influence: int(0)
+      }),
       penalty: int(0),
       notes: new HTMLField({ required: true, blank: true })
     };
@@ -101,6 +107,15 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
     this.combat.recoilCapacity = recoilCapacity({ strength: this._strength, bonus: this.combat.recoilBonus });
 
     this._prepareArmor();
+    this._prepareDeck();
+  }
+
+  /** Equipped deck and its MCP dice, usable only for decking tests (p.130). */
+  _prepareDeck() {
+    const deck = this.parent.items.find(i => i.type === "deck" && i.system.equipped) ?? null;
+    const max = deck?.system.mcp ?? 0;
+    this.grid.deckId = deck?.id ?? null;
+    this.grid.mcp = { max, value: Math.max(0, max - this.grid.mcpSpent) };
   }
 
   /** Stacked armor (p.92): highest value vs penetration, total value reduces damage. */
@@ -161,11 +176,6 @@ export class CharacterData extends SinlessActorBase {
       }),
       initiativeBonus: int(0, { min: undefined }),
       movement: int(0),
-      // Decking (ch.7): MCP dice spent this round and NAN influence radius in meters.
-      grid: new SchemaField({
-        mcpSpent: int(0),
-        influence: int(0)
-      }),
       // Rigging (ch.8): VCR bonus dice spent this round.
       rig: new SchemaField({
         vcrSpent: int(0)
@@ -202,7 +212,6 @@ export class CharacterData extends SinlessActorBase {
     this.kismet.pool = { max: poolMax, value: Math.max(0, poolMax - this.kismet.spent) };
 
     this._prepareZoetic();
-    this._prepareDeck();
     this._prepareRig();
     this.carryCapacity = this.attributes.str.value;
     this.carried = this.parent.items.reduce(
@@ -210,14 +219,6 @@ export class CharacterData extends SinlessActorBase {
     );
     this.encumbrance = Math.max(0, Math.floor(this.carried - this.carryCapacity));
     this.totalPenalty += this.encumbrance;
-  }
-
-  /** Equipped deck and its MCP dice, usable only for decking tests (p.130). */
-  _prepareDeck() {
-    const deck = this.parent.items.find(i => i.type === "deck" && i.system.equipped) ?? null;
-    const max = deck?.system.mcp ?? 0;
-    this.grid.deckId = deck?.id ?? null;
-    this.grid.mcp = { max, value: Math.max(0, max - this.grid.mcpSpent) };
   }
 
   /** Equipped VCR and its free bonus dice for vehicle tests (p.142). */
@@ -264,12 +265,28 @@ export class NpcData extends SinlessActorBase {
       defenses: new SchemaField(Object.fromEntries(keys(DEFENSES).map(k => [k, new NumberField({
         required: true, nullable: true, integer: true, min: 0, initial: null
       })]))),
-      agonarch: new BooleanField({ initial: true })
+      agonarch: new BooleanField({ initial: true }),
+      // Network entities: ICE and daemons (pp.133, 205-206). Their stun track is the
+      // cohesion track and takes all damage; hardening works as armor.
+      network: new SchemaField({
+        entity: new BooleanField({ initial: false }),
+        hardening: int(0),
+        // Sensor daemon: extra alert for every grid action in its range.
+        alertAura: int(0),
+        // RNID: dice rolled to shrink the decker's influence field, meters per success.
+        shrinkDice: int(0),
+        shrinkMeters: int(2)
+      })
     };
   }
 
   get isAgonarch() {
     return this.agonarch;
+  }
+
+  /** A network entity (ICE, daemon) with only a cohesion track. */
+  get isEntity() {
+    return this.network.entity;
   }
 
   get _strength() {
@@ -281,6 +298,8 @@ export class NpcData extends SinlessActorBase {
   }
 
   _conditionMax() {
+    // Software entities have no physical track: everything marks cohesion (p.133).
+    if (this.network.entity) return { physical: 0, stun: this.conditionMax.stun };
     return { ...this.conditionMax };
   }
 

@@ -1,0 +1,65 @@
+<div class="sinless-damage sinless-digital">
+  <p class="notes"><span>{{attack}}</span><span>{{defender}}</span><span>{{localize kindLabel}}</span></p>
+  <fieldset>
+    <legend>{{localize "SINLESS.Damage.attack"}}</legend>
+    <div class="form-group">
+      <label>{{localize "SINLESS.Damage.hits"}}</label>
+      <input type="number" name="hits" value="{{hits}}" min="0">
+    </div>
+    {{#if canDodge}}
+    <div class="form-group">
+      <label data-tooltip="{{localize "SINLESS.Digital.defenseHint"}}">{{localize "SINLESS.Digital.defense"}}</label>
+      <div class="with-button">
+        <input type="number" name="defense" value="0" min="0">
+        {{#if canRoll}}<button type="button" data-sinless-roll="dodge" data-tooltip="{{localize "SINLESS.Damage.rollDodge"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+      </div>
+    </div>
+    {{/if}}
+    {{#if showBase}}
+    <div class="form-group">
+      <label>{{localize "SINLESS.Damage.base"}}</label>
+      <input type="number" name="base" value="{{base}}" min="0">
+    </div>
+    {{/if}}
+    {{#if (eq kind "acid")}}
+    <div class="form-group">
+      <label>{{localize "SINLESS.Item.FIELDS.rating.label"}}</label>
+      <input type="number" name="rating" value="{{rating}}" min="0">
+    </div>
+    {{/if}}
+    {{#if (eq kind "strike")}}
+    <div class="form-group checks">
+      <label class="checkbox"><input type="checkbox" name="machine" {{checked machine}}> {{localize "SINLESS.Digital.machine"}}</label>
+    </div>
+    {{/if}}
+  </fieldset>
+  {{#unless (eq kind "strike")}}
+  <fieldset>
+    <legend>{{localize "SINLESS.Item.FIELDS.hardening.label"}}</legend>
+    <div class="form-group">
+      <label>{{localize "SINLESS.Digital.targetHardening"}}</label>
+      <input type="number" name="hardening" value="{{hardening}}" min="0">
+    </div>
+    {{#if (eq kind "weapon")}}
+    <div class="form-group">
+      <label>{{localize "SINLESS.Item.FIELDS.ignoreHardening.label"}}</label>
+      <input type="number" name="ignore" value="{{ignore}}" min="0">
+    </div>
+    {{/if}}
+  </fieldset>
+  {{/unless}}
+  {{#if canSoak}}
+  <fieldset>
+    <legend>{{localize "SINLESS.Defense.soak"}}</legend>
+    <div class="form-group">
+      <label>{{localize "SINLESS.Damage.soakSuccesses"}}</label>
+      <div class="with-button">
+        <input type="number" name="soak" value="0" min="0">
+        {{#if canRoll}}<button type="button" data-sinless-roll="soak" data-tooltip="{{localize "SINLESS.Damage.rollSoak"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+      </div>
+    </div>
+    <p class="notes"><span>{{localize "SINLESS.Damage.track"}}: {{#if entity}}{{localize "SINLESS.Grid.cohesion"}}{{else}}{{localize trackLabel}}{{/if}}</span></p>
+  </fieldset>
+  {{/if}}
+  <p class="sinless-damage-preview"></p>
+</div>

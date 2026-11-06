@@ -2,7 +2,7 @@ import { SINLESS, SYSTEM_ID, skillLabel, AGONARCH_TN } from "../config.mjs";
 import { autoSuccesses, sectorHeatPenalty } from "../helpers/brand.mjs";
 import { damageFormula, weaponArmorType, applyConditionDamage } from "../helpers/damage.mjs";
 import { currentTargetNumber, currentHeatBonus, getSetting } from "../settings.mjs";
-import { INTRUSION_PENALTY, NO_NERVE_RIG_PENALTY, influencePenalty } from "../helpers/grid.mjs";
+import { INTRUSION_PENALTY, NO_NERVE_RIG_PENALTY, influencePenalty, entityDefenseDice } from "../helpers/grid.mjs";
 import { CONTROL_PENALTY, effectiveControl, hotseatFeedback } from "../helpers/rigging.mjs";
 import { forceFormula, drainIsLethal } from "../helpers/magic.mjs";
 import {
@@ -14,6 +14,8 @@ import {
 import {
   awardTotal, skillRaiseCost, attributeRaiseCost, zoeticRaiseCost, boonStatus, boonChoices, BOONS, WINDFALLS
 } from "../helpers/advancement.mjs";
+import { payLifestyle, buyLifestyle } from "../helpers/lifestyle.mjs";
+import { CHASE_ACTIONS, chaseNeeded } from "../helpers/chase.mjs";
 import { testDialog } from "../apps/test-dialog.mjs";
 import { performTest } from "../dice/test-roll.mjs";
 
@@ -147,16 +149,18 @@ export class SinlessActor extends Actor {
   async rollSkill(skillKey) {
     if (!SINLESS.SKILLS[skillKey]) return null;
     const { mode, rank, pool, spec } = this._skillMode(skillKey);
+    // Shadow tests while sneaking raise the alert level (p.236).
+    const extra = skillKey === "shadow" ? { shadow: true } : {};
     return this._runTest(this._testDefaults({
       label: game.i18n.localize(skillLabel(skillKey)), pool, mode, rank, spec
-    }));
+    }), extra);
   }
 
   /**
    * Roll a pool for defense (dodge, soak, resist): no limit applies (p.29).
    * Opponents with bestiary defenses roll their listed dice instead (p.195).
    */
-  async rollDefense(key) {
+  async rollDefense(key, { digital = true } = {}) {
     const def = SINLESS.DEFENSES[key];
     if (!def) return null;
     // Vehicles: a hot-seated rigger dodges with their own Finesse pool (p.144).
@@ -166,7 +170,9 @@ export class SinlessActor extends Actor {
       ui.notifications.warn("SINLESS.Notify.vehicleNoDefense", { localize: true });
       return null;
     }
-    const fixed = this.system.fixedDefense?.(key) ?? null;
+    let fixed = this.system.fixedDefense?.(key) ?? null;
+    // Programs double their defense dice against physical and magical attacks (p.205).
+    if (fixed !== null && this.isEntity) fixed = entityDefenseDice(fixed, { entity: true, digital });
     if (fixed !== null) return this._rollFixedDefense(key, fixed);
     const defaults = this._testDefaults({
       label: game.i18n.localize(def.label), pool: def.pool, mode: "defense"
@@ -309,6 +315,8 @@ export class SinlessActor extends Actor {
       energy: sys.category === "energy",
       stun: sys.stun || sys.category === "unarmed",
       blast: sys.blast,
+      digital: sys.digital ? "weapon" : null,
+      ignoreHardening: sys.digital ? sys.ignoreHardening : 0,
       targets
     };
   }
@@ -327,6 +335,8 @@ export class SinlessActor extends Actor {
       stun: sys.condition.stun.value,
       overflow: sys.condition.overflow
     };
+    // Software entities only have a cohesion track: every hit marks it (p.133).
+    if (this.isEntity) result = { ...result, track: "stun" };
     const after = applyConditionDamage(before, max, result.final, result.track);
     await this.update({
       "system.condition.physical.value": after.physical,
@@ -334,8 +344,11 @@ export class SinlessActor extends Actor {
       "system.condition.overflow": after.overflow
     });
     // More damage in one attack than the whole physical track is fatal (p.97).
-    const killed = this.type !== "vehicle" && result.final > 0 && killedOutright(result.final, max.physical);
+    const killed = this.type !== "vehicle" && !this.isEntity && result.final > 0 && killedOutright(result.final, max.physical);
     if (killed) await this.markDead();
+    // A full cohesion track crashes the software until it reboots (p.133).
+    const crashed = this.isEntity && max.stun > 0 && after.stun >= max.stun && before.stun < max.stun;
+    if (crashed) await this.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { active: true, overlay: true });
     // Hot-seated rigger takes the vehicle's physical damage as stun, less VCR hardening (p.142).
     if (this.type === "vehicle" && this.controlMode === "hotseat" && result.final > 0) {
       const rigger = this.vehicleController;
@@ -359,11 +372,13 @@ export class SinlessActor extends Actor {
         name: this.name,
         source: result.source,
         result,
-        trackLabel: `SINLESS.Condition.${result.track}`,
+        trackLabel: this.isEntity ? "SINLESS.Grid.cohesion" : `SINLESS.Condition.${result.track}`,
         before, after, max,
         overflowAdded: after.overflow - before.overflow,
         strippedNames,
-        killed
+        killed,
+        crashed,
+        entity: this.isEntity
       }
     );
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this }), content });
@@ -456,11 +471,27 @@ export class SinlessActor extends Actor {
   async rollVehicleTest(kind = "maneuver") {
     if (this.type !== "vehicle") return null;
     const v = this.system;
-    const label = `${game.i18n.localize(`SINLESS.Rig.action.${kind}`)}: ${this.name}`;
+    const chaseKind = kind !== "maneuver" && CHASE_ACTIONS[kind];
+    const label = `${game.i18n.localize(chaseKind ? `SINLESS.Chase.action.${kind}` : `SINLESS.Rig.action.${kind}`)}: ${this.name}`;
     const prepared = this._rigDefaults({ label, skillKey: v.skill, gear: v.handling });
     if (!prepared) return null;
     const { rigger, defaults } = prepared;
     const extra = { vehicleUuid: this.uuid };
+    // Car chase actions (pp.231-232): successes needed, applied to the chase board by the GM.
+    const chase = game.settings.get(SYSTEM_ID, "chase");
+    if (chase?.active && CHASE_ACTIONS[kind]) {
+      const targetActor = [...(game.user?.targets ?? [])].map(t => t.actor).find(a => a && a !== this);
+      const target = kind === "maneuver" ? chase.enemies.find(e => e.uuid === targetActor?.uuid) : null;
+      if (kind !== "maneuver" || target) {
+        const needed = chaseNeeded(kind, {
+          handling: targetActor?.system.handling ?? 0,
+          rigger: targetActor?.type === "vehicle" && !!targetActor.system.controller
+        });
+        defaults.threshold = needed;
+        extra.chase = { action: kind, needed, targetUuid: target?.uuid ?? null, targetName: target?.name ?? null };
+        defaults.notes.push(game.i18n.format("SINLESS.Chase.needed", { n: needed }));
+      }
+    }
     if (kind === "overdrive") extra.overdrive = { inertia: v.kind === "vehicle" };
     if (kind === "ram") {
       const target = [...(game.user?.targets ?? [])].map(t => t.actor).find(a => a && a !== this);
@@ -514,6 +545,84 @@ export class SinlessActor extends Actor {
     return this.items.find(i => i.type === "software" && i.system.base) ?? null;
   }
 
+  /** A network entity: ICE or a daemon with only a cohesion track (p.133). */
+  get isEntity() {
+    return !!this.system.isEntity;
+  }
+
+  /** Machines take double Electric Strike damage (p.137). */
+  get isMachine() {
+    return this.type === "vehicle" || this.isEntity;
+  }
+
+  /** Deckers with a nerve rig are hot-seated: digital hits are physical damage (p.129). */
+  get hotseated() {
+    return !!this.deck?.system.nerveRig;
+  }
+
+  /** Hardening against digital attacks: entity, vehicle or the equipped deck (p.130). */
+  get hardening() {
+    if (this.isEntity) return this.system.network.hardening;
+    if (this.type === "vehicle") return this.system.hardening ?? 0;
+    return this.deck?.system.hardening ?? 0;
+  }
+
+  /** Lower hardening (Acid Burn, p.135) where it is stored. */
+  async setHardening(value) {
+    const v = Math.max(0, Math.floor(value));
+    if (this.isEntity) return this.update({ "system.network.hardening": v });
+    if (this.type === "vehicle") return this.update({ "system.hardening": v });
+    return this.deck?.update({ "system.hardening": v }) ?? null;
+  }
+
+  /**
+   * Alert added by sensor daemons on the current scene (p.205): any grid action
+   * in their range raises the alert by 2 more. Crashed daemons do not count.
+   */
+  get sensorAlert() {
+    const tokens = canvas?.scene?.tokens ?? [];
+    let total = 0;
+    for (const token of tokens) {
+      const a = token.actor;
+      if (!a?.isEntity || a.statuses?.has(CONFIG.specialStatusEffects.DEFEATED)) continue;
+      total += a.system.network.alertAura ?? 0;
+    }
+    return total;
+  }
+
+  /** Targeted tokens other than this actor, for attack cards. */
+  _currentTargets() {
+    return [...(game.user?.targets ?? [])]
+      .filter(t => t.actor && t.actor !== this)
+      .map(t => ({ uuid: t.document.uuid, name: t.name }));
+  }
+
+  /**
+   * Digital attack software (pp.135-137): De-rez and Acid Burn against hardening
+   * and defense; Electric Strike rolls 1d6 + successes stun, doubled on machines.
+   */
+  async _digitalAttackData(item) {
+    const kind = item.system.digitalAttack;
+    const data = { weapon: true, digital: kind, rating: item.system.rating, damage: 0, penetration: 0, armorType: "ballistic", targets: this._currentTargets() };
+    if (kind === "strike") {
+      const roll = await new Roll("1d6").evaluate();
+      Object.assign(data, { damage: roll.total, damageText: "1d6", damageFormula: String(roll.total), stun: true, ignoreArmor: true });
+    }
+    return data;
+  }
+
+  /**
+   * RNID and enemy deckers (p.205): roll the shrink dice; each success shrinks a
+   * targeted decker's influence field.
+   */
+  async rollShrinkInfluence() {
+    const net = this.system.network;
+    if (!net?.shrinkDice) return null;
+    const label = game.i18n.localize("SINLESS.Digital.shrink");
+    const defaults = this._fixedDiceDefaults(label, net.shrinkDice);
+    return this._runTest(defaults, { shrink: { meters: net.shrinkMeters, targets: this._currentTargets() } });
+  }
+
   /**
    * Dialog defaults for a decking test: Focus pool plus MCP dice, limit skill +
    * software rating, intrusion difficulty and missing nerve rig penalties.
@@ -558,14 +667,17 @@ export class SinlessActor extends Actor {
     const shadow = this.items
       .filter(i => i.type === "software" && i.system.running && i.system.reducesAlert && i.id !== item.id)
       .reduce((max, i) => Math.max(max, i.system.rating), 0);
-    return this._runTest(defaults, {
+    const extra = {
       software: true,
       alert: sys.alert,
       alertPerSuccess: sys.alertPerSuccess,
       alertNote: sys.alertNote,
       shadow,
+      sensor: this.sensorAlert,
       effect: sys.effect
-    });
+    };
+    if (sys.digitalAttack) Object.assign(extra, await this._digitalAttackData(item));
+    return this._runTest(defaults, extra);
   }
 
   /**
@@ -588,7 +700,7 @@ export class SinlessActor extends Actor {
       notes: extraPenalty ? [game.i18n.format("SINLESS.Grid.rangePenalty", { n: extraPenalty })] : []
     });
     if (!defaults) return null;
-    const extra = { software: true, nan: mode === "device" ? null : mode, io: this.deck?.system.io ?? 0 };
+    const extra = { software: true, nan: mode === "device" ? null : mode, io: this.deck?.system.io ?? 0, sensor: this.sensorAlert };
     if (mode === "device") extra.effect = game.i18n.localize("SINLESS.Grid.deviceHint");
     return this._runTest(defaults, extra);
   }
@@ -842,11 +954,68 @@ export class SinlessActor extends Actor {
       "system.actionsUsed": 0,
       "system.sectorTurn": sys.sectorTurn + 1
     });
+    // Members pay their lifestyle for the new sector turn (pp.46, 76).
+    const lifestyles = [];
+    for (const id of sys.members) {
+      const member = game.actors.get(id);
+      if (!member) continue;
+      if (!member.isOwner) {
+        lifestyles.push({ name: member.name, text: game.i18n.localize("SINLESS.Lifestyle.noPermission"), warn: true });
+        continue;
+      }
+      const r = await member.payLifestyle({ message: false });
+      lifestyles.push({ name: member.name, text: member._lifestyleText(r), warn: r.mode === "unpaid" });
+    }
     const content = await foundry.applications.handlebars.renderTemplate(
       `systems/${SYSTEM_ID}/templates/chat/sector-turn.hbs`,
-      { turn: sys.sectorTurn, marketCap, upkeep, net, bank, unmet, heat: sys.sector.heat }
+      { turn: sys.sectorTurn, marketCap, upkeep, net, bank, unmet, heat: sys.sector.heat, lifestyles }
     );
     return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this }), content });
+  }
+
+  /**
+   * Pay this character's lifestyle for one sector turn (p.46): a pre-purchased
+   * month first, otherwise the monthly cost in zuzus.
+   */
+  async payLifestyle({ message = true } = {}) {
+    const sys = this.system;
+    if (this.type !== "character") return null;
+    const r = payLifestyle({ lifestyle: sys.lifestyle, months: sys.lifestyleMonths, zuzu: sys.zuzu });
+    if (r.mode === "prepaid" || r.mode === "cash") {
+      await this.update({ "system.lifestyleMonths": r.months, "system.zuzu": r.zuzu });
+    }
+    if (message) await this._lifestyleMessage(this._lifestyleText(r), r.mode === "unpaid");
+    return r;
+  }
+
+  /** Pre-purchase months of the current lifestyle (p.46). */
+  async buyLifestyle(count) {
+    const sys = this.system;
+    if (this.type !== "character" || !(count > 0)) return null;
+    const r = buyLifestyle({ lifestyle: sys.lifestyle, months: sys.lifestyleMonths, zuzu: sys.zuzu }, count);
+    if (!r.ok) {
+      ui.notifications.warn(game.i18n.format("SINLESS.Lifestyle.cannotAfford", { cost: r.cost.toLocaleString() }));
+      return null;
+    }
+    await this.update({ "system.lifestyleMonths": r.months, "system.zuzu": r.zuzu });
+    return this._lifestyleMessage(game.i18n.format("SINLESS.Lifestyle.bought", {
+      n: count, lifestyle: game.i18n.localize(SINLESS.LIFESTYLES[sys.lifestyle]), cost: r.cost.toLocaleString(), months: r.months
+    }));
+  }
+
+  /** Localized result of a lifestyle payment. */
+  _lifestyleText(r) {
+    const lifestyle = game.i18n.localize(SINLESS.LIFESTYLES[this.system.lifestyle]);
+    return game.i18n.format(`SINLESS.Lifestyle.paid.${r.mode}`, {
+      lifestyle, cost: r.cost.toLocaleString(), months: r.months, zuzu: r.zuzu.toLocaleString()
+    });
+  }
+
+  async _lifestyleMessage(text, warn = false) {
+    return ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: this }),
+      content: `<div class="sinless-card"><header class="card-header"><h3>${game.i18n.localize("SINLESS.Lifestyle.title")}</h3></header><p class="effect${warn ? " warn" : ""}">${foundry.utils.escapeHTML(text)}</p></div>`
+    });
   }
 
   /** Add a character as a brand member. */
@@ -866,7 +1035,7 @@ export class SinlessActor extends Actor {
   /** Overload tests due at the start of this actor's turn. */
   get overloadTests() {
     const c = this.system.condition;
-    if (!c || this.type === "vehicle") return [];
+    if (!c || this.type === "vehicle" || this.isEntity) return [];
     return overloadTests(c);
   }
 

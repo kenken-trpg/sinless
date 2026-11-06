@@ -1,0 +1,46 @@
+<div class="sinless-operation-body">
+  <div class="form-group">
+    <label>{{localize "SINLESS.Setting.difficulty.name"}}</label>
+    <select name="difficulty">{{selectOptions difficultyChoices selected=difficulty localize=true}}</select>
+  </div>
+
+  <section class="op-heat">
+    <h3>{{localize "SINLESS.Operation.heat"}}</h3>
+    <div class="stars">
+      {{#each stars}}
+      <a class="star{{#if on}} on{{/if}}" data-action="heat" data-heat="{{n}}" data-tooltip="{{localize (concat "SINLESS.Heat." n)}}"><i class="fa-{{#if on}}solid{{else}}regular{{/if}} fa-star"></i></a>
+      {{/each}}
+      <button type="button" data-action="discovered" data-tooltip="{{localize "SINLESS.Operation.discoveredHint"}}"><i class="fa-solid fa-eye"></i> {{localize "SINLESS.Operation.discovered"}}</button>
+    </div>
+    <p class="heat-label"><strong>{{localize heatLabel}}</strong> — {{localize heatEffect}}</p>
+    {{#if htr}}<p class="warn">{{localize "SINLESS.Operation.htr" n=htr}}</p>{{/if}}
+  </section>
+
+  <section class="op-alert">
+    <h3>{{localize "SINLESS.Operation.alert"}}</h3>
+    <div class="alert-row">
+      <button type="button" data-action="alert" data-delta="-1">−1</button>
+      <input type="number" name="alert" value="{{alert}}" min="0">
+      <button type="button" data-action="alert" data-delta="1">+1</button>
+      <button type="button" data-action="alert" data-delta="2">+2</button>
+      <span class="hint">{{localize "SINLESS.Operation.alertHint"}}</span>
+    </div>
+    <h4>{{localize "SINLESS.Operation.responses"}}</h4>
+    <p class="hint">{{localize "SINLESS.Operation.responsesHint"}}</p>
+    <ol class="responses">
+      {{#each responses}}
+      <li class="{{#if active}}active{{/if}}">
+        <input type="number" name="responses.{{index}}.threshold" value="{{threshold}}" min="1" class="threshold">
+        <input type="text" name="responses.{{index}}.label" value="{{label}}" placeholder="{{localize "SINLESS.Operation.responsePlaceholder"}}">
+        {{#if active}}<i class="fa-solid fa-triangle-exclamation" data-tooltip="{{localize "SINLESS.Operation.active"}}"></i>{{/if}}
+        <a data-action="removeResponse" data-index="{{index}}"><i class="fa-solid fa-trash"></i></a>
+      </li>
+      {{/each}}
+    </ol>
+    <button type="button" data-action="addResponse"><i class="fa-solid fa-plus"></i> {{localize "SINLESS.Operation.addResponse"}}</button>
+  </section>
+
+  <footer class="op-footer">
+    <button type="button" data-action="endOperation"><i class="fa-solid fa-flag-checkered"></i> {{localize "SINLESS.Operation.end"}}</button>
+  </footer>
+</div>

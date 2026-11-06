@@ -42,6 +42,11 @@ export class VehicleSheet extends SinlessActorSheet {
     context.frameChoices = SINLESS.VEHICLE_FRAMES;
     context.mobilityChoices = labels(SINLESS.VEHICLE_MOBILITY);
     context.controlChoices = SINLESS.CONTROL_MODES;
+    // Car chase actions while a chase is running (pp.231-232).
+    context.chaseActive = !!game.settings.get(SYSTEM_ID, "chase")?.active;
+    context.chaseActions = ["trap", "book", "burn", "switch", "plot"].map(key => ({
+      key, label: `SINLESS.Chase.action.${key}`, hint: `SINLESS.Chase.actionHint.${key}`
+    }));
     const boxes = (value, max) => Array.from({ length: max }, (_, i) => ({
       n: i + 1, filled: i < value, mark: (i + 1) % 3 === 0
     }));

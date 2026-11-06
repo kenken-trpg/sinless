@@ -131,7 +131,24 @@
       "low": "Low",
       "middle": "Middle",
       "high": "High",
-      "wealthy": "Wealthy"
+      "wealthy": "Wealthy",
+      "title": "Lifestyle",
+      "pay": "Pay lifestyle",
+      "payHint": "Pay this sector turn's lifestyle: a pre-purchased month first, otherwise the monthly cost in zuzus (p.46).",
+      "payConfirm": "Pay one sector turn of lifestyle now? (Brand members pay automatically when the brand ends its sector turn.)",
+      "buy": "Buy lifestyle months",
+      "buyHint": "Pre-purchase months of the current lifestyle.",
+      "buyPrompt": "{lifestyle}: {cost}ㄓ per month. Zuzus: {zuzu}ㄓ.",
+      "months": "Months",
+      "bought": "Bought {n} month(s) of {lifestyle} lifestyle for {cost}ㄓ ({months} prepaid).",
+      "cannotAfford": "Not enough zuzus ({cost}ㄓ needed).",
+      "noPermission": "Lifestyle not paid: you do not own this character.",
+      "paid": {
+        "free": "{lifestyle}: free.",
+        "prepaid": "{lifestyle}: one prepaid month used ({months} left).",
+        "cash": "{lifestyle}: paid {cost}ㄓ (zuzus left: {zuzu}ㄓ).",
+        "unpaid": "{lifestyle}: cannot pay {cost}ㄓ (only {zuzu}ㄓ). Choose a cheaper lifestyle; squatting is free."
+      }
     },
     "Difficulty": {
       "veteran": "Veteran (4+)",
@@ -401,6 +418,26 @@
         "defenses": {
           "label": "Fixed defense dice",
           "hint": "Bestiary dice for this defense (p.195): rolled every time, no pool is spent. Leave empty to defend from the pool like a player character."
+        },
+        "network": {
+          "entity": {
+            "label": "Network entity (ICE / daemon)",
+            "hint": "Software that only exists in AR: the stun track is its cohesion track (p.133)."
+          },
+          "hardening": {
+            "label": "Hardening"
+          },
+          "alertAura": {
+            "label": "Alert per grid action",
+            "hint": "Sensor daemon: grid actions in its range raise the alert by this much more (p.205)."
+          },
+          "shrinkDice": {
+            "label": "Shrink dice",
+            "hint": "RNID: dice rolled as a complex action to shrink a decker's influence field (p.205)."
+          },
+          "shrinkMeters": {
+            "label": "Meters per success"
+          }
         }
       },
       "fixedDice": "Dice",
@@ -650,6 +687,17 @@
         "recoilComp": {
           "label": "Recoil compensation",
           "hint": "Recoil capacity added by mods such as a bipod, gyro-mount or gas vent."
+        },
+        "digital": {
+          "label": "Digital attack",
+          "hint": "ICE and AR weapons: the target's hardening reduces the damage instead of armor (pp.130, 205)."
+        },
+        "ignoreHardening": {
+          "label": "Ignores hardening"
+        },
+        "digitalAttack": {
+          "label": "Automated attack",
+          "hint": "Resolves the attack against targeted tokens (pp.135-137)."
         }
       }
     },
@@ -1346,6 +1394,177 @@
       "influence": "Get 3d6 points of influence on a resource.",
       "marketCap": "Get 3d6 points of Market Cap added to your brand's bank.",
       "cash": "Gain 3d6 × 4,000ㄓ in cash or gear of rarity 4 or less."
+    },
+    "Operation": {
+      "title": "Operation",
+      "heat": "Operational heat",
+      "alert": "Alert level",
+      "alertHint": "Over 50: two stars of heat.",
+      "discovered": "Discovered",
+      "discoveredHint": "Identified or suspicious activity seen: heat rises to one star (pp.81, 236).",
+      "responses": "Alert responses",
+      "responsesHint": "Pick 4–7 security responses and give each a threshold (1–50). You are told when the alert reaches them (p.236).",
+      "responsePlaceholder": "e.g. Deploy patrol drones",
+      "active": "Active",
+      "addResponse": "Add response",
+      "end": "End operation",
+      "alertReached": "Alert {n}: security responds",
+      "htr": "High-Threat Response team arrives in {n} rounds (2d6).",
+      "heatEffect": {
+        "0": "Operations are normal.",
+        "1": "A virtual sensor drone is deployed and security is told to patrol.",
+        "2": "Roto and dog drones deployed, magically sensitive staff alerted, automated defenses armed. Players get +1 bonus die on all tests.",
+        "3": "Barricades and checkpoints, more patrols, anthro-drones released. Player target numbers improve by 1.",
+        "4": "HTR teams are incoming. Every character gets an extra simple action each round."
+      },
+      "sectorHeat": {
+        "0": "no sector heat at the end of the operation.",
+        "1": "no sector heat at the end of the operation.",
+        "2": "sector heat +1 on 4–6 (1d6).",
+        "3": "sector heat +1.",
+        "4": "sector heat +2."
+      },
+      "brand": "Brand (sector heat)",
+      "cameraHint": "Characters caught on camera (not erased, no recognition immunity) roll 1d6 on the camera table (p.236):",
+      "noCharacters": "No player characters.",
+      "caches": "Paydata / relic caches recovered",
+      "cachesHint": "Each cache: 1d6, a 6 is a relic. Value 3d6 × 1,000 / 10,000 / 100,000 by difficulty; relics ×10 (p.236).",
+      "sectorGain": "Sector heat +{n}",
+      "camera": {
+        "assassination": "Targeted for assassination: the Hunted framework starts next fallout.",
+        "extraction": "Targeted for extraction: the Hunted framework starts next fallout.",
+        "investigation": "An investigation begins.",
+        "mixup": "A mix-up: the record has disappeared."
+      },
+      "ghostLoss": "Ghost Rating −{n} (now {ghost}).",
+      "paydata": "Paydata worth {n}ㄓ (sell after the mission at no risk).",
+      "relic": "Relic worth {n}ㄓ (takes a sector turn to sell).",
+      "injuryReminder": "Permanent injury test due (overflow damage): {names}.",
+      "fallout": "Fallout",
+      "shadowAlert": "Shadow test: alert +{n} (0 successes +2, 1 success +1, 2+ none; p.236)"
+    },
+    "Chase": {
+      "title": "Car chase",
+      "start": "Start chase",
+      "started": "Car chase!",
+      "startedText": "Escape by completing {legs} legs or losing every pursuer. The path deck is split into {paths} paths.",
+      "end": "End chase",
+      "ended": "The chase is over.",
+      "legs": "Legs",
+      "legsHint": "Collect this many \"leg completed\" cards to escape (3 / 4 / 5 by difficulty, p.151).",
+      "paths": "Paths",
+      "deckHint": "One path card per line. Start a line with + for a \"leg completed\" card. The deck is shuffled and split between the paths (p.230).",
+      "sampleDeck": "+ Leg completed: highway on-ramp\n+ Leg completed: back alleys\n+ Leg completed: river bridge\n+ Leg completed: industrial zone\nRoadblock ahead: Drive test or take 6 damage\nA police drone joins the pursuit (close)\nTraffic jam: −2 dice on Drive tests this turn\nOil spill: every vehicle loses 1 handling this turn\nPedestrian crowd: swerve or ram\nShortcut: one pursuer falls back\nConstruction site: high cover for one turn\nAmbush: a new pursuer appears (close)",
+      "fewLegs": "The deck has only {n} leg cards for {legs} legs.",
+      "turn": "Turn {n}",
+      "playerVehicle": "Players' vehicle",
+      "dropVehicle": "Drop the players' vehicle here, or select its token.",
+      "useSelected": "Use selected token",
+      "wrecked": "Wrecked",
+      "pathsTitle": "Paths",
+      "path": "Path {name}",
+      "primary": "Primary",
+      "makePrimary": "Make primary",
+      "cardsLeft": "{n} card(s)",
+      "legCard": "Leg completed!",
+      "reveal": "Reveal the next hidden card (scouting)",
+      "burn": "Discard the top card",
+      "endTurn": "End turn: flip the primary path",
+      "enemies": "Pursuers",
+      "enemiesHint": "Drop actors here, or add the selected / targeted tokens. Engaged and close pursuers can attack and be attacked.",
+      "closeIn": "Close in",
+      "fallBack": "Fall back",
+      "flyingHint": "Flying: cannot be escaped, always close (p.152).",
+      "attackable": "In attack range",
+      "addEnemies": "Add selected / targeted tokens",
+      "selectToken": "Select or target a token first.",
+      "emptyPath": "That path has no cards left.",
+      "notActive": "No chase is running.",
+      "reason": {
+        "flip": "Path {path}",
+        "book": "Book it! Path {path}",
+        "trap": "It's a trap! Path {path}"
+      },
+      "affectsEnemies": "This card affects the pursuers.",
+      "legsProgress": "Legs completed: {n} / {legs}",
+      "fellBack": "{name} falls back: {range}.",
+      "switched": "The route switches: path {path} is now primary.",
+      "burned": "The top card of path {path} is discarded.",
+      "plotted": "A card on path {path} is revealed.",
+      "outcome": {
+        "legs": "All legs completed: the players reach safe territory and escape!",
+        "evaded": "No pursuers left: the players escape!",
+        "wrecked": "The players' vehicle is wrecked: final shootout! Mark an escape zone behind the opponents."
+      },
+      "range": {
+        "engaged": "Engaged",
+        "close": "Close",
+        "fallingBack": "Falling back",
+        "distant": "Distant",
+        "out": "Out of the chase"
+      },
+      "action": {
+        "maneuver": "Maneuver",
+        "trap": "It's a trap!",
+        "book": "Book it!",
+        "burn": "Change the route",
+        "switch": "Switch the route",
+        "plot": "Plot the route"
+      },
+      "actionHint": {
+        "trap": "4 successes: a non-primary path card hits the pursuers. A failure hits you instead.",
+        "book": "2 successes: trigger the primary path card now.",
+        "burn": "4 successes: discard the top card of the primary path.",
+        "switch": "2 successes: another path becomes primary.",
+        "plot": "1 success (scouting drone): reveal a path card."
+      },
+      "needed": "Chase: {n} successes needed",
+      "success": "success",
+      "failure": "failure",
+      "apply": "Apply to the chase",
+      "applied": "Applied to the chase."
+    },
+    "Digital": {
+      "attack": {
+        "none": "None",
+        "derez": "De-rez (1d6 per net success to cohesion)",
+        "acid": "Acid Burn (lowers hardening)",
+        "strike": "Electric Strike (1d6 + successes stun)",
+        "weapon": "Digital attack"
+      },
+      "line": {
+        "weapon": "Digital attack: damage {damage}, reduced by hardening (ignores {ignore})",
+        "derez": "De-rez: each success left after defense and hardening deals 1d6 to cohesion",
+        "acid": "Acid Burn: lowers the target's hardening by net successes + {rating}÷2",
+        "strike": "Electric Strike: {damage} (1d6) + successes stun · no dodge, ignores armor · ×2 vs machines and software"
+      },
+      "title": "Digital attack: {name}",
+      "defense": "Defense successes",
+      "defenseHint": "Dodge or defense dice of the target (defensive daemons add their dice).",
+      "machine": "Machine, synthetic or software (damage ×2)",
+      "targetHardening": "Target hardening",
+      "preview": {
+        "damage": "Damage {raw} − hardening {hardening} − soak {soak} = <strong>{final}</strong> {track}",
+        "derez": "<strong>{n}d6</strong> direct damage to cohesion",
+        "acid": "Hardening −{reduction} → <strong>{hardening}</strong>"
+      },
+      "acidApplied": "Acid Burn: {name}'s hardening drops from {from} to {to}.",
+      "derezRoll": "De-rez: {n}d6 to {name}'s cohesion",
+      "crashed": "{name}'s cohesion track is full: the software crashes and must reboot (about 5 minutes).",
+      "entityTitle": "Network entity",
+      "entityHint": "ICE / daemon: only the cohesion track (the stun track) takes damage; hardening reduces every attack; defense dice double against physical and magic attacks (pp.133, 205).",
+      "shrink": "Shrink influence",
+      "shrinkButton": "Shrink influence ({n} dice)",
+      "shrinkLine": "The decker's influence field shrinks by {n} m.",
+      "applyShrink": "Shrink {name}'s influence −{n} m",
+      "shrinkApplied": "{name}: influence shrunk.",
+      "shrinkNoTarget": "Target a decker to shrink their influence.",
+      "shrunk": "{name}'s influence shrinks by {loss} m to {n} m.",
+      "shrunkOut": "{name}'s influence collapses (−{loss} m): control of the node is lost. Feedback is up to the Agonarch.",
+      "sensorAdded": "(sensor daemon +{n})",
+      "noPermission": "You do not own that actor.",
+      "cohesionMax": "Cohesion boxes",
+      "breakdown": "Damage {raw} − hardening {hardening} = {afterArmor} → after soak {final}"
     }
   }
 }

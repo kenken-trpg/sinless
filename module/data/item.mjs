@@ -59,7 +59,10 @@ export class WeaponData extends PhysicalItemData {
       rangeClose: str(),
       rangeMax: str(),
       ammo: str(),
-      alert: str()
+      alert: str(),
+      // ICE and digital weapons: hardening reduces the damage instead of armor (pp.130, 205).
+      digital: new BooleanField({ initial: false }),
+      ignoreHardening: int(0)
     };
   }
 }
@@ -197,6 +200,13 @@ export class DeckData extends PhysicalItemData {
   }
 }
 
+const DIGITAL_ATTACK_CHOICES = {
+  "": "SINLESS.Digital.attack.none",
+  derez: "SINLESS.Digital.attack.derez",
+  acid: "SINLESS.Digital.attack.acid",
+  strike: "SINLESS.Digital.attack.strike"
+};
+
 /** Decking software (pp.133-138). */
 export class SoftwareData extends SinlessItemBase {
   static defineSchema() {
@@ -209,6 +219,8 @@ export class SoftwareData extends SinlessItemBase {
       base: new BooleanField({ initial: false }),
       requiresNan: new BooleanField({ initial: false }),
       attack: new BooleanField({ initial: false }),
+      // Automated digital attacks: De-rez, Acid Burn, Electric Strike (pp.135-137).
+      digitalAttack: new StringField({ required: true, blank: true, initial: "", choices: () => DIGITAL_ATTACK_CHOICES }),
       alert: int(0),
       alertPerSuccess: int(0),
       alertNote: str(),

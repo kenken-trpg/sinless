@@ -64,6 +64,14 @@
       <button type="button" data-action="rollVehicleTest" data-kind="overdrive"><i class="fa-solid fa-gauge-high"></i> {{localize "SINLESS.Rig.action.overdrive"}}</button>
       <button type="button" data-action="rollVehicleTest" data-kind="ram"><i class="fa-solid fa-car-burst"></i> {{localize "SINLESS.Rig.action.ram"}}</button>
     </div>
+    {{#if chaseActive}}
+    <div class="rig-actions chase-actions">
+      <span class="hint">{{localize "SINLESS.Chase.title"}}:</span>
+      {{#each chaseActions}}
+      <button type="button" data-action="rollVehicleTest" data-kind="{{key}}" data-tooltip="{{localize hint}}">{{localize label}}</button>
+      {{/each}}
+    </div>
+    {{/if}}
     {{else}}
     <p class="hint">{{localize "SINLESS.Vehicle.dropController"}}</p>
     {{/if}}

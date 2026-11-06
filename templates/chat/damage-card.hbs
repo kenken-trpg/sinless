@@ -3,17 +3,20 @@
     <h3>{{localize "SINLESS.Damage.cardTitle" name=name}}</h3>
   </header>
   {{#if source}}<p class="notes"><span>{{source}}</span></p>{{/if}}
-  <p class="breakdown">{{localize "SINLESS.Damage.breakdown" raw=result.raw armor=result.armorReduction afterArmor=result.afterArmor final=result.final}}</p>
+  <p class="breakdown">{{#if result.digital}}{{localize "SINLESS.Digital.breakdown" raw=result.raw hardening=result.armorReduction afterArmor=result.afterArmor final=result.final}}{{else}}{{localize "SINLESS.Damage.breakdown" raw=result.raw armor=result.armorReduction afterArmor=result.afterArmor final=result.final}}{{/if}}</p>
   <div class="result">
     <span class="successes">{{localize "SINLESS.Damage.taken" n=result.final track=(localize trackLabel)}}</span>
   </div>
   <p class="weapon-line">
+    {{#if entity}}{{localize "SINLESS.Grid.cohesion"}} {{after.stun}}/{{max.stun}}{{else}}
     {{localize "SINLESS.Condition.physical"}} {{after.physical}}/{{max.physical}} ·
     {{localize "SINLESS.Condition.stun"}} {{after.stun}}/{{max.stun}}{{#if after.overflow}} ·
-    {{localize "SINLESS.Condition.overflow"}} {{after.overflow}}{{/if}}
+    {{localize "SINLESS.Condition.overflow"}} {{after.overflow}}{{/if}}{{/if}}
   </p>
   {{#each strippedNames}}<p class="effect">{{localize "SINLESS.Damage.stripped" armor=this}}</p>{{/each}}
-  {{#if killed}}
+  {{#if entity}}
+  {{#if crashed}}<p class="effect warn">{{localize "SINLESS.Digital.crashed" name=name}}</p>{{/if}}
+  {{else if killed}}
   <p class="effect warn">{{localize "SINLESS.Overload.killed" name=name}}</p>
   {{else if after.physicalFull}}
   <p class="effect warn">{{localize "SINLESS.Damage.physicalFull" n=after.overflow}}</p>

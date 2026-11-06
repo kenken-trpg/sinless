@@ -8,6 +8,10 @@
     <li>{{localize "SINLESS.Brand.net"}}: <strong>{{sinlessSigned net}}</strong></li>
     <li>{{localize "SINLESS.Brand.FIELDS.bank.label"}}: <strong>{{bank}}</strong></li>
   </ul>
+  {{#if lifestyles.length}}
+  <h4>{{localize "SINLESS.Lifestyle.title"}}</h4>
+  <ul class="lifestyles">{{#each lifestyles}}<li class="{{#if warn}}warn{{/if}}"><strong>{{name}}</strong>: {{text}}</li>{{/each}}</ul>
+  {{/if}}
   {{#if unmet}}<p class="effect warn">{{localize "SINLESS.SectorTurn.unmet" n=unmet}}</p>{{/if}}
   {{#if (gte heat 4)}}<p class="effect warn">{{localize "SINLESS.SectorTurn.crackdown"}}</p>{{/if}}
 </div>

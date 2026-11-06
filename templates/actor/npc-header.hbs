@@ -9,10 +9,12 @@
       <label>{{localize "SINLESS.Npc.FIELDS.strength.label"}}
         <input type="number" name="system.strength" value="{{system.strength}}" min="0">
       </label>
+      {{#unless isEntity}}
       <label>{{localize "SINLESS.Npc.FIELDS.conditionMax.physical.label"}}
         <input type="number" name="system.conditionMax.physical" value="{{system.conditionMax.physical}}" min="0">
       </label>
-      <label>{{localize "SINLESS.Npc.FIELDS.conditionMax.stun.label"}}
+      {{/unless}}
+      <label>{{#if isEntity}}{{localize "SINLESS.Digital.cohesionMax"}}{{else}}{{localize "SINLESS.Npc.FIELDS.conditionMax.stun.label"}}{{/if}}
         <input type="number" name="system.conditionMax.stun" value="{{system.conditionMax.stun}}" min="0">
       </label>
       <label class="checkbox" data-tooltip="{{localize "SINLESS.Npc.FIELDS.agonarch.hint"}}">

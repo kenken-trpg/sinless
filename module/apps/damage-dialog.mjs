@@ -22,7 +22,11 @@ export async function damageDialog(message, actor) {
   const weapon = state?.extra;
   if (!weapon?.weapon || !actor?.system.condition) return null;
   const hits = summarize(state).successes;
-  const armor = actor.system.armor ?? {};
+  // Network entities: hardening works as armor against every attack (p.133).
+  const h = actor.isEntity ? actor.hardening : 0;
+  const armor = actor.isEntity
+    ? { ballistic: { total: h, highest: h }, impact: { total: h, highest: h } }
+    : actor.system.armor ?? {};
   const choices = obj => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v]));
 
   const content = await foundry.applications.handlebars.renderTemplate(TEMPLATE, {
@@ -89,7 +93,7 @@ export async function damageDialog(message, actor) {
   /** Roll a defense test for the defender and copy its successes into a field. */
   const rollInto = async (dialog, key) => {
     // "resist" fills the dodge field: resistance successes cancel the caster's successes.
-    const msg = key === "resist" ? await actor.rollResistance(weapon.resistPool) : await actor.rollDefense(key);
+    const msg = key === "resist" ? await actor.rollResistance(weapon.resistPool) : await actor.rollDefense(key, { digital: false });
     if (!msg) return;
     const input = dialog.element.querySelector(`input[name="${key === "resist" ? "dodge" : key}"]`);
     if (input) input.value = messageSuccesses(msg);
