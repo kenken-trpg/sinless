@@ -143,20 +143,29 @@ export class SinlessActor extends Actor {
   /** Critter rules (p.195): roll the listed dice, no pool is spent. */
   async _rollFixedDefense(key, dice) {
     const label = game.i18n.localize(SINLESS.DEFENSES[key].label);
+    const defaults = this._fixedDiceDefaults(label, dice);
+    defaults.penalty = 0;
+    return this._runTest(defaults);
+  }
+
+  /**
+   * Dialog defaults for a fixed-dice opponent test. Penalty dice still apply
+   * (p.195: player abilities that apply penalties affect all opponent tests).
+   */
+  _fixedDiceDefaults(label, dice, notes = []) {
     const defaults = this._testDefaults({
       label, mode: "rank", rank: dice,
-      notes: [game.i18n.localize("SINLESS.Npc.fixedDiceNote")]
+      notes: [...notes, game.i18n.localize("SINLESS.Npc.fixedDiceNote")]
     });
-    Object.assign(defaults, {
+    return Object.assign(defaults, {
       simple: true,
       pool: null,
       mode: "rank",
       rankLabel: game.i18n.localize("SINLESS.Npc.fixedDice"),
-      penalty: 0,
       spendPool: false,
-      conflict: false
+      conflict: false,
+      showFiring: false
     });
-    return this._runTest(defaults);
   }
 
   /** Etiquette test: roll dice equal to the etiquette rank (p.69). */
@@ -177,6 +186,10 @@ export class SinlessActor extends Actor {
   async rollWeapon(item) {
     const sys = item.system;
     const skillKey = sys.skill;
+    if (this.type === "npc" && Number.isInteger(sys.attackDice)) {
+      const defaults = this._fixedDiceDefaults(item.name, sys.attackDice, [game.i18n.localize(skillLabel(skillKey))]);
+      return this._runTest(defaults, await this._weaponCardData(item));
+    }
     const def = SINLESS.SKILLS[skillKey];
     let rank = this.system.skills[skillKey]?.rank ?? 0;
     let mode = "skill";

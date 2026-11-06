@@ -424,6 +424,10 @@
         "accuracy": {
           "label": "Accuracy"
         },
+        "attackDice": {
+          "label": "Attack dice (NPC)",
+          "hint": "Bestiary attack dice (p.195). An NPC rolls exactly this many dice, with no skill limit or pool. Include firing-mode bonuses (e.g. burst 9). Leave empty to use skill + pool."
+        },
         "damage": {
           "label": "Damage"
         },

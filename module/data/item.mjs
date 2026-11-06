@@ -45,6 +45,8 @@ export class WeaponData extends PhysicalItemData {
       category: new StringField({ required: true, initial: "firearm", choices: () => WEAPON_CATEGORIES }),
       skill: new StringField({ required: true, initial: "firearms", choices: skillChoices }),
       accuracy: int(0, { min: undefined }),
+      // Bestiary attack dice (p.195): NPCs roll this many dice instead of skill + pool.
+      attackDice: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null }),
       damage: str("0"),
       penetration: int(0),
       armorType: new StringField({ required: true, initial: "auto", choices: () => ARMOR_TYPES }),
