@@ -1,0 +1,140 @@
+{
+  "name": "体験02：魔法 / Magic",
+  "type": "character",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "attributes": {
+      "str": {
+        "value": 6,
+        "max": 20
+      },
+      "bod": {
+        "value": 6,
+        "max": 20
+      },
+      "rea": {
+        "value": 6,
+        "max": 20
+      },
+      "int": {
+        "value": 6,
+        "max": 20
+      },
+      "wil": {
+        "value": 6,
+        "max": 20
+      },
+      "cha": {
+        "value": 6,
+        "max": 20
+      }
+    },
+    "heritage": "human",
+    "talent": "mage",
+    "charismaPool": "resolve",
+    "creation": {
+      "active": false
+    },
+    "skills": {
+      "sorcery": {
+        "rank": 4,
+        "spec": ""
+      },
+      "channeling": {
+        "rank": 4,
+        "spec": ""
+      },
+      "conjuring": {
+        "rank": 3,
+        "spec": ""
+      },
+      "astralSenses": {
+        "rank": 3,
+        "spec": ""
+      }
+    },
+    "zuzu": 10000,
+    "kismet": {
+      "earned": 10,
+      "unspent": 10
+    },
+    "notes": "<p>公開サーバー動作確認用。作成予算に準拠した完成キャラクターではありません。/ Test fixture; not a rules-legal starting character.</p>"
+  },
+  "items": [
+    {
+      "name": "テスト攻撃呪文 / Test bolt",
+      "type": "power",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "category": "spell",
+        "force": 3,
+        "drain": "Force",
+        "damage": "1+Force",
+        "resistPool": "resolve",
+        "focus": 1,
+        "fetish": 1,
+        "duration": "instant"
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト持続呪文 / Test sustained spell",
+      "type": "power",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "category": "spell",
+        "force": 3,
+        "drain": "Force",
+        "resistPool": "resolve",
+        "duration": "continuous"
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト召喚 / Test summoning",
+      "type": "power",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "category": "spirit",
+        "force": 2,
+        "drain": "Force",
+        "spiritBag": 1
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト儀式 / Test ritual",
+      "type": "ritual",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "rank": 3,
+        "pool": "resolve",
+        "drain": "3"
+      },
+      "effects": []
+    }
+  ],
+  "effects": [],
+  "prototypeToken": {
+    "name": "体験02：魔法 / Magic",
+    "actorLink": true,
+    "disposition": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  },
+  "flags": {
+    "exportSource": {
+      "system": "sinless",
+      "systemVersion": "0.13.0"
+    }
+  }
+}

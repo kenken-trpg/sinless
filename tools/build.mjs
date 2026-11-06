@@ -17,7 +17,7 @@ const manifest = JSON.parse(readFileSync(join(root, "system.json"), "utf8"));
 manifest.download = `https://github.com/kenken-trpg/sinless/releases/download/v${manifest.version}/sinless.zip`;
 const manifestText = `${JSON.stringify(manifest, null, 2)}\n`;
 
-const include = ["sinless.mjs", "module", "templates", "styles", "lang", "LICENSE", "README.md", "README.ja.md"];
+const include = ["sinless.mjs", "module", "templates", "styles", "lang", "samples", "LICENSE", "README.md", "README.ja.md"];
 for (const path of include) cpSync(join(root, path), join(stage, path), { recursive: true });
 writeFileSync(join(stage, "system.json"), manifestText);
 writeFileSync(join(dist, "system.json"), manifestText);

@@ -147,6 +147,10 @@ this system contains no rules text.
   resources with damage / influence tracks, members and asset tests rolled by the best member.
 - Localization from day one: English and Japanese.
 
+## Public server demo data
+
+The release ZIP includes actor JSON files for combat, magic, decking, a training NPC, a vehicle, and a brand, with embedded equipment. Follow the [sample list and import walkthrough](samples/README.md) to import them into fresh actors as GM and grant players ownership. These are fictional test fixtures.
+
 ## Development
 
 No build step is required — Foundry loads the ES modules directly.

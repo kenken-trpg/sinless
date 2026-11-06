@@ -1,0 +1,78 @@
+{
+  "name": "体験06：ブランド / Brand",
+  "type": "brand",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "kind": "体験用 / Demo",
+    "base": {
+      "muscle": 3,
+      "magic": 3,
+      "media": 3,
+      "espionage": 3,
+      "grid": 3
+    },
+    "bank": 10000,
+    "traits": [],
+    "members": [],
+    "sector": {
+      "name": "テスト地区 / Test sector",
+      "heat": 0
+    },
+    "notes": "<p>メンバータブに体験キャラクターをドロップしてください。/ Drop sample characters into the Members tab.</p>"
+  },
+  "items": [
+    {
+      "name": "テスト拠点 / Test base",
+      "type": "resource",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "class": "D",
+        "tags": [
+          "housing"
+        ],
+        "market": 1000,
+        "upkeep": 100,
+        "controlled": true,
+        "brandBonus": {
+          "muscle": 1,
+          "magic": 0,
+          "media": 0,
+          "espionage": 0,
+          "grid": 0
+        }
+      },
+      "effects": []
+    },
+    {
+      "name": "テスト連絡員 / Test contact",
+      "type": "asset",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
+        "source": "Sinless public-server sample",
+        "etiquette": "street",
+        "free": true,
+        "operation": "テスト用 / Demo",
+        "sector": "テスト用 / Demo"
+      },
+      "effects": []
+    }
+  ],
+  "effects": [],
+  "prototypeToken": {
+    "name": "体験06：ブランド / Brand",
+    "actorLink": true,
+    "disposition": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg"
+    }
+  },
+  "flags": {
+    "exportSource": {
+      "system": "sinless",
+      "systemVersion": "0.13.0"
+    }
+  }
+}
