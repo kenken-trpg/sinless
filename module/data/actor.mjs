@@ -8,7 +8,7 @@ import { PRIORITY_CATEGORIES, PRIORITY_LEVELS } from "../helpers/creation.mjs";
 import { amplificationCost } from "../helpers/magic.mjs";
 import { recoilCapacity } from "../helpers/combat.mjs";
 
-const { NumberField, StringField, SchemaField, BooleanField, HTMLField } = foundry.data.fields;
+const { NumberField, StringField, SchemaField, BooleanField, HTMLField, ArrayField, ObjectField } = foundry.data.fields;
 
 const int = (initial = 0, opts = {}) =>
   new NumberField({ required: true, nullable: false, integer: true, min: 0, initial, ...opts });
@@ -150,7 +150,11 @@ export class CharacterData extends SinlessActorBase {
         earned: int(0),
         unspent: int(0),
         spent: int(0),
-        poolBonus: int(0)
+        poolBonus: int(0),
+        // Advancement (p.238): boons chosen, pool resilience dice and a log of awards and purchases.
+        boons: int(0),
+        resilience: new SchemaField(Object.fromEntries(keys(POOLS).map(k => [k, int(0)]))),
+        history: new ArrayField(new ObjectField())
       }),
       zoetic: new SchemaField({
         bonus: new NumberField({ required: true, nullable: false, initial: 0 })

@@ -53,8 +53,10 @@ export async function performTest(o) {
   // VCR bonus dice used on a hot-seated vehicle test (p.142).
   const vcrUsed = Math.max(0, o.vcrUsed ?? 0);
   if (vcrUsed && actor.system.rig) updates["system.rig.vcrSpent"] = actor.system.rig.vcrSpent + vcrUsed;
-  if (plan.kismetDice > 0 && actor.system.kismet) {
-    updates["system.kismet.spent"] = actor.system.kismet.spent + plan.kismetDice;
+  // Resilience dice are never exhausted: only the dice taken from the Kismet pool are spent.
+  const kismetSpent = Math.max(0, plan.kismetDice - (o.kismetFree ?? 0));
+  if (kismetSpent > 0 && actor.system.kismet) {
+    updates["system.kismet.spent"] = actor.system.kismet.spent + kismetSpent;
   }
   if (!foundry.utils.isEmpty(updates)) await actor.update(updates);
 

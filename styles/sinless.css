@@ -260,3 +260,21 @@
 .sinless-card .spell-result p { margin: 0.2rem 0; font-size: 0.85rem; }
 .sinless-card .recoil-line { margin: 0.15rem 0; font-size: 0.85em; opacity: 0.85; }
 .sinless-card .lethal, .sinless-test-dialog .lethal { color: var(--sl-fail, #b71c1c); font-weight: bold; }
+
+/* Kismet advancement (p.238) */
+.sinless.sheet .kismet-block .advance-actions { display: flex; flex-wrap: wrap; gap: 4px; margin: 0.4rem 0; }
+.sinless.sheet .kismet-block .advance-actions button { flex: 0 0 auto; width: auto; padding: 0 8px; line-height: 1.8; }
+.sinless.sheet .kismet-block .boon-ready { border-color: var(--sl-accent, #c2185b); font-weight: bold; }
+.sinless.sheet .kismet-block .resilience span + span::before { content: " · "; }
+.sinless.sheet .kismet-block .advance-log ol { margin: 0.25rem 0; padding-left: 1.2rem; font-size: 0.85rem; }
+.sinless.sheet .kismet-block .advance-log .time { opacity: 0.6; margin-right: 4px; }
+.sinless.sheet .kismet-block .advance-log button { width: auto; padding: 0 8px; }
+.sinless-advance-dialog .sinless-advance .award { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+.sinless-advance-dialog .sinless-advance .award .cost { margin-left: auto; opacity: 0.75; }
+.sinless-advance-dialog .sinless-advance .hint { font-size: 0.85em; opacity: 0.8; margin: 0.2rem 0; }
+.sinless-advance-dialog .sinless-advance .boon { padding: 0.3rem 0.4rem; margin: 0.25rem 0; border: 1px solid var(--sl-border, #888); border-radius: 4px; }
+.sinless-advance-dialog .sinless-advance .boon.major { border-style: dashed; }
+.sinless-advance-dialog .sinless-advance .boon label { display: flex; align-items: center; gap: 6px; }
+.sinless-advance-dialog .sinless-advance .talisman { display: flex; align-items: center; gap: 6px; }
+.sinless-advance-dialog .sinless-advance label > input[type="radio"],
+.sinless-advance-dialog .sinless-advance label > input[type="checkbox"] { flex: 0 0 auto; width: 1rem; height: 1rem; margin: 0; }

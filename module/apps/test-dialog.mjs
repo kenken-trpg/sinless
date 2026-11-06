@@ -34,6 +34,8 @@ export async function testDialog(defaults) {
     const poolAvailable = pool ? defaults.poolValues[pool] : 0;
     const mode = data.mode ?? defaults.mode;
     const notes = [];
+    const resilience = pool ? defaults.resilience?.[pool] ?? 0 : 0;
+    if (resilience) notes.push(game.i18n.format("SINLESS.Boon.resilience.note", { n: resilience }));
     // Specialization (p.41): ±1 rank for a skill the actor has.
     let rank = n(data.rank);
     if (defaults.spec && (mode === "skill" || mode === "rank")) {
@@ -71,7 +73,9 @@ export async function testDialog(defaults) {
       penalty: n(data.penalty) + (combat?.penalty ?? 0),
       notes,
       combat,
-      kismet: Math.min(n(data.kismet), defaults.kismetAvailable ?? 0),
+      // Pool resilience boons add free Kismet dice to tests with that pool (p.238).
+      kismet: Math.min(n(data.kismet), defaults.kismetAvailable ?? 0) + (pool ? defaults.resilience?.[pool] ?? 0 : 0),
+      kismetFree: pool ? defaults.resilience?.[pool] ?? 0 : 0,
       poolDice: data.poolDice === "" || data.poolDice === null || data.poolDice === undefined ? undefined : n(data.poolDice),
       target: Math.clamp(n(data.target, 4), 2, 6),
       reroll: n(data.reroll),

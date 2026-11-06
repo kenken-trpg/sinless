@@ -37,6 +37,15 @@ this system contains no rules text.
   outright. After the run, a permanent injury test (successes = overflow) reports organ
   damage (a random attribute maximum −1, applied with a button), a lost eye or limb, or no
   lasting harm.
+- Kismet advancement (pp.214, 238) on the Etiquettes & Assets tab:
+  - The Agonarch awards end-of-session Kismet from the p.238 checklist (plus any extra).
+  - Spend unspent Kismet on a new skill (4), a skill rank (current rank, up to 6), an
+    attribute (3 up to 10, 4 to 15, 5 from 16) or the Zoetic Potential (twice its value,
+    needs a talisman of power).
+  - Every 10 Kismet earned grants a boon: financial windfall (rolled on the table), new
+    asset, skill mastery 6→7; every second boon also magic item, skill guru 7→8 or pool
+    resilience (a permanent free Kismet die on tests with that pool).
+  - Everything is logged on the sheet and in chat; the last entry can be undone with a refund.
 - NPCs can use bestiary defenses (critter rules): fixed dodge / soak / resist dice that never
   spend a pool. Leave a field empty to defend from the pool like a player character.
   NPC weapons can list fixed attack dice in the same way.

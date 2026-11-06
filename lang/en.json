@@ -1264,6 +1264,88 @@
       },
       "apply": "Lower {attribute} maximum by 1",
       "applied": "Organ damage applied."
+    },
+    "Advance": {
+      "title": "Kismet advancement",
+      "awarded": "{name} gains {n} Kismet.",
+      "boonEarned": "The Kismet pool grows: {n} boon(s) to choose.",
+      "bought": "{name} raises {label} {from} → {to} for {cost} Kismet.",
+      "notEnough": "Not enough unspent Kismet.",
+      "noBoon": "No boon is available yet (one every 10 Kismet earned).",
+      "skillMustBe": "Needs a skill at rank {n}.",
+      "boonTaken": "{name} takes a boon: {boon}",
+      "undone": "{name}: the last advancement entry was undone.",
+      "unspent": "Unspent Kismet: {n}",
+      "choose": "Advance",
+      "costHint": "New skill 4; raise a skill: its current rank (max 6). Attributes: 3 per point up to 10, 4 from 11 to 15, 5 from 16. Zoetic Potential: twice its current value (pp.214, 238).",
+      "talisman": "I have a talisman of power or similar item (needed for Zoetic Potential, p.214)",
+      "needTalisman": "Raising the Zoetic Potential needs a talisman of power or similar item.",
+      "spendTitle": "Spend Kismet: {name}",
+      "buy": "Spend",
+      "boonMinor": "Boon #{n}: choose one.",
+      "boonMajor": "Boon #{n}: every second boon may also come from the rare list.",
+      "boonTitle": "Choose a boon: {name}",
+      "takeBoon": "Take boon",
+      "groupAttributes": "Attributes",
+      "groupSkills": "Skills",
+      "spend": "Spend Kismet",
+      "chooseBoon": "Choose boon ({n})",
+      "undo": "Undo last entry",
+      "undoConfirm": "Undo the most recent award, purchase or boon and refund its Kismet?",
+      "log": {
+        "title": "Advancement log",
+        "award": "+{n} Kismet",
+        "buy": "{label} {from}→{to} (−{cost})"
+      }
+    },
+    "Award": {
+      "title": "Award Kismet: {name}",
+      "hint": "End of session (p.238). Usually 4–6 Kismet.",
+      "survived": "Survived the session",
+      "mission": "Completed the mission successfully",
+      "paydata": "Acquired paydata during the run",
+      "optional": "Optional objective completed",
+      "personal": "Personal goal achieved",
+      "learned": "Told what the character learned",
+      "extra": "Other Kismet",
+      "give": "Award",
+      "button": "Award Kismet"
+    },
+    "Boon": {
+      "windfall": {
+        "label": "Financial windfall",
+        "hint": "Roll 1d6 on the windfall table."
+      },
+      "asset": {
+        "label": "Old friend",
+        "hint": "A new free random asset that needs no upkeep."
+      },
+      "mastery": {
+        "label": "Skill mastery",
+        "hint": "Raise a skill from 6 to 7."
+      },
+      "item": {
+        "label": "Magic item or experimental tech",
+        "hint": "The Agonarch grants a rare item with your input."
+      },
+      "guru": {
+        "label": "Skill guru",
+        "hint": "Raise a skill from 7 to 8."
+      },
+      "resilience": {
+        "label": "Pool resilience",
+        "hint": "Tests with the chosen pool gain a Kismet die that is never exhausted. Can be taken more than once.",
+        "note": "Pool resilience: +{n} Kismet dice"
+      },
+      "notePlaceholder": "Name or description"
+    },
+    "Windfall": {
+      "techtronics": "Gain 3d6×10 Techtronics.",
+      "manastellite": "Gain 3d6×10 Manastellite.",
+      "arcanatech": "Gain a prototype Arcanatech (installed in a headquarters, raises a brand stat by 1 permanently).",
+      "influence": "Get 3d6 points of influence on a resource.",
+      "marketCap": "Get 3d6 points of Market Cap added to your brand's bank.",
+      "cash": "Gain 3d6 × 4,000ㄓ in cash or gear of rarity 4 or less."
     }
   }
 }

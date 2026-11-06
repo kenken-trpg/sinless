@@ -3,6 +3,8 @@ import { currentTargetNumber, getSetting, adjustAlert } from "../settings.mjs";
 import { deckStatus, influencePenalty, INTRUSION_PENALTY } from "../helpers/grid.mjs";
 import { actorEffects, effectActions, lockOverriddenInputs, EFFECT_KEYS } from "./effects.mjs";
 import { creationReport, creationSpending, PRIORITY_CATEGORIES } from "../helpers/creation.mjs";
+import { boonStatus } from "../helpers/advancement.mjs";
+import { awardDialog, advanceDialog, boonDialog } from "../apps/advancement-dialog.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -231,7 +233,11 @@ export class CharacterSheet extends SinlessActorSheet {
       setCohesion: CharacterSheet.#onSetCohesion,
       openVehicle: CharacterSheet.#onOpenVehicle,
       rollSeedMoney: CharacterSheet.#onRollSeedMoney,
-      finishCreation: CharacterSheet.#onFinishCreation
+      finishCreation: CharacterSheet.#onFinishCreation,
+      awardKismet: CharacterSheet.#onAwardKismet,
+      spendKismet: CharacterSheet.#onSpendKismet,
+      chooseBoon: CharacterSheet.#onChooseBoon,
+      undoAdvance: CharacterSheet.#onUndoAdvance
     }
   };
 
@@ -273,7 +279,49 @@ export class CharacterSheet extends SinlessActorSheet {
     if (sys.creation.active) context.creation = this.#creationContext();
     context.grid = this.#gridContext();
     context.rig = this.#rigContext();
+    context.advance = this.#advanceContext();
     return context;
+  }
+
+  /** Kismet advancement: boons waiting, resilience dice and the latest log entries (p.238). */
+  #advanceContext() {
+    const k = this.actor.system.kismet;
+    const status = boonStatus(k.earned, k.boons);
+    const loc = key => game.i18n.localize(key);
+    const describe = e => {
+      switch (e.kind) {
+        case "award": return game.i18n.format("SINLESS.Advance.log.award", { n: e.amount });
+        case "boon": return `${loc(`SINLESS.Boon.${e.boon}.label`)}${e.label ? ` (${e.label}${e.from !== undefined ? ` ${e.from}→${e.to}` : ""})` : ""}${e.windfall ? `: ${loc(`SINLESS.Windfall.${e.windfall}`)}` : ""}${e.note ? `: ${e.note}` : ""}`;
+        default: return game.i18n.format("SINLESS.Advance.log.buy", { label: e.label, from: e.from, to: e.to, cost: e.cost });
+      }
+    };
+    return {
+      status,
+      resilience: Object.entries(k.resilience ?? {}).filter(([, n]) => n > 0)
+        .map(([pool, n]) => ({ label: SINLESS.POOLS[pool], n })),
+      history: [...(k.history ?? [])].reverse().slice(0, 12).map(e => ({ text: describe(e), time: new Date(e.time).toLocaleDateString() })),
+      canUndo: !!k.history?.length
+    };
+  }
+
+  static async #onAwardKismet() {
+    return awardDialog(this.actor);
+  }
+
+  static async #onSpendKismet() {
+    return advanceDialog(this.actor);
+  }
+
+  static async #onChooseBoon() {
+    return boonDialog(this.actor);
+  }
+
+  static async #onUndoAdvance() {
+    const ok = await foundry.applications.api.DialogV2.confirm({
+      window: { title: "SINLESS.Advance.undo" },
+      content: `<p>${game.i18n.localize("SINLESS.Advance.undoConfirm")}</p>`
+    });
+    return ok ? this.actor.undoAdvance() : null;
   }
 
   /** Deck, MCP dice, intrusion, alert and NAN influence for the Grid tab (ch.7). */
