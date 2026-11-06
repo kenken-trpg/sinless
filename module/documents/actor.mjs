@@ -4,6 +4,7 @@ import { damageFormula, weaponArmorType, applyConditionDamage } from "../helpers
 import { currentTargetNumber, currentHeatBonus, getSetting } from "../settings.mjs";
 import { INTRUSION_PENALTY, NO_NERVE_RIG_PENALTY, influencePenalty } from "../helpers/grid.mjs";
 import { CONTROL_PENALTY, effectiveControl, hotseatFeedback } from "../helpers/rigging.mjs";
+import { forceFormula, drainIsLethal } from "../helpers/magic.mjs";
 import { testDialog } from "../apps/test-dialog.mjs";
 import { performTest } from "../dice/test-roll.mjs";
 
@@ -85,6 +86,7 @@ export class SinlessActor extends Actor {
       ui.notifications.warn("SINLESS.Test.impossible", { localize: true });
       return null;
     }
+    if (typeof extra === "function") extra = await extra(config);
     const notes = [...(defaults.notes ?? [])];
     if (config.mode !== "skill" && config.mode !== "rank") {
       notes.push(game.i18n.localize(SINLESS.TEST_MODES[config.mode]));
@@ -562,9 +564,125 @@ export class SinlessActor extends Actor {
   }
 
   async rollRitual(item) {
+    const drain = forceFormula(item.system.drain, 0);
     return this._runTest(this._testDefaults({
       label: item.name, pool: item.system.pool, rank: item.system.rank
+    }), drain ? { spell: { drain, lethal: false, fetish: 0, label: item.name } } : {});
+  }
+
+  /* ---------------- Magic (ch.9) ---------------- */
+
+  /** Use a power item: cast a spell or infusion, or summon a spirit. */
+  async usePower(item) {
+    switch (item.system.category) {
+      case "spirit": return this.summonSpirit(item);
+      case "amplification": return item.toMessage?.() ?? null;
+      default: return this.castSpell(item);
+    }
+  }
+
+  /** Current Zoetic Potential, the threshold for lethal drain (p.167). */
+  get zoeticPotential() {
+    return this.system.zoetic?.value ?? 0;
+  }
+
+  /**
+   * Cast a spell (p.167): Sorcery + focus rank from the Resolve pool, at a chosen
+   * force up to the force learned. Drain and damage use that force.
+   */
+  async castSpell(item) {
+    const sys = item.system;
+    const { mode, rank } = this._skillMode("sorcery");
+    const defaults = this._testDefaults({
+      label: item.name, pool: "resolve", mode, rank, gear: sys.focus,
+      notes: [game.i18n.localize(skillLabel("sorcery")), sys.school].filter(Boolean)
+    });
+    defaults.force = { value: Math.max(1, sys.force), max: Math.max(1, sys.force), drain: sys.drain, zoetic: this.zoeticPotential };
+    return this._runTest(defaults, async config => {
+      const force = config.force ?? sys.force;
+      const extra = {
+        spell: {
+          force,
+          drain: forceFormula(sys.drain, force) ?? 0,
+          lethal: drainIsLethal(force, this.zoeticPotential),
+          fetish: sys.fetish,
+          label: item.name
+        },
+        effect: sys.effect
+      };
+      const damage = forceFormula(sys.damage, force);
+      if (damage !== null) {
+        Object.assign(extra, {
+          weapon: true,
+          magic: true,
+          damage,
+          damageText: sys.damage,
+          damageFormula: "",
+          damageNote: "",
+          penetration: 0,
+          armorType: "ballistic",
+          energy: false,
+          stun: sys.damageTrack === "stun",
+          blast: false,
+          resistPool: sys.resistPool,
+          targets: [...(game.user?.targets ?? [])].filter(t => t.actor && t.actor !== this)
+            .map(t => ({ uuid: t.document.uuid, name: t.name }))
+        });
+      }
+      return extra;
+    });
+  }
+
+  /** Summon a spirit (p.183): Conjuring + focus against the spirit's force less the spirit bag. */
+  async summonSpirit(item) {
+    const sys = item.system;
+    const { mode, rank } = this._skillMode("conjuring");
+    const defaults = this._testDefaults({
+      label: item.name, pool: "resolve", mode, rank, gear: sys.focus,
+      notes: [game.i18n.localize(skillLabel("conjuring"))]
+    });
+    defaults.force = { value: Math.max(1, sys.force), max: Math.max(1, sys.force), drain: "", zoetic: this.zoeticPotential };
+    return this._runTest(defaults, config => ({
+      summon: { force: config.force ?? sys.force, bag: sys.spiritBag }
     }));
+  }
+
+  /** Invoke a bound spirit (p.183): drain equal to its force, lethal above the Zoetic Potential. */
+  async invokeSpirit(item) {
+    const { drainDialog } = await import("../apps/drain-dialog.mjs");
+    const force = item.system.force;
+    return drainDialog(this, {
+      label: game.i18n.format("SINLESS.Magic.invoke", { name: item.name }),
+      drain: force,
+      lethal: drainIsLethal(force, this.zoeticPotential),
+      fetish: item.system.fetish
+    });
+  }
+
+  /** Channeling test to resist drain: Channeling + fetish rank from Resolve (p.167). */
+  async rollChanneling(fetish = 0, label = null) {
+    const { mode, rank } = this._skillMode("channeling");
+    return this._runTest(this._testDefaults({
+      label: label ?? game.i18n.localize("SINLESS.Magic.channeling"),
+      pool: "resolve", mode, rank, gear: fetish,
+      notes: [game.i18n.localize(skillLabel("channeling"))]
+    }));
+  }
+
+  /**
+   * Resist a spell with a pool (p.167), as many dice as wished, no limit.
+   * Opponents with fixed bestiary defenses roll those instead.
+   */
+  async rollResistance(pool) {
+    const fixedKey = { finesse: "dodge", brawn: "soak", resolve: "resist" }[pool];
+    if (fixedKey && this.system.fixedDefense?.(fixedKey) != null) return this.rollDefense(fixedKey);
+    if (!this.system.pools?.[pool]) return null;
+    const defaults = this._testDefaults({
+      label: game.i18n.format("SINLESS.Magic.resist", { pool: game.i18n.localize(SINLESS.POOLS[pool]) }),
+      pool, mode: "defense"
+    });
+    defaults.penalty = 0;
+    return this._runTest(defaults);
   }
 
   /**

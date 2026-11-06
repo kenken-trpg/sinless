@@ -33,6 +33,17 @@
     {{#if (eq sum.outcome "success")}}<strong class="outcome success">{{localize "SINLESS.Card.success" threshold=threshold}}</strong>{{/if}}
     {{#if (eq sum.outcome "failure")}}<strong class="outcome failure">{{localize "SINLESS.Card.failure" threshold=threshold}}</strong>{{/if}}
   </div>
+  {{#if extra.spell}}
+  <div class="spell-result">
+    <p>{{#if extra.spell.force}}{{localize "SINLESS.Magic.force"}} {{extra.spell.force}} · {{/if}}<span class="{{#if extra.spell.lethal}}lethal{{/if}}">{{localize "SINLESS.Magic.drainLine" n=extra.spell.drain}} ({{#if extra.spell.lethal}}{{localize "SINLESS.Magic.lethal"}}{{else}}{{localize "SINLESS.Condition.stun"}}{{/if}})</span></p>
+    {{#unless extra.spell.applied}}
+    <button type="button" data-sinless-action="resist-drain"><i class="fa-solid fa-hand-sparkles"></i> {{localize "SINLESS.Magic.resistDrain"}}</button>
+    {{else}}<p class="reroll-note">{{localize "SINLESS.Magic.drainTaken"}}</p>{{/unless}}
+  </div>
+  {{/if}}
+  {{#if summon}}
+  <p class="effect">{{localize (concat "SINLESS.Magic.summon." summon.outcome) n=summon.services needed=summon.needed}}</p>
+  {{/if}}
   {{#if vcrUsed}}<p class="reroll-note">{{localize "SINLESS.Rig.vcrUsed" n=vcrUsed}}</p>{{/if}}
   {{#if overdrive}}<p class="effect">{{localize "SINLESS.Rig.overdriveGain" n=overdrive.gain}}{{#if overdrive.inertia}} · {{localize "SINLESS.Rig.overdriveInertia"}}{{/if}}</p>{{/if}}
   {{#if ram}}
@@ -58,7 +69,7 @@
   {{#if extra.weapon}}
   <p class="weapon-line">
     {{#if extra.blast}}{{localize "SINLESS.Card.damageBlast" damage=extra.damage}}{{else}}{{localize "SINLESS.Card.damage" damage=extra.damage}}{{/if}}
-    · {{localize (concat "SINLESS.Armor." extra.armorType)}} · {{localize "SINLESS.Item.FIELDS.penetration.label"}} {{extra.penetration}}
+    {{#if extra.magic}}{{#if extra.resistPool}}· {{localize "SINLESS.Magic.resistedBy" pool=(localize (concat "SINLESS.Pool." extra.resistPool))}}{{/if}}{{else}}· {{localize (concat "SINLESS.Armor." extra.armorType)}} · {{localize "SINLESS.Item.FIELDS.penetration.label"}} {{extra.penetration}}{{/if}}
     {{#if extra.stun}} · {{localize "SINLESS.Condition.stun"}}{{/if}}
     {{#if extra.damageFormula}}<span class="formula">({{extra.damageText}} → {{extra.damageFormula}})</span>{{/if}}
     {{#if extra.damageNote}}<span class="formula">+ {{extra.damageNote}}</span>{{/if}}

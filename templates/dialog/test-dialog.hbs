@@ -10,6 +10,12 @@
     <select name="mode">{{selectOptions modeChoices selected=mode localize=true}}</select>
   </div>
   {{/unless}}
+  {{#if force}}
+  <div class="form-group">
+    <label data-tooltip="{{localize "SINLESS.Magic.forceHint"}}">{{localize "SINLESS.Magic.force"}}</label>
+    <input type="number" name="force" value="{{force.value}}" min="1" max="{{force.max}}">
+  </div>
+  {{/if}}
   <div class="form-group">
     <label>{{#if rankLabel}}{{rankLabel}}{{else}}{{localize "SINLESS.Test.rank"}}{{/if}}</label>
     <input type="number" name="rank" value="{{rank}}" min="0">

@@ -35,6 +35,7 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       itemEdit: SinlessActorSheet.#onItemEdit,
       itemDelete: SinlessActorSheet.#onItemDelete,
       itemToggle: SinlessActorSheet.#onItemToggle,
+      invokeSpirit: SinlessActorSheet.#onInvokeSpirit,
       ...effectActions
     }
   };
@@ -130,12 +131,18 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     switch (item.type) {
       case "weapon": return this.actor.rollWeapon(item);
       case "ritual": return this.actor.rollRitual(item);
+      case "power": return this.actor.usePower(item);
       case "asset": return this.actor.rollAsset(item);
       case "software": return this.actor.rollSoftware(item);
       case "deck": return item.sheet.render(true);
       case "resource": return item.sheet.render(true);
       default: return item.toMessage?.();
     }
+  }
+
+  static async #onInvokeSpirit(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    return item ? this.actor.invokeSpirit(item) : null;
   }
 
   static async #onRefreshPools() {

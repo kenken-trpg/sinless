@@ -450,7 +450,8 @@
           "hint": "Bestiary attack dice (p.195). An NPC rolls exactly this many dice, with no skill limit or pool. Include firing-mode bonuses (e.g. burst 9). Leave empty to use skill + pool."
         },
         "damage": {
-          "label": "Damage"
+          "label": "Damage",
+          "hint": "Weapons: e.g. ½ Str +2. Spells: e.g. 1+Force (net successes are added)."
         },
         "penetration": {
           "label": "Penetration / AP",
@@ -496,7 +497,8 @@
           "label": "Kind"
         },
         "zoeticCost": {
-          "label": "Zoetic cost (ZC)"
+          "label": "Zoetic cost (ZC)",
+          "hint": "Amps pay half for amplifications (p.180)."
         },
         "bodyIndex": {
           "label": "Body Index (BI)"
@@ -508,13 +510,12 @@
           "label": "School"
         },
         "force": {
-          "label": "Force"
+          "label": "Force",
+          "hint": "Spells: force learned (max castable). Spirits: the spirit's force."
         },
         "drain": {
-          "label": "Drain"
-        },
-        "resistance": {
-          "label": "Resistance"
+          "label": "Drain",
+          "hint": "Drain code, e.g. 3 + (Force/2). Halved force rounds down, minimum 1."
         },
         "focus": {
           "label": "Focus"
@@ -623,6 +624,28 @@
         "links": {
           "label": "Links",
           "hint": "Vehicles or drones controlled at once."
+        },
+        "resistPool": {
+          "label": "Resisted with"
+        },
+        "resistOptional": {
+          "label": "Resistance optional"
+        },
+        "damageTrack": {
+          "label": "Damage track"
+        },
+        "area": {
+          "label": "Area effect"
+        },
+        "duration": {
+          "label": "Duration"
+        },
+        "price": {
+          "label": "Price per force (ㄓ)"
+        },
+        "spiritBag": {
+          "label": "Spirit bag",
+          "hint": "Each rank lowers the spirit's force for summoning (p.183)."
         }
       }
     },
@@ -1128,6 +1151,31 @@
       "bonusHint": "Free bonus dice for vehicle tests while hot-seated; refresh each round (p.142).",
       "bonusDice": "VCR dice",
       "noVehicles": "No vehicles. Drop this character on a drone or vehicle sheet."
+    },
+    "Magic": {
+      "force": "Force",
+      "forceHint": "Cast at any force up to the force the spell was learned at (p.167).",
+      "drain": "Drain",
+      "drainLine": "Drain {n}",
+      "drainPreview": "Drain {drain} ({type}; Zoetic Potential {zoetic})",
+      "lethal": "Lethal",
+      "lethalHint": "Force above your Zoetic Potential: drain is physical and cannot be soaked.",
+      "drainTitle": "Drain: {name}",
+      "drainResult": "Take <strong>{n}</strong> {track} damage",
+      "channeling": "Channel drain",
+      "channelSuccesses": "Channeling successes",
+      "rollChannel": "Roll Channeling + fetish (Resolve)",
+      "resistDrain": "Resist drain",
+      "drainTaken": "Drain applied.",
+      "resist": "Resist ({pool})",
+      "resistedBy": "Resisted with {pool}",
+      "invoke": "Invoke {name}",
+      "invokeHint": "Invoke the spirit for a service: drain equal to its force (p.183).",
+      "summon": {
+        "bound": "Spirit bound for {n} service(s).",
+        "uncontrolled": "The spirit appears but is not controlled.",
+        "failed": "The spirit does not appear (needed {needed} successes)."
+      }
     }
   }
 }

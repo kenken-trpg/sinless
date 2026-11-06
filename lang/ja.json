@@ -450,7 +450,8 @@
           "hint": "クリーチャーの攻撃ダイス数（p.195）。NPC は技能の上限やプールを使わず、この数だけ振る。射撃モードのボーナスも含めた値を入れる（例：バースト 9）。空欄なら技能＋プールで振る。"
         },
         "damage": {
-          "label": "ダメージ"
+          "label": "ダメージ",
+          "hint": "武器：例 ½ Str +2。呪文：例 1+Force（純成功数を加算）。"
         },
         "penetration": {
           "label": "貫通 / AP",
@@ -496,7 +497,8 @@
           "label": "種別"
         },
         "zoeticCost": {
-          "label": "ゾエティック・コスト（ZC）"
+          "label": "ゾエティック・コスト（ZC）",
+          "hint": "アンプは増幅のコストが半分（p.180）。"
         },
         "bodyIndex": {
           "label": "ボディ・インデックス（BI）"
@@ -508,13 +510,12 @@
           "label": "流派"
         },
         "force": {
-          "label": "フォース"
+          "label": "フォース",
+          "hint": "呪文：習得したフォース（発動できる上限）。精霊：その精霊のフォース。"
         },
         "drain": {
-          "label": "ドレイン"
-        },
-        "resistance": {
-          "label": "抵抗"
+          "label": "ドレイン",
+          "hint": "ドレインの式。例：3 + (Force/2)。半分にしたフォースは切り捨て、最小 1。"
         },
         "focus": {
           "label": "フォーカス"
@@ -623,6 +624,28 @@
         "links": {
           "label": "リンク",
           "hint": "同時に制御できる乗り物・ドローンの数。"
+        },
+        "resistPool": {
+          "label": "抵抗に使うプール"
+        },
+        "resistOptional": {
+          "label": "抵抗は任意"
+        },
+        "damageTrack": {
+          "label": "ダメージのトラック"
+        },
+        "area": {
+          "label": "範囲効果"
+        },
+        "duration": {
+          "label": "持続時間"
+        },
+        "price": {
+          "label": "フォースあたりの価格（ㄓ）"
+        },
+        "spiritBag": {
+          "label": "精霊バッグ",
+          "hint": "ランクごとに召喚時の精霊のフォースを下げる（p.183）。"
         }
       }
     },
@@ -1128,6 +1151,31 @@
       "bonusHint": "ホットシート中の乗り物判定に使える無料のボーナスダイス。ラウンドごとに回復（p.142）。",
       "bonusDice": "VCR ダイス",
       "noVehicles": "乗り物がありません。ドローンや乗り物のシートにこのキャラクターをドロップしてください。"
+    },
+    "Magic": {
+      "force": "フォース",
+      "forceHint": "習得したフォースまでの任意のフォースで発動できる（p.167）。",
+      "drain": "ドレイン",
+      "drainLine": "ドレイン {n}",
+      "drainPreview": "ドレイン {drain}（{type}／ゾエティック・ポテンシャル {zoetic}）",
+      "lethal": "致命",
+      "lethalHint": "フォースがゾエティック・ポテンシャルを超えると、ドレインは肉体ダメージになり、ソークできない。",
+      "drainTitle": "ドレイン：{name}",
+      "drainResult": "<strong>{n}</strong> 点の{track}ダメージを受ける",
+      "channeling": "ドレインをチャネリング",
+      "channelSuccesses": "チャネリングの成功数",
+      "rollChannel": "チャネリング＋フェティッシュをロール（決意）",
+      "resistDrain": "ドレインに抵抗",
+      "drainTaken": "ドレイン適用済み。",
+      "resist": "抵抗（{pool}）",
+      "resistedBy": "{pool}で抵抗",
+      "invoke": "{name} を呼び出す",
+      "invokeHint": "精霊を呼び出して奉仕させる：フォースと同じ値のドレイン（p.183）。",
+      "summon": {
+        "bound": "精霊を {n} 回の奉仕で束縛した。",
+        "uncontrolled": "精霊は現れたが、制御できない。",
+        "failed": "精霊は現れない（{needed} 成功が必要）。"
+      }
     }
   }
 }

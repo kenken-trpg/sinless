@@ -238,3 +238,7 @@
 .sinless.sheet .rig-panel .vehicles { list-style: none; padding: 0; margin: 0.25rem 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .sinless.sheet .rig-panel .vehicles li { display: flex; align-items: center; gap: 0.3rem; }
 .sinless.sheet .rig-panel .vehicles img { width: 1.5rem; height: 1.5rem; border: none; }
+
+/* ---------- Magic ---------- */
+.sinless-card .spell-result p { margin: 0.2rem 0; font-size: 0.85rem; }
+.sinless-card .lethal, .sinless-test-dialog .lethal { color: var(--sl-fail, #b71c1c); font-weight: bold; }

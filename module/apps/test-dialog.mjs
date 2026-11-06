@@ -1,5 +1,6 @@
 import { SYSTEM_ID, SINLESS } from "../config.mjs";
 import { planTest } from "../helpers/rules.mjs";
+import { forceFormula, drainIsLethal } from "../helpers/magic.mjs";
 
 const TEMPLATE = `systems/${SYSTEM_ID}/templates/dialog/test-dialog.hbs`;
 const { DialogV2 } = foundry.applications.api;
@@ -43,6 +44,7 @@ export async function testDialog(defaults) {
       spendPool: !!data.spendPool,
       autoSuccesses: defaults.autoSuccesses ?? 0,
       firingMode: data.firingMode,
+      force: defaults.force ? Math.clamp(n(data.force, defaults.force.value), 1, defaults.force.max) : null,
       poolAvailable
     };
     config.plan = planTest(config);
@@ -52,7 +54,7 @@ export async function testDialog(defaults) {
   const updatePreview = dialog => {
     const form = dialog.element.querySelector("form");
     if (!form) return;
-    const { plan, poolAvailable } = read(form);
+    const { plan, poolAvailable, force } = read(form);
     const out = dialog.element.querySelector(".sinless-test-preview");
     const fmt = plan.usesPool ? "SINLESS.Test.preview" : "SINLESS.Test.previewDice";
     out.innerHTML = plan.impossible
@@ -65,6 +67,14 @@ export async function testDialog(defaults) {
         kismet: plan.kismetDice,
         total: plan.total
       });
+    // Spells: show the drain the chosen force will cause (p.167).
+    if (defaults.force?.drain) {
+      const drain = forceFormula(defaults.force.drain, force) ?? 0;
+      const lethal = drainIsLethal(force, defaults.force.zoetic);
+      out.innerHTML += `<br><span class="${lethal ? "lethal" : ""}">${game.i18n.format("SINLESS.Magic.drainPreview", {
+        drain, type: game.i18n.localize(lethal ? "SINLESS.Magic.lethal" : "SINLESS.Condition.stun"), zoetic: defaults.force.zoetic
+      })}</span>`;
+    }
   };
 
   return DialogV2.wait({

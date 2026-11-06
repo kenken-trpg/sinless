@@ -33,7 +33,12 @@ export async function damageDialog(message, actor) {
     armor,
     canRoll: actor.isOwner && (!!actor.system.pools || actor.type === "vehicle"),
     armorTypeChoices: { ballistic: "SINLESS.Armor.ballistic", impact: "SINLESS.Armor.impact" },
-    trackChoices: choices(SINLESS.DAMAGE_TRACKS)
+    trackChoices: choices(SINLESS.DAMAGE_TRACKS),
+    // Spells: targets resist with a pool instead of dodging, and armor does not apply (p.167).
+    magic: !!weapon.magic,
+    resistLabel: weapon.resistPool
+      ? game.i18n.format("SINLESS.Magic.resist", { pool: game.i18n.localize(SINLESS.POOLS[weapon.resistPool]) })
+      : null
   });
 
   const read = form => {
@@ -53,7 +58,8 @@ export async function damageDialog(message, actor) {
       modifier: n(data.modifier),
       soak: n(data.soak),
       multiplier: weapon.multiplier ?? 1,
-      vehicle: actor.type === "vehicle"
+      vehicle: actor.type === "vehicle",
+      ignoreArmor: !!weapon.magic
     });
     if (data.track === "physical" || data.track === "stun") result.track = data.track;
     result.source = state.label;
@@ -82,9 +88,10 @@ export async function damageDialog(message, actor) {
 
   /** Roll a defense test for the defender and copy its successes into a field. */
   const rollInto = async (dialog, key) => {
-    const msg = await actor.rollDefense(key);
+    // "resist" fills the dodge field: resistance successes cancel the caster's successes.
+    const msg = key === "resist" ? await actor.rollResistance(weapon.resistPool) : await actor.rollDefense(key);
     if (!msg) return;
-    const input = dialog.element.querySelector(`input[name="${key}"]`);
+    const input = dialog.element.querySelector(`input[name="${key === "resist" ? "dodge" : key}"]`);
     if (input) input.value = messageSuccesses(msg);
     updatePreview(dialog);
   };

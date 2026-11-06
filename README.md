@@ -39,6 +39,17 @@ this system contains no rules text.
   base condition boxes and wound penalties.
 - Item types: weapon, armor, gear, implant, spell/power, ritual, knowledge skill, asset, resource,
   cyberdeck, software, vehicle control rig.
+- Magic (ch.9):
+  - Spells are cast with Sorcery + focus from Resolve, at a chosen force up to the force
+    learned. The dialog previews the drain and whether it is lethal (force above the Zoetic
+    Potential).
+  - Spell cards carry the damage (e.g. `1+Force` + net successes, armor ignored). Targets
+    resist with the spell's pool from the defend dialog.
+  - The caster resists drain from the card: Channeling + fetish, then soak if the drain is
+    stun. At least one stun box is always marked.
+  - Spirits are summoned with Conjuring + focus against force less the spirit bag. The card
+    shows the services bound. Invoking a spirit applies drain equal to its force.
+  - Amplifications cost Zoetic Potential (half for amps). Rituals can list a fixed drain.
 - Drones and vehicles (ch.8), as their own actor type:
   - Body, weapon weight, movement, handling, hardening, armor, inertia, and the physical and
     integrity tracks. Body is also the soak dice.

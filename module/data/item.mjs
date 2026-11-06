@@ -98,18 +98,42 @@ export class ImplantData extends SinlessItemBase {
   }
 }
 
+/**
+ * Spells, amplifications, infusions and spirits (ch.9).
+ * Formulas (drain, damage) may use "Force", e.g. "3 + (Force/2)".
+ */
 export class PowerData extends SinlessItemBase {
   static defineSchema() {
     return {
       ...super.defineSchema(),
       category: new StringField({ required: true, initial: "spell", choices: () => POWER_CATEGORIES }),
       school: str(),
-      force: int(0),
+      // Spells: force learned (max castable). Spirits: the spirit's force.
+      force: int(1),
       drain: str(),
-      resistance: str(),
+      resistPool: new StringField({ required: true, blank: true, initial: "", choices: () => ({ "": "—", ...POOLS }) }),
+      resistOptional: new BooleanField({ initial: false }),
+      damage: str(),
+      damageTrack: new StringField({ required: true, initial: "physical", choices: () => ({ physical: "SINLESS.Condition.physical", stun: "SINLESS.Condition.stun" }) }),
+      area: new BooleanField({ initial: false }),
+      duration: str(),
+      price: int(0),
       focus: int(0),
-      fetish: int(0)
+      fetish: int(0),
+      spiritBag: int(0),
+      zoeticCost: num(0, { step: 0.01 }),
+      effect: str()
     };
+  }
+
+  /** v0.7: the free-text "resistance" field became a pool choice. */
+  static migrateData(source) {
+    if (typeof source.resistance === "string" && source.resistPool === undefined) {
+      const match = source.resistance.toLowerCase().match(/brawn|finesse|focus|resolve/);
+      source.resistPool = match ? match[0] : "";
+      if (/optional/i.test(source.resistance)) source.resistOptional = true;
+    }
+    return super.migrateData(source);
   }
 }
 
@@ -119,7 +143,9 @@ export class RitualData extends SinlessItemBase {
     return {
       ...super.defineSchema(),
       rank: int(0),
-      pool: new StringField({ required: true, initial: "resolve", choices: () => POOLS })
+      pool: new StringField({ required: true, initial: "resolve", choices: () => POOLS }),
+      // Rituals list a fixed drain, e.g. "Drain (8)" (p.179).
+      drain: str()
     };
   }
 }

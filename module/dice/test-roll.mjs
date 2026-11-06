@@ -2,6 +2,7 @@ import { SYSTEM_ID } from "../config.mjs";
 import { resolveTest, rerollCount } from "../helpers/rules.mjs";
 import { splitDeckingDice, softwareAlert, nanHackResult } from "../helpers/grid.mjs";
 import { overdriveGain, ramResult } from "../helpers/rigging.mjs";
+import { summonResult } from "../helpers/magic.mjs";
 import { adjustAlert } from "../settings.mjs";
 import { damageDialog, controlledDefenders } from "../apps/damage-dialog.mjs";
 
@@ -117,6 +118,8 @@ export async function renderCard(state) {
   };
   // Rigging and decking results, recomputed when Kismet dice are added.
   const x = state.extra ?? {};
+  // Magic: spirit summoning outcome (p.183).
+  if (x.summon && !state.abf) context.summon = summonResult(sum.successes, x.summon.force, x.summon.bag);
   // Rigging: overdrive movement and ramming damage to the ramming vehicle.
   if (x.overdrive && !state.abf) context.overdrive = { gain: overdriveGain(sum.successes), inertia: x.overdrive.inertia };
   if (x.ram && !state.abf) {
@@ -184,6 +187,13 @@ export function onRenderChatMessage(message, html) {
     }
     guard(button, () => damageDialog(message, actor));
   }
+  // Drain: the caster resists and applies it once, even if the spell failed (p.167).
+  const drain = html.querySelector("[data-sinless-action='resist-drain']");
+  if (drain) {
+    if (message.isOwner) guard(drain, () => resistDrain(message));
+    else drain.remove();
+  }
+
   // Ramming: the rigger applies the damage to their own vehicle once.
   const ramSelf = html.querySelector("[data-sinless-action='apply-ram-self']");
   if (ramSelf) {
@@ -250,5 +260,19 @@ async function applyRamSelf(message) {
     });
   }
   x.ram.applied = true;
+  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+}
+
+/** Open the drain dialog for a spell card and mark the drain as taken. */
+async function resistDrain(message) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
+  const spell = state?.extra?.spell;
+  if (!spell || spell.applied) return;
+  const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
+  if (!actor) return;
+  const { drainDialog } = await import("../apps/drain-dialog.mjs");
+  const result = await drainDialog(actor, spell);
+  if (!result) return;
+  spell.applied = true;
   await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
 }

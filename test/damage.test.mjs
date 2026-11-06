@@ -102,3 +102,11 @@ test("stun overflows to physical, physical overflows to the overflow box", () =>
     { physical: 6, stun: 6, overflow: 2, physicalFull: true, stunFull: true }
   );
 });
+
+test("spells ignore armor and are reduced only by resistance and soak (p.167)", () => {
+  const r = resolveDamage({ base: 4, hits: 4, dodge: 1, armor: armor([4, 4], [3, 3]), ignoreArmor: true, soak: 2 });
+  assert.equal(r.armorReduction, 0);
+  assert.equal(r.raw, 7);
+  assert.equal(r.final, 5);
+  assert.equal(r.track, "physical");
+});

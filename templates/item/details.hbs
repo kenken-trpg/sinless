@@ -76,14 +76,30 @@
     {{formGroup fields.category value=system.category localize=true}}
     {{formGroup fields.school value=system.school}}
     {{formGroup fields.force value=system.force}}
+    {{#if (eq system.category "amplification")}}
+    {{formGroup fields.zoeticCost value=system.zoeticCost}}
+    {{else}}
     {{formGroup fields.drain value=system.drain}}
-    {{formGroup fields.resistance value=system.resistance}}
+    {{#if (eq system.category "spirit")}}
+    {{formGroup fields.spiritBag value=system.spiritBag}}
+    {{else}}
+    {{formGroup fields.resistPool value=system.resistPool localize=true}}
+    {{formGroup fields.resistOptional value=system.resistOptional}}
+    {{formGroup fields.damage value=system.damage}}
+    {{formGroup fields.damageTrack value=system.damageTrack localize=true}}
+    {{formGroup fields.area value=system.area}}
+    {{/if}}
+    {{formGroup fields.duration value=system.duration}}
     {{formGroup fields.focus value=system.focus}}
     {{formGroup fields.fetish value=system.fetish}}
+    {{/if}}
+    {{formGroup fields.price value=system.price}}
+    {{formGroup fields.effect value=system.effect}}
   {{/if}}
   {{#if isType.ritual}}
     {{formGroup fields.rank value=system.rank}}
     {{formGroup fields.pool value=system.pool localize=true}}
+    {{formGroup fields.drain value=system.drain}}
   {{/if}}
   {{#if isType.knowledge}}
     {{formGroup fields.rank value=system.rank}}

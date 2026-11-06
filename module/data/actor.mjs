@@ -5,6 +5,7 @@ import {
   computePools, conditionTrackSize, woundPenalty, kismetPoolSize
 } from "../helpers/rules.mjs";
 import { PRIORITY_CATEGORIES, PRIORITY_LEVELS } from "../helpers/creation.mjs";
+import { amplificationCost } from "../helpers/magic.mjs";
 
 const { NumberField, StringField, SchemaField, BooleanField, HTMLField } = foundry.data.fields;
 
@@ -211,6 +212,9 @@ export class CharacterData extends SinlessActorBase {
     let gearLoss = 0;
     for (const item of this.parent.items) {
       if (item.type === "implant" || item.type === "vcr") implantLoss += item.system.zoeticCost;
+      else if (item.type === "power" && item.system.category === "amplification") {
+        implantLoss += amplificationCost(item.system.zoeticCost, this.talent === "amp");
+      }
       else if (item.system.carried && item.system.metal) gearLoss += 1;
     }
     const raw = base + this.zoetic.bonus - implantLoss;

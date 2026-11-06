@@ -6,7 +6,17 @@
       <label>{{localize "SINLESS.Damage.hits"}}</label>
       <input type="number" name="hits" value="{{hits}}" min="0">
     </div>
-    {{#unless weapon.blast}}
+    {{#if magic}}
+    {{#if resistLabel}}
+    <div class="form-group">
+      <label>{{resistLabel}}</label>
+      <div class="with-button">
+        <input type="number" name="dodge" value="0" min="0">
+        {{#if canRoll}}<button type="button" data-sinless-roll="resist" data-tooltip="{{resistLabel}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+      </div>
+    </div>
+    {{/if}}
+    {{else}}{{#unless weapon.blast}}
     <div class="form-group">
       <label>{{localize "SINLESS.Defense.dodge"}}</label>
       <div class="with-button">
@@ -14,7 +24,7 @@
         {{#if canRoll}}<button type="button" data-sinless-roll="dodge" data-tooltip="{{localize "SINLESS.Damage.rollDodge"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
       </div>
     </div>
-    {{/unless}}
+    {{/unless}}{{/if}}
     <div class="form-group">
       <label>{{localize "SINLESS.Damage.base"}}</label>
       <input type="number" name="base" value="{{weapon.damage}}" min="0">
@@ -28,6 +38,7 @@
       <label class="checkbox"><input type="checkbox" name="halve"> {{localize "SINLESS.Damage.halve"}}</label>
     </div>
   </fieldset>
+  {{#unless magic}}
   <fieldset>
     <legend>{{localize "SINLESS.Damage.armor"}}</legend>
     <p class="notes">
@@ -47,6 +58,7 @@
       <label class="checkbox"><input type="checkbox" name="stun" {{checked weapon.stun}}> {{localize "SINLESS.Item.FIELDS.stun.label"}}</label>
     </div>
   </fieldset>
+  {{/unless}}
   <fieldset>
     <legend>{{localize "SINLESS.Defense.soak"}}</legend>
     <div class="form-group">

@@ -68,6 +68,7 @@ export function damageFormula(text, strength = 0) {
  * @param {boolean} [o.stun=false]   The weapon only deals stun damage.
  * @param {number} [o.soak=0]        Soak successes.
  * @param {number} [o.modifier=0]    Situational change to the damage (half blast, mist ...).
+ * @param {boolean} [o.ignoreArmor=false] Spells and other direct damage bypass armor.
  * @param {number} [o.multiplier=1] Damage multiplier (Battle Ram doubles ramming damage, p.149).
  * @param {boolean} [o.halve=false]  Half damage (2"-4" from a grenade, p.93).
  * @param {boolean} [o.vehicle=false] Vehicles and drones take no damage at all from weapons
@@ -96,6 +97,11 @@ export function resolveDamage(o) {
   if (o.halve) raw = Math.floor(raw / 2);
   raw += Number(o.modifier) || 0;
   raw = Math.max(0, raw);
+
+  if (o.ignoreArmor) {
+    const final = Math.max(0, raw - n(o.soak));
+    return { hit: true, net, raw, stripped: [], armorReduction: 0, afterArmor: raw, final, track };
+  }
 
   const stripped = [];
   let stripReduction = 0;
