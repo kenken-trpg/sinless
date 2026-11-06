@@ -66,7 +66,10 @@
     "disposition": -1,
     "texture": {
       "src": "icons/svg/mystery-man.svg"
-    }
+    },
+    "depth": 1,
+    "width": 1,
+    "height": 1
   },
   "flags": {
     "exportSource": {
