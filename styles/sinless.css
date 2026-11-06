@@ -10,6 +10,11 @@
 
 /* ---------- Sheet layout ---------- */
 .sinless.sheet .window-content { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.5rem; }
+/* PARTS.scrollable preserves scroll positions; CSS must create the scroll area. */
+.sinless.sheet.actor .window-content { min-height: 0; overflow-y: auto; }
+.sinless.sheet.actor .window-content > .sheet-header,
+.sinless.sheet.actor .window-content > nav.tabs { flex-shrink: 0; }
+.sinless.sheet.actor .window-content > .tab { flex: 1; min-height: 0; overflow-y: auto; }
 .sinless.sheet .sheet-header { display: flex; gap: 0.75rem; align-items: flex-start; }
 .sinless.sheet .sheet-header .profile { width: 96px; height: 96px; object-fit: cover; border: 1px solid var(--sl-border); border-radius: 4px; cursor: pointer; flex: 0 0 auto; }
 .sinless.sheet .header-fields { flex: 1; display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
