@@ -242,7 +242,8 @@
       "noKismet": "キスメット・プールにダイスが残っていません。",
       "noSectorActions": "このターンのセクター・アクションは残っていません。",
       "tooManyTraits": "時価総額で許される数より多くの特性を選んでいます。",
-      "noMember": "この判定を行える、あなたが操作するメンバーがいません。"
+      "noMember": "この判定を行える、あなたが操作するメンバーがいません。",
+      "noDefender": "防御するには、自分が操作するトークンを選択してください。"
     },
     "Test": {
       "roll": "ロール",
@@ -276,11 +277,14 @@
       "successes": "成功数 {n}",
       "success": "成功（必要 {threshold}）",
       "failure": "失敗（必要 {threshold}）",
-      "damage": "ダメージ {damage} + 純成功数・貫通 {penetration}",
+      "damage": "ダメージ {damage} + 純成功数",
       "addKismet": "キスメット・ダイスを1個追加",
       "dice": "ダイス {n} 個",
       "autoSuccesses": "自動 +{n}",
-      "heatRaised": "セクター・ヒートが {heat} になりました。"
+      "heatRaised": "セクター・ヒートが {heat} になりました。",
+      "damageBlast": "ダメージ {damage}（爆発：成功数は散布を減らす）",
+      "defend": "防御：{name}",
+      "defendSelected": "選択中のトークンで防御"
     },
     "Actor": {
       "FIELDS": {
@@ -418,7 +422,8 @@
           "label": "ダメージ"
         },
         "penetration": {
-          "label": "貫通"
+          "label": "貫通 / AP",
+          "hint": "射撃：最も高い対弾アーマーと比較（アーマーが上回れば朦朧）。近接：アーマー貫通の値だけ対衝撃アーマーを無視。"
         },
         "reach": {
           "label": "リーチ"
@@ -509,6 +514,17 @@
         },
         "sector": {
           "label": "セクター・アクション"
+        },
+        "armorType": {
+          "label": "防ぐアーマー",
+          "hint": "自動：近接・素手・投擲は対衝撃、その他の武器は対弾。"
+        },
+        "stun": {
+          "label": "朦朧ダメージのみ"
+        },
+        "blast": {
+          "label": "爆発（範囲）",
+          "hint": "成功数はダメージに加算されず散布を減らす。回避で打ち消せない。"
         }
       }
     },
@@ -768,6 +784,35 @@
       "confirm": "収支を貯蓄に繰り入れ、使用済みアクションをリセットして次のセクター・ターンを始めますか？",
       "unmet": "未払いの維持費 {n}：未払い1点につきリソース1つに1d6ダメージ。",
       "crackdown": "一斉摘発中：次のターン開始時に1d6を振り、4以上ならヒートが★3に下がります。"
+    },
+    "ArmorType": {
+      "auto": "自動"
+    },
+    "Damage": {
+      "title": "ダメージ：{name}",
+      "apply": "ダメージを適用",
+      "attack": "攻撃",
+      "hits": "攻撃側の成功数",
+      "rollDodge": "回避をロール（技巧）",
+      "base": "武器ダメージ",
+      "modifier": "ダメージ修正",
+      "modifierHint": "状況による増減。例：エネルギー兵器は霧 2 m ごとに −1。",
+      "halve": "ダメージ半減（爆心から 2\"〜4\"）",
+      "armor": "アーマー",
+      "energy": "エネルギー兵器（アーマーを 1 剥ぐ）",
+      "soakSuccesses": "ソークの成功数",
+      "rollSoak": "ソークをロール（剛力）",
+      "track": "コンディショントラック",
+      "preview": "ダメージ {raw} − アーマー {armor} − ソーク {soak} = <strong>{final}</strong>（{track}）",
+      "miss": "ミス：成功数が残っていない。",
+      "missed": "攻撃は {name} に当たらなかった。",
+      "cardTitle": "{name} がダメージを受けた",
+      "breakdown": "ダメージ {raw} − アーマー {armor} = {afterArmor} → ソーク後 {final}",
+      "taken": "{track}ダメージ {n}",
+      "stripped": "アーマー損耗：{armor}",
+      "armorBonus": "アーマー補正",
+      "physicalFull": "肉体トラックが満杯：毎ターン単純アクション 1 回のみ。毎ターン剛力判定で {n} 成功が必要。失敗すると意識を失い出血する。",
+      "stunFull": "朦朧トラックが満杯：毎ターン単純アクション 1 回のみ。毎ターン剛力判定で {n} 成功が必要。失敗すると意識を失う。"
     }
   }
 }

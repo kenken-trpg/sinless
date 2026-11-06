@@ -157,3 +157,14 @@
 .sinless-card .effect { margin: 0.2rem 0; font-size: 0.85rem; }
 .sinless-card .effect.warn { color: var(--sl-fail); }
 .sinless-card .finance { list-style: none; padding: 0; margin: 0.25rem 0; }
+
+/* ---------- Damage ---------- */
+.sinless-damage-dialog .sinless-damage fieldset { margin: 0 0 0.4rem; padding: 0.25rem 0.5rem; }
+.sinless-damage-dialog .sinless-damage .form-group { display: grid; grid-template-columns: 11rem minmax(0, 1fr); align-items: center; }
+.sinless-damage-dialog .sinless-damage .form-group.checks { display: flex; gap: 1rem; flex-wrap: wrap; }
+.sinless-damage-dialog .with-button { display: flex; gap: 4px; }
+.sinless-damage-dialog .with-button button { flex: 0 0 2rem; }
+.sinless-damage-dialog .notes span + span::before { content: " · "; }
+.sinless-damage-dialog .sinless-damage-preview { margin-top: 0.5rem; padding: 0.35rem; border: 1px solid var(--sl-border, #888); border-radius: 4px; }
+.sinless-card .defend { display: flex; flex-direction: column; gap: 3px; margin-top: 0.3rem; }
+.sinless-card .weapon-line .formula { opacity: 0.75; font-size: 0.8rem; margin-left: 0.25rem; }

@@ -242,7 +242,8 @@
       "noKismet": "No dice left in the Kismet pool.",
       "noSectorActions": "No sector actions left this turn.",
       "tooManyTraits": "More traits than the brand's market cap allows.",
-      "noMember": "The brand has no member you control to make this test."
+      "noMember": "The brand has no member you control to make this test.",
+      "noDefender": "Select a token you control to defend."
     },
     "Test": {
       "roll": "Roll",
@@ -276,11 +277,14 @@
       "successes": "{n} successes",
       "success": "Success (needed {threshold})",
       "failure": "Failure (needed {threshold})",
-      "damage": "Damage {damage} + net successes · Penetration {penetration}",
+      "damage": "Damage {damage} + net successes",
       "addKismet": "Add a Kismet die",
       "dice": "{n} dice",
       "autoSuccesses": "+{n} automatic",
-      "heatRaised": "Sector heat is now {heat}."
+      "heatRaised": "Sector heat is now {heat}.",
+      "damageBlast": "Damage {damage} (explosive: successes reduce scatter)",
+      "defend": "Defend: {name}",
+      "defendSelected": "Defend with selected token"
     },
     "Actor": {
       "FIELDS": {
@@ -418,7 +422,8 @@
           "label": "Damage"
         },
         "penetration": {
-          "label": "Penetration"
+          "label": "Penetration / AP",
+          "hint": "Firearms: compared with the highest ballistic layer (higher armor → stun). Melee: armor piercing ignores that much impact armor."
         },
         "reach": {
           "label": "Reach"
@@ -509,6 +514,17 @@
         },
         "sector": {
           "label": "Sector action"
+        },
+        "armorType": {
+          "label": "Stopped by",
+          "hint": "Automatic: melee, unarmed and thrown use impact armor; other weapons use ballistic armor."
+        },
+        "stun": {
+          "label": "Stun damage only"
+        },
+        "blast": {
+          "label": "Explosive (area)",
+          "hint": "Successes reduce scatter instead of adding damage and cannot be dodged away."
         }
       }
     },
@@ -768,6 +784,35 @@
       "confirm": "Bank the net market cap, reset used actions and start the next sector turn?",
       "unmet": "Unmet upkeep {n}: each unpaid point deals 1d6 damage to a resource.",
       "crackdown": "Crackdown: at the start of the next turn roll 1d6; on 4+ heat drops to three stars."
+    },
+    "ArmorType": {
+      "auto": "Automatic"
+    },
+    "Damage": {
+      "title": "Damage: {name}",
+      "apply": "Apply damage",
+      "attack": "Attack",
+      "hits": "Attacker successes",
+      "rollDodge": "Roll dodge (Finesse)",
+      "base": "Weapon damage",
+      "modifier": "Damage modifier",
+      "modifierHint": "Situational change, e.g. −1 per 2 m of mist for energy beams.",
+      "halve": "Half damage (2\"–4\" from the blast)",
+      "armor": "Armor",
+      "energy": "Energy weapon (strips 1 armor)",
+      "soakSuccesses": "Soak successes",
+      "rollSoak": "Roll soak (Brawn)",
+      "track": "Condition track",
+      "preview": "Damage {raw} − armor {armor} − soak {soak} = <strong>{final}</strong> {track}",
+      "miss": "Miss: no successes remain.",
+      "missed": "The attack misses {name}.",
+      "cardTitle": "{name} takes damage",
+      "breakdown": "Damage {raw} − armor {armor} = {afterArmor} → after soak {final}",
+      "taken": "{n} {track} damage",
+      "stripped": "Armor stripped: {armor}",
+      "armorBonus": "Armor bonus",
+      "physicalFull": "Physical track full: one simple action per turn. Brawn test each turn needs {n} successes or fall unconscious and bleed out.",
+      "stunFull": "Stun track full: one simple action per turn. Brawn test each turn needs {n} successes or fall unconscious."
     }
   }
 }

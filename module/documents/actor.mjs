@@ -1,5 +1,6 @@
 import { SINLESS, SYSTEM_ID, skillLabel, AGONARCH_TN } from "../config.mjs";
 import { autoSuccesses, sectorHeatPenalty } from "../helpers/brand.mjs";
+import { damageFormula, weaponArmorType, applyConditionDamage } from "../helpers/damage.mjs";
 import { currentTargetNumber, currentHeatBonus } from "../settings.mjs";
 import { testDialog } from "../apps/test-dialog.mjs";
 import { performTest } from "../dice/test-roll.mjs";
@@ -165,9 +166,101 @@ export class SinlessActor extends Actor {
       gear: sys.accuracy, notes: [game.i18n.localize(skillLabel(skillKey))]
     });
     defaults.showFiring = sys.category === "firearm" || sys.category === "energy" || sys.category === "heavy";
-    return this._runTest(defaults, {
-      damage: sys.damage, penetration: sys.penetration, weapon: true
+    return this._runTest(defaults, await this._weaponCardData(item));
+  }
+
+  /** Strength used for melee and thrown damage (p.94). */
+  get strength() {
+    return this.system.attributes?.str?.value ?? this.system.strength ?? 0;
+  }
+
+  /**
+   * Weapon data stored on the attack card: damage is evaluated now (it may use
+   * Strength or dice), and the current targets are recorded for the defenders.
+   */
+  async _weaponCardData(item) {
+    const sys = item.system;
+    const { formula, note } = damageFormula(sys.damage, this.strength);
+    let damage = 0;
+    let damageRoll = null;
+    try {
+      damageRoll = await new Roll(formula).evaluate();
+      damage = Math.max(0, Math.floor(damageRoll.total));
+    } catch (err) {
+      console.warn(`${SYSTEM_ID} | Cannot evaluate damage "${sys.damage}" of ${item.name}`, err);
+    }
+    const targets = [...(game.user?.targets ?? [])]
+      .filter(t => t.actor && t.actor !== this)
+      .map(t => ({ uuid: t.document.uuid, name: t.name }));
+    return {
+      weapon: true,
+      damage,
+      damageText: sys.damage,
+      damageFormula: damageRoll?.isDeterministic === false ? damageRoll.result : "",
+      damageNote: note,
+      penetration: sys.penetration,
+      armorType: weaponArmorType(sys.category, sys.armorType),
+      energy: sys.category === "energy",
+      stun: sys.stun || sys.category === "unarmed",
+      blast: sys.blast,
+      targets
+    };
+  }
+
+  /**
+   * Mark damage on the condition tracks (overflowing as needed), strip armor
+   * hit by energy weapons, and post a summary card.
+   * @param {object} result   Output of resolveDamage plus `source` (attack label).
+   */
+  async applyDamage(result) {
+    const sys = this.system;
+    if (!sys.condition) return null;
+    const max = { physical: sys.condition.physical.max, stun: sys.condition.stun.max };
+    const before = {
+      physical: sys.condition.physical.value,
+      stun: sys.condition.stun.value,
+      overflow: sys.condition.overflow
+    };
+    const after = applyConditionDamage(before, max, result.final, result.track);
+    await this.update({
+      "system.condition.physical.value": after.physical,
+      "system.condition.stun.value": after.stun,
+      "system.condition.overflow": after.overflow
     });
+    const strippedNames = [];
+    for (const kind of result.stripped ?? []) {
+      const name = await this._stripArmor(kind);
+      if (name) strippedNames.push(`${name} (${game.i18n.localize(`SINLESS.Armor.${kind}`)} −1)`);
+    }
+    const content = await foundry.applications.handlebars.renderTemplate(
+      `systems/${SYSTEM_ID}/templates/chat/damage-card.hbs`,
+      {
+        name: this.name,
+        source: result.source,
+        result,
+        trackLabel: `SINLESS.Condition.${result.track}`,
+        before, after, max,
+        overflowAdded: after.overflow - before.overflow,
+        strippedNames
+      }
+    );
+    return ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this }), content });
+  }
+
+  /** Energy weapons lower the best armor of a type by one point (p.110). */
+  async _stripArmor(kind) {
+    const worn = this.items.filter(i => i.type === "armor" && i.system.equipped && i.system[kind] > 0);
+    const best = worn.sort((a, b) => b.system[kind] - a.system[kind])[0];
+    const bonus = this.system.armorBonus?.[kind] ?? 0;
+    if (best && best.system[kind] >= bonus) {
+      await best.update({ [`system.${kind}`]: best.system[kind] - 1 });
+      return best.name;
+    }
+    if (bonus > 0) {
+      await this.update({ [`system.armorBonus.${kind}`]: bonus - 1 });
+      return game.i18n.localize("SINLESS.Damage.armorBonus");
+    }
+    return null;
   }
 
   async rollRitual(item) {

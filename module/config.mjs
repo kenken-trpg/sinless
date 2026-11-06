@@ -160,6 +160,20 @@ export const ARMOR_LAYERS = Object.freeze({
   outer: L("ArmorLayer.outer")
 });
 
+/** Which armor stops a weapon (p.92); "auto" follows the weapon category. */
+export const ARMOR_TYPES = Object.freeze({
+  auto: L("ArmorType.auto"),
+  ballistic: L("Armor.ballistic"),
+  impact: L("Armor.impact")
+});
+
+/** Condition track chosen when applying damage. */
+export const DAMAGE_TRACKS = Object.freeze({
+  auto: L("ArmorType.auto"),
+  physical: L("Condition.physical"),
+  stun: L("Condition.stun")
+});
+
 export const IMPLANT_KINDS = Object.freeze({
   cyber: L("ImplantKind.cyber"),
   bio: L("ImplantKind.bio")
@@ -265,7 +279,7 @@ export const BRAND_ACTIONS = Object.freeze({
 export const SINLESS = {
   ATTRIBUTES, POOLS, SKILLS, SKILL_GROUPS, ETIQUETTES, HERITAGES, MAGIC_TALENTS,
   LIFESTYLES, DIFFICULTIES, AGONARCH_TN, HEAT_LEVELS, WEAPON_CATEGORIES, FIRING_MODES,
-  ARMOR_LAYERS, IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES,
+  ARMOR_LAYERS, ARMOR_TYPES, DAMAGE_TRACKS, IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES,
   BRAND_STATS, BRAND_TRAITS, RESOURCE_TAGS, RESOURCE_CLASSES, SECTOR_HEAT, BRAND_ACTIONS
 };
 

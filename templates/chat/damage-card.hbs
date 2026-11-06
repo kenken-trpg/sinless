@@ -1,0 +1,21 @@
+<div class="sinless-card sinless-damage-card">
+  <header class="card-header">
+    <h3>{{localize "SINLESS.Damage.cardTitle" name=name}}</h3>
+  </header>
+  {{#if source}}<p class="notes"><span>{{source}}</span></p>{{/if}}
+  <p class="breakdown">{{localize "SINLESS.Damage.breakdown" raw=result.raw armor=result.armorReduction afterArmor=result.afterArmor final=result.final}}</p>
+  <div class="result">
+    <span class="successes">{{localize "SINLESS.Damage.taken" n=result.final track=(localize trackLabel)}}</span>
+  </div>
+  <p class="weapon-line">
+    {{localize "SINLESS.Condition.physical"}} {{after.physical}}/{{max.physical}} ·
+    {{localize "SINLESS.Condition.stun"}} {{after.stun}}/{{max.stun}}{{#if after.overflow}} ·
+    {{localize "SINLESS.Condition.overflow"}} {{after.overflow}}{{/if}}
+  </p>
+  {{#each strippedNames}}<p class="effect">{{localize "SINLESS.Damage.stripped" armor=this}}</p>{{/each}}
+  {{#if after.physicalFull}}
+  <p class="effect warn">{{localize "SINLESS.Damage.physicalFull" n=after.overflow}}</p>
+  {{else if after.stunFull}}
+  <p class="effect warn">{{localize "SINLESS.Damage.stunFull" n=after.physical}}</p>
+  {{/if}}
+</div>

@@ -1,5 +1,6 @@
 import { SYSTEM_ID } from "../config.mjs";
 import { resolveTest, rerollCount } from "../helpers/rules.mjs";
+import { damageDialog, controlledDefenders } from "../apps/damage-dialog.mjs";
 
 const CARD_TEMPLATE = `systems/${SYSTEM_ID}/templates/chat/test-card.hbs`;
 
@@ -97,7 +98,9 @@ export async function renderCard(state) {
     initialDice: state.initial.map((v, i) => dieView(v, { rerolled: state.rerolledIndices.includes(i) })),
     finalDice: state.rerolledIndices.length ? state.final.map(v => dieView(v)) : null,
     kismetDice: state.kismetAdded.map(v => dieView(v, { kismet: true })),
-    canAddKismet: !state.abf
+    canAddKismet: !state.abf,
+    // A hit needs successes, except explosives which always land somewhere (p.93).
+    canDefend: !!state.extra?.weapon && !state.abf && (sum.successes > 0 || !!state.extra.blast)
   };
   return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, context);
 }
@@ -127,19 +130,41 @@ export async function addKismetDie(message) {
 
 /** Chat card listeners (Foundry v13+ passes an HTMLElement). */
 export function onRenderChatMessage(message, html) {
-  const button = html.querySelector?.("[data-sinless-action='kismet']");
-  if (!button) return;
-  if (!message.isOwner) {
-    button.remove();
-    return;
-  }
-  button.addEventListener("click", async event => {
+  if (!html.querySelector) return;
+  const guard = (button, fn) => button.addEventListener("click", async event => {
     event.preventDefault();
     button.disabled = true;
     try {
-      await addKismetDie(message);
+      await fn();
     } finally {
       button.disabled = false;
     }
   });
+
+  const kismet = html.querySelector("[data-sinless-action='kismet']");
+  if (kismet) {
+    if (message.isOwner) guard(kismet, () => addKismetDie(message));
+    else kismet.remove();
+  }
+
+  // Defend buttons: only for users who control the target (or the GM).
+  for (const button of html.querySelectorAll("[data-sinless-action='defend']")) {
+    const actor = fromUuidSync(button.dataset.targetUuid)?.actor;
+    if (!actor || !(game.user.isGM || actor.isOwner)) {
+      button.remove();
+      continue;
+    }
+    guard(button, () => damageDialog(message, actor));
+  }
+  const selected = html.querySelector("[data-sinless-action='defend-selected']");
+  if (selected) {
+    guard(selected, async () => {
+      const defenders = controlledDefenders();
+      if (!defenders.length) {
+        ui.notifications.warn("SINLESS.Notify.noDefender", { localize: true });
+        return;
+      }
+      for (const actor of defenders) await damageDialog(message, actor);
+    });
+  }
 }

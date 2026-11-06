@@ -1,0 +1,65 @@
+<div class="sinless-damage">
+  <p class="notes"><span>{{attack}}</span><span>{{defender}}</span></p>
+  <fieldset>
+    <legend>{{localize "SINLESS.Damage.attack"}}</legend>
+    <div class="form-group">
+      <label>{{localize "SINLESS.Damage.hits"}}</label>
+      <input type="number" name="hits" value="{{hits}}" min="0">
+    </div>
+    {{#unless weapon.blast}}
+    <div class="form-group">
+      <label>{{localize "SINLESS.Defense.dodge"}}</label>
+      <div class="with-button">
+        <input type="number" name="dodge" value="0" min="0">
+        {{#if canRoll}}<button type="button" data-sinless-roll="dodge" data-tooltip="{{localize "SINLESS.Damage.rollDodge"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+      </div>
+    </div>
+    {{/unless}}
+    <div class="form-group">
+      <label>{{localize "SINLESS.Damage.base"}}</label>
+      <input type="number" name="base" value="{{weapon.damage}}" min="0">
+    </div>
+    <div class="form-group">
+      <label data-tooltip="{{localize "SINLESS.Damage.modifierHint"}}">{{localize "SINLESS.Damage.modifier"}}</label>
+      <input type="number" name="modifier" value="0">
+    </div>
+    <div class="form-group checks">
+      <label class="checkbox"><input type="checkbox" name="blast" {{checked weapon.blast}}> {{localize "SINLESS.Item.FIELDS.blast.label"}}</label>
+      <label class="checkbox"><input type="checkbox" name="halve"> {{localize "SINLESS.Damage.halve"}}</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>{{localize "SINLESS.Damage.armor"}}</legend>
+    <p class="notes">
+      <span>{{localize "SINLESS.Armor.ballistic"}} {{armor.ballistic.total}} ({{armor.ballistic.highest}})</span>
+      <span>{{localize "SINLESS.Armor.impact"}} {{armor.impact.total}} ({{armor.impact.highest}})</span>
+    </p>
+    <div class="form-group">
+      <label>{{localize "SINLESS.Item.FIELDS.armorType.label"}}</label>
+      <select name="armorType">{{selectOptions armorTypeChoices selected=weapon.armorType localize=true}}</select>
+    </div>
+    <div class="form-group">
+      <label data-tooltip="{{localize "SINLESS.Item.FIELDS.penetration.hint"}}">{{localize "SINLESS.Item.FIELDS.penetration.label"}}</label>
+      <input type="number" name="penetration" value="{{weapon.penetration}}" min="0">
+    </div>
+    <div class="form-group checks">
+      <label class="checkbox"><input type="checkbox" name="energy" {{checked weapon.energy}}> {{localize "SINLESS.Damage.energy"}}</label>
+      <label class="checkbox"><input type="checkbox" name="stun" {{checked weapon.stun}}> {{localize "SINLESS.Item.FIELDS.stun.label"}}</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>{{localize "SINLESS.Defense.soak"}}</legend>
+    <div class="form-group">
+      <label>{{localize "SINLESS.Damage.soakSuccesses"}}</label>
+      <div class="with-button">
+        <input type="number" name="soak" value="0" min="0">
+        {{#if canRoll}}<button type="button" data-sinless-roll="soak" data-tooltip="{{localize "SINLESS.Damage.rollSoak"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label>{{localize "SINLESS.Damage.track"}}</label>
+      <select name="track">{{selectOptions trackChoices selected="auto" localize=true}}</select>
+    </div>
+  </fieldset>
+  <p class="sinless-damage-preview"></p>
+</div>

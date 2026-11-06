@@ -36,7 +36,21 @@
   {{#if extra.effect}}<p class="effect">{{extra.effect}}</p>{{/if}}
   {{#if extra.heatRaised}}<p class="effect warn">{{localize "SINLESS.Card.heatRaised" heat=extra.heatRaised}}</p>{{/if}}
   {{#if extra.weapon}}
-  <p class="weapon-line">{{localize "SINLESS.Card.damage" damage=extra.damage penetration=extra.penetration}}</p>
+  <p class="weapon-line">
+    {{#if extra.blast}}{{localize "SINLESS.Card.damageBlast" damage=extra.damage}}{{else}}{{localize "SINLESS.Card.damage" damage=extra.damage}}{{/if}}
+    · {{localize (concat "SINLESS.Armor." extra.armorType)}} · {{localize "SINLESS.Item.FIELDS.penetration.label"}} {{extra.penetration}}
+    {{#if extra.stun}} · {{localize "SINLESS.Condition.stun"}}{{/if}}
+    {{#if extra.damageFormula}}<span class="formula">({{extra.damageText}} → {{extra.damageFormula}})</span>{{/if}}
+    {{#if extra.damageNote}}<span class="formula">+ {{extra.damageNote}}</span>{{/if}}
+  </p>
+  {{#if canDefend}}
+  <div class="defend">
+    {{#each extra.targets}}
+    <button type="button" data-sinless-action="defend" data-target-uuid="{{uuid}}"><i class="fa-solid fa-shield-halved"></i> {{localize "SINLESS.Card.defend" name=name}}</button>
+    {{/each}}
+    <button type="button" data-sinless-action="defend-selected"><i class="fa-solid fa-crosshairs"></i> {{localize "SINLESS.Card.defendSelected"}}</button>
+  </div>
+  {{/if}}
   {{/if}}
   {{#if canAddKismet}}
   <button type="button" data-sinless-action="kismet"><i class="fa-solid fa-dice-d6"></i> {{localize "SINLESS.Card.addKismet"}}</button>

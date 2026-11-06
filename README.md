@@ -16,6 +16,10 @@ this system contains no rules text.
   rerolls of 1s / 1s and 2s, Kismet dice and pool spending during conflict.
 - Chat card with successes, Argle Bargle Foofaraw detection and a button to add Kismet dice
   after the roll.
+- Attack cards remember the targeted tokens. Each defender opens a damage dialog to roll
+  dodge and soak from it. The dialog applies armor: ballistic armor against penetration
+  (stun or physical), impact armor minus armor piercing, energy weapons stripping armor, and
+  explosives. Damage then goes on the condition tracks, with stun → physical → overflow.
 - Initiative = Reaction + successes on the full Focus pool; NPCs use a static number.
   Pools refresh automatically every combat round.
 - World settings for run difficulty (Veteran / Professional / Prime), operational heat,

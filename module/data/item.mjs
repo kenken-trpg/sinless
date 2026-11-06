@@ -1,5 +1,5 @@
 import {
-  SKILLS, ETIQUETTES, WEAPON_CATEGORIES, ARMOR_LAYERS, IMPLANT_KINDS, POWER_CATEGORIES, POOLS
+  SKILLS, ETIQUETTES, WEAPON_CATEGORIES, ARMOR_LAYERS, ARMOR_TYPES, IMPLANT_KINDS, POWER_CATEGORIES, POOLS
 } from "../config.mjs";
 
 const { NumberField, StringField, BooleanField, HTMLField } = foundry.data.fields;
@@ -47,6 +47,9 @@ export class WeaponData extends PhysicalItemData {
       accuracy: int(0, { min: undefined }),
       damage: str("0"),
       penetration: int(0),
+      armorType: new StringField({ required: true, initial: "auto", choices: () => ARMOR_TYPES }),
+      stun: new BooleanField({ initial: false }),
+      blast: new BooleanField({ initial: false }),
       reach: int(0),
       modes: str(),
       rangeClose: str(),
