@@ -28,6 +28,15 @@ this system contains no rules text.
   dodge and soak from it. The dialog applies armor: ballistic armor against penetration
   (stun or physical), impact armor minus armor piercing, energy weapons stripping armor, and
   explosives. Damage then goes on the condition tracks, with stun → physical → overflow.
+- Full condition tracks (p.97): at the start of the turn of an actor with a full track, a
+  whispered card reminds its owners to roll the overload test (free Brawn pool test, wound
+  penalty applies; physical needs the overflow value, stun the physical damage). A failure
+  sets the unconscious status; a physical failure also sets bleeding and a countdown of
+  Body − overflow combat rounds, after which the character is marked dead. A Stabilized
+  button stops the countdown. More damage than the whole physical track in one attack kills
+  outright. After the run, a permanent injury test (successes = overflow) reports organ
+  damage (a random attribute maximum −1, applied with a button), a lost eye or limb, or no
+  lasting harm.
 - NPCs can use bestiary defenses (critter rules): fixed dodge / soak / resist dice that never
   spend a pool. Leave a field empty to defend from the pool like a player character.
   NPC weapons can list fixed attack dice in the same way.

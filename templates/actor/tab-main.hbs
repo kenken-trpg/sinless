@@ -32,6 +32,28 @@
           <input type="number" name="system.penalty" value="{{system.penalty}}" min="0">
         </label>
       </div>
+      {{#with conditionStatus}}
+      <div class="condition-status">
+        {{#if dead}}<p class="warn"><i class="fa-solid fa-skull"></i> {{localize "SINLESS.Overload.dead"}}</p>
+        {{else}}
+        {{#if unconscious}}<p class="warn"><i class="fa-solid fa-bed"></i> {{localize "SINLESS.Overload.unconscious"}}</p>{{/if}}
+        {{#if dying}}
+        <p class="warn"><i class="fa-solid fa-droplet"></i> {{localize "SINLESS.Overload.dying" n=bleedOut}}
+          <button type="button" data-action="stabilizeDying" data-tooltip="{{localize "SINLESS.Overload.stabilizeHint"}}"><i class="fa-solid fa-kit-medical"></i> {{localize "SINLESS.Overload.stabilize"}}</button>
+        </p>
+        {{/if}}
+        {{#if tests.length}}{{#unless unconscious}}
+        <p class="warn">{{localize "SINLESS.Overload.restricted"}}</p>
+        {{#each tests}}
+        <button type="button" data-action="rollOverload" data-track="{{track}}"><i class="fa-solid fa-heart-pulse"></i> {{localize label}} ({{localize "SINLESS.Overload.needed" n=needed}})</button>
+        {{/each}}
+        {{/unless}}{{/if}}
+        {{/if}}
+        {{#if overflow}}
+        <button type="button" data-action="rollPermanentInjury" data-tooltip="{{localize "SINLESS.Injury.hint"}}"><i class="fa-solid fa-user-injured"></i> {{localize "SINLESS.Injury.title"}}</button>
+        {{/if}}
+      </div>
+      {{/with}}
     </div>
     <div class="defenses">
       <div class="armor">

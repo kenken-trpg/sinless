@@ -1,0 +1,9 @@
+<div class="sinless-card sinless-overload-card">
+  <header class="card-header">
+    <h3>{{localize "SINLESS.Overload.promptTitle" name=name}}</h3>
+  </header>
+  <p class="effect warn">{{localize "SINLESS.Overload.restricted"}}</p>
+  {{#each tests}}
+  <button type="button" data-sinless-action="overload" data-track="{{track}}"><i class="fa-solid fa-heart-pulse"></i> {{localize label}} ({{localize "SINLESS.Overload.needed" n=needed}})</button>
+  {{/each}}
+</div>

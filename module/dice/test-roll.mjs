@@ -1,8 +1,9 @@
-import { SYSTEM_ID } from "../config.mjs";
+import { SYSTEM_ID, SINLESS } from "../config.mjs";
 import { resolveTest, rerollCount } from "../helpers/rules.mjs";
 import { splitDeckingDice, softwareAlert, nanHackResult } from "../helpers/grid.mjs";
 import { overdriveGain, ramResult } from "../helpers/rigging.mjs";
 import { summonResult } from "../helpers/magic.mjs";
+import { permanentInjury } from "../helpers/condition.mjs";
 import { adjustAlert } from "../settings.mjs";
 import { damageDialog, controlledDefenders } from "../apps/damage-dialog.mjs";
 
@@ -120,6 +121,16 @@ export async function renderCard(state) {
   };
   // Rigging and decking results, recomputed when Kismet dice are added.
   const x = state.extra ?? {};
+  // Full condition tracks (p.97): overload test failure and permanent injury.
+  if (x.overload && !state.abf) context.overloadFailed = sum.outcome === "failure";
+  if (x.overload && state.abf) context.overloadFailed = true;
+  if (x.injury) {
+    const result = state.abf ? "organ" : permanentInjury(sum.successes, x.injury.overflow);
+    context.injury = {
+      result,
+      attributeLabel: x.injury.attribute ? SINLESS.ATTRIBUTES[x.injury.attribute] ?? x.injury.attribute : null
+    };
+  }
   // Magic: spirit summoning outcome (p.183).
   if (x.summon && !state.abf) context.summon = summonResult(sum.successes, x.summon.force, x.summon.bag);
   // Rigging: overdrive movement and ramming damage to the ramming vehicle.
@@ -215,6 +226,22 @@ export function onRenderChatMessage(message, html) {
     else alert.remove();
   }
 
+  // Full tracks (p.97): the actor's owner rolls overload tests and applies the results.
+  for (const button of html.querySelectorAll("[data-sinless-action='overload']")) {
+    const actor = fromUuidSync(message.getFlag(SYSTEM_ID, "actorUuid"));
+    if (!actor?.isOwner) {
+      button.remove();
+      continue;
+    }
+    guard(button, () => actor.rollOverload(button.dataset.track));
+  }
+  for (const action of ["apply-overload", "apply-organ"]) {
+    const button = html.querySelector(`[data-sinless-action='${action}']`);
+    if (!button) continue;
+    if (message.isOwner || game.user.isGM) guard(button, () => applyConditionResult(message, action));
+    else button.remove();
+  }
+
   const selected = html.querySelector("[data-sinless-action='defend-selected']");
   if (selected) {
     guard(selected, async () => {
@@ -243,6 +270,22 @@ async function applyGridResult(message, what) {
     const value = x.nan ? nanHackResult(x.nan, sum.successes, x.io).alert : softwareAlert(x, sum.successes, x.shadow);
     x.alertNow = await adjustAlert(value);
     x.alertApplied = true;
+  } else return;
+  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+}
+
+/** Apply a failed overload test or organ damage once (p.97). */
+async function applyConditionResult(message, action) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
+  const x = state?.extra;
+  const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
+  if (!x || !actor) return;
+  if (action === "apply-overload" && x.overload && !x.overload.applied) {
+    await actor.applyOverloadFailure(x.overload.track, x.overload.rounds);
+    x.overload.applied = true;
+  } else if (action === "apply-organ" && x.injury?.attribute && !x.injury.applied) {
+    await actor.applyOrganDamage(x.injury.attribute);
+    x.injury.applied = true;
   } else return;
   await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
 }

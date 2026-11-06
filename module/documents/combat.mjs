@@ -33,10 +33,41 @@ export function registerCombatHooks() {
     for (const actor of actors) await actor.refreshPools();
   });
 
+  // Full condition tracks (p.97): bleed out each round, overload tests at the start of a turn.
+  Hooks.on("updateCombat", async (combat, changed, options) => {
+    if (!game.user.isActiveGM) return;
+    if (!("turn" in changed || "round" in changed) || options?.direction === -1) return;
+    // Starting the combat (round 0 → 1) does not count as a round passing.
+    if ((changed.round ?? 0) > 1) {
+      const dying = new Set(combat.combatants.map(c => c.actor).filter(a => Number.isInteger(a?.system.condition?.bleedOut)));
+      for (const actor of dying) await actor.tickBleedOut();
+    }
+    const actor = combat.combatant?.actor;
+    if (actor) await promptOverload(actor);
+  });
+
   // Recoil tokens do not outlast the fight (p.92).
   Hooks.on("deleteCombat", async combat => {
     if (!game.user.isActiveGM) return;
     const actors = new Set(combat.combatants.map(c => c.actor).filter(a => a?.system.combat?.recoil || a?.system.combat?.recoilPrimed));
     for (const actor of actors) await actor.stabilize();
+  });
+}
+
+/** Remind the owners of an actor with a full track to roll the overload test (p.97). */
+export async function promptOverload(actor) {
+  const tests = actor.overloadTests ?? [];
+  const out = actor.statuses?.has("unconscious") || actor.statuses?.has(CONFIG.specialStatusEffects.DEFEATED);
+  if (!tests.length || out) return null;
+  const content = await foundry.applications.handlebars.renderTemplate(
+    `systems/${SYSTEM_ID}/templates/chat/overload-prompt.hbs`,
+    { name: actor.name, tests: tests.map(t => ({ ...t, label: `SINLESS.Overload.title.${t.track}` })) }
+  );
+  const owners = game.users.filter(u => actor.testUserPermission(u, "OWNER")).map(u => u.id);
+  return ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content,
+    whisper: owners,
+    flags: { [SYSTEM_ID]: { actorUuid: actor.uuid, overloadPrompt: true } }
   });
 }

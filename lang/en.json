@@ -1228,6 +1228,42 @@
         "dualWield": "Two guns",
         "range": "Range"
       }
+    },
+    "Overload": {
+      "title": {
+        "physical": "Overload test (physical)",
+        "stun": "Overload test (stun)"
+      },
+      "dice": "Brawn pool dice (less wounds)",
+      "needed": "need {n}",
+      "notNeeded": "Neither condition track is full.",
+      "restricted": "Track full: a single simple action per turn; exploit and reflex actions are denied (p.97).",
+      "promptTitle": "{name}: overload test",
+      "pass": "Stays conscious.",
+      "failStun": "Falls unconscious.",
+      "failPhysical": "Unconscious in critical condition: bleeds out in {n} combat round(s).",
+      "failPhysicalNpc": "Unconscious in critical condition and bleeding out.",
+      "apply": "Apply (unconscious / bleeding)",
+      "applied": "Applied.",
+      "unconscious": "Unconscious.",
+      "dying": "Critical: bleeds out in {n} round(s).",
+      "stabilize": "Stabilized",
+      "stabilizeHint": "Any success on a Biotech test stabilizes the dying, who wake in 1d6 days (p.97).",
+      "dead": "Dead.",
+      "bledOut": "{name} has bled out.",
+      "killed": "{name} takes more damage than their whole physical track in one attack and is killed (p.97)."
+    },
+    "Injury": {
+      "title": "Permanent injury test",
+      "hint": "After the run: an unmodified Brawn pool test needing as many successes as the overflow damage taken (p.97).",
+      "notNeeded": "No overflow damage: no permanent injury test is needed.",
+      "result": {
+        "organ": "Organ damage: {attribute} maximum −1, permanently (the statistic is selected randomly).",
+        "limb": "An eye or a limb is rendered inoperable or lost: replace it or regrow it with biotechnology.",
+        "none": "No permanent damage."
+      },
+      "apply": "Lower {attribute} maximum by 1",
+      "applied": "Organ damage applied."
     }
   }
 }

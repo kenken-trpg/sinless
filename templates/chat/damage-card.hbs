@@ -13,7 +13,9 @@
     {{localize "SINLESS.Condition.overflow"}} {{after.overflow}}{{/if}}
   </p>
   {{#each strippedNames}}<p class="effect">{{localize "SINLESS.Damage.stripped" armor=this}}</p>{{/each}}
-  {{#if after.physicalFull}}
+  {{#if killed}}
+  <p class="effect warn">{{localize "SINLESS.Overload.killed" name=name}}</p>
+  {{else if after.physicalFull}}
   <p class="effect warn">{{localize "SINLESS.Damage.physicalFull" n=after.overflow}}</p>
   {{else if after.stunFull}}
   <p class="effect warn">{{localize "SINLESS.Damage.stunFull" n=after.physical}}</p>

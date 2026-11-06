@@ -30,6 +30,9 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       rollItem: SinlessActorSheet.#onRollItem,
       refreshPools: SinlessActorSheet.#onRefreshPools,
       stabilize: SinlessActorSheet.#onStabilize,
+      rollOverload: SinlessActorSheet.#onRollOverload,
+      stabilizeDying: SinlessActorSheet.#onStabilizeDying,
+      rollPermanentInjury: SinlessActorSheet.#onRollPermanentInjury,
       refreshKismet: SinlessActorSheet.#onRefreshKismet,
       setCondition: SinlessActorSheet.#onSetCondition,
       itemCreate: SinlessActorSheet.#onItemCreate,
@@ -54,6 +57,19 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.isGM = game.user.isGM;
     context.targetNumber = currentTargetNumber(sys.isAgonarch);
     context.recoilJammed = !!sys.combat && sys.combat.recoil >= sys.combat.recoilCapacity;
+    // Full tracks, bleeding out and permanent injury (p.97).
+    if (sys.condition && actor.type !== "vehicle") {
+      const statuses = actor.statuses ?? new Set();
+      const status = {
+        tests: actor.overloadTests.map(t => ({ ...t, label: `SINLESS.Overload.title.${t.track}` })),
+        bleedOut: sys.condition.bleedOut,
+        dying: Number.isInteger(sys.condition.bleedOut),
+        unconscious: statuses.has("unconscious"),
+        dead: statuses.has(CONFIG.specialStatusEffects.DEFEATED),
+        overflow: sys.condition.overflow
+      };
+      if (status.tests.length || status.dying || status.unconscious || status.dead || status.overflow) context.conditionStatus = status;
+    }
 
     context.items = {};
     context.itemGroups = {};
@@ -153,6 +169,18 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async #onStabilize() {
     return this.actor.stabilize();
+  }
+
+  static async #onRollOverload(event, target) {
+    return this.actor.rollOverload(target.dataset.track);
+  }
+
+  static async #onStabilizeDying() {
+    return this.actor.stabilizeDying();
+  }
+
+  static async #onRollPermanentInjury() {
+    return this.actor.rollPermanentInjury();
   }
 
   static async #onRefreshKismet() {

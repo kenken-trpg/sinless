@@ -44,7 +44,9 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
       condition: new SchemaField({
         physical: new SchemaField({ value: int(0), bonus: int(0, { min: undefined }) }),
         stun: new SchemaField({ value: int(0), bonus: int(0, { min: undefined }) }),
-        overflow: int(0)
+        overflow: int(0),
+        // Critical condition (p.97): combat rounds left before bleeding out; null when not dying.
+        bleedOut: new NumberField({ required: true, nullable: true, integer: true, initial: null })
       }),
       armorBonus: new SchemaField({
         ballistic: int(0, { min: undefined }),

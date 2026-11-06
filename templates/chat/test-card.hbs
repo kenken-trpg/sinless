@@ -65,6 +65,22 @@
     {{/if}}{{/unless}}
   </div>
   {{/if}}
+  {{#if extra.overload}}
+  {{#if overloadFailed}}
+  <p class="effect warn">{{#if (eq extra.overload.track "physical")}}{{#if extra.overload.rounds includeZero=true}}{{localize "SINLESS.Overload.failPhysical" n=extra.overload.rounds}}{{else}}{{localize "SINLESS.Overload.failPhysicalNpc"}}{{/if}}{{else}}{{localize "SINLESS.Overload.failStun"}}{{/if}}</p>
+  {{#if extra.overload.applied}}<p class="effect">{{localize "SINLESS.Overload.applied"}}</p>{{else}}
+  <button type="button" data-sinless-action="apply-overload"><i class="fa-solid fa-bed"></i> {{localize "SINLESS.Overload.apply"}}</button>{{/if}}
+  {{else}}
+  <p class="effect">{{localize "SINLESS.Overload.pass"}}</p>
+  {{/if}}
+  {{/if}}
+  {{#if injury}}
+  <p class="effect{{#unless (eq injury.result "none")}} warn{{/unless}}">{{localize (concat "SINLESS.Injury.result." injury.result) attribute=(localize injury.attributeLabel)}}</p>
+  {{#if (eq injury.result "organ")}}{{#if injury.attributeLabel}}
+  {{#if extra.injury.applied}}<p class="effect">{{localize "SINLESS.Injury.applied"}}</p>{{else}}
+  <button type="button" data-sinless-action="apply-organ"><i class="fa-solid fa-lungs"></i> {{localize "SINLESS.Injury.apply" attribute=(localize injury.attributeLabel)}}</button>{{/if}}
+  {{/if}}{{/if}}
+  {{/if}}
   {{#if extra.heatRaised}}<p class="effect warn">{{localize "SINLESS.Card.heatRaised" heat=extra.heatRaised}}</p>{{/if}}
   {{#if extra.weapon}}
   <p class="weapon-line">
