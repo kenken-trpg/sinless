@@ -71,8 +71,29 @@ TRPG **Sinless** を Foundry Virtual Tabletop で遊ぶための、非公式の�
 ln -s "$PWD" "<FoundryData>/Data/systems/sinless"
 npm test             # ルールの単体テスト＋i18n チェック
 npm run check:i18n   # 言語ファイルのキー・プレースホルダ整合性
+npm run lint:syntax  # 全モジュールと JSON の構文チェック
+npm run check        # 上の 3 つをまとめて実行
 npm run build        # dist/sinless.zip を作成
 ```
+
+`main` への push と PR では、GitHub Actions がこれらのチェックとビルドを実行します（`.github/workflows/ci.yml`）。
+
+### リリース手順
+
+```sh
+npm run bump -- 0.9.0                 # system.json と package.json のバージョンを更新
+$EDITOR release-notes/v0.9.0.md       # 1 行目の「## Title / タイトル」がリリース名になる
+git commit -am "Release v0.9.0" && git push
+git tag v0.9.0 && git push origin v0.9.0
+```
+
+タグを push すると `.github/workflows/release.yml` が動き、次を順に行います。
+1. チェックを再実行する
+2. ビルドする
+3. タグと両方のマニフェストのバージョンが一致するか確認する
+4. `sinless.zip` と `system.json` を GitHub Release として公開する
+
+公開せずにローカルで確認するには：`npm run build && DRY_RUN=1 node tools/release.mjs v0.9.0`
 
 表示文字列は直接書かず、必ず `lang/en.json` と `lang/ja.json` の両方にキーを追加してください。
 訳語は暫定です。用語集の確定に合わせて `lang/ja.json` を更新してください。

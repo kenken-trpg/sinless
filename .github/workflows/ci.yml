@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Unit tests
+        run: npm test
+      - name: Localization check (en / ja)
+        run: npm run check:i18n
+      - name: Syntax check
+        run: npm run lint:syntax
+      - name: Build package
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sinless-${{ github.sha }}
+          path: dist/
+          retention-days: 7

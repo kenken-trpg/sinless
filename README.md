@@ -86,8 +86,26 @@ ln -s "$PWD" "<FoundryData>/Data/systems/sinless"
 npm test             # rule unit tests + i18n check
 npm run check:i18n   # locale parity, placeholders, missing keys
 npm run lint:syntax  # parse-check every module and JSON file
+npm run check        # all three
 npm run build        # dist/sinless.zip
 ```
+
+GitHub Actions runs these checks and the build on every push to `main` and on pull
+requests (`.github/workflows/ci.yml`).
+
+### Releasing
+
+```sh
+npm run bump -- 0.9.0                 # system.json + package.json
+$EDITOR release-notes/v0.9.0.md       # first line "## Title / タイトル" names the release
+git commit -am "Release v0.9.0" && git push
+git tag v0.9.0 && git push origin v0.9.0
+```
+
+Pushing the tag runs `.github/workflows/release.yml`: it re-runs the checks, builds,
+verifies that the tag matches both manifests, and publishes `sinless.zip` and
+`system.json` as the GitHub release. To check a release locally without publishing:
+`npm run build && DRY_RUN=1 node tools/release.mjs v0.9.0`.
 
 ### Adding text
 

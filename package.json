@@ -8,7 +8,9 @@
     "test": "node --test \"test/**/*.test.mjs\"",
     "check:i18n": "node tools/check-i18n.mjs",
     "lint:syntax": "node tools/check-syntax.mjs",
-    "build": "node tools/build.mjs"
+    "build": "node tools/build.mjs",
+    "bump": "node tools/bump.mjs",
+    "check": "npm test && npm run check:i18n && npm run lint:syntax"
   },
   "license": "MIT"
 }

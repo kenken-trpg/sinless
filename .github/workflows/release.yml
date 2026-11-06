@@ -1,0 +1,32 @@
+name: Release
+
+# Push a tag such as v0.9.0 (matching system.json and package.json) to publish
+# dist/sinless.zip and dist/system.json as a GitHub release. Notes are read from
+# release-notes/<tag>.md when present.
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Unit tests
+        run: npm test
+      - name: Localization check (en / ja)
+        run: npm run check:i18n
+      - name: Syntax check
+        run: npm run lint:syntax
+      - name: Build package
+        run: npm run build
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node tools/release.mjs "${GITHUB_REF_NAME}"
