@@ -23,6 +23,11 @@ this system contains no rules text.
 - NPCs can use bestiary defenses (critter rules): fixed dodge / soak / resist dice that never
   spend a pool. Leave a field empty to defend from the pool like a player character.
   NPC weapons can list fixed attack dice in the same way.
+- Active Effects on actors and items. Item effects apply while armor is equipped and gear is
+  carried; implant effects always apply. Useful keys: `system.attributes.str.value`,
+  `system.pools.brawn.bonus`, `system.condition.physical.bonus`, `system.armorBonus.ballistic`,
+  `system.skills.firearms.rank`, `system.initiativeBonus`, `system.zoetic.bonus`.
+  Attribute fields keep showing the base value. Other fields that an effect sets are locked.
 - Initiative = Reaction + successes on the full Focus pool; NPCs use a static number.
   Pools refresh automatically every combat round.
 - World settings for run difficulty (Veteran / Professional / Prime), operational heat,

@@ -1,5 +1,6 @@
 import { SYSTEM_ID, SINLESS, skillLabel } from "../config.mjs";
 import { currentTargetNumber } from "../settings.mjs";
+import { actorEffects, effectActions, lockOverriddenInputs, EFFECT_KEYS } from "./effects.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -30,7 +31,8 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       itemCreate: SinlessActorSheet.#onItemCreate,
       itemEdit: SinlessActorSheet.#onItemEdit,
       itemDelete: SinlessActorSheet.#onItemDelete,
-      itemToggle: SinlessActorSheet.#onItemToggle
+      itemToggle: SinlessActorSheet.#onItemToggle,
+      ...effectActions
     }
   };
 
@@ -58,6 +60,8 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const TextEditor = foundry.applications.ux.TextEditor.implementation;
     context.enrichedNotes = await TextEditor.enrichHTML(sys.notes, { relativeTo: actor, secrets: actor.isOwner });
     context.fields = sys.schema.fields;
+    context.effects = actorEffects(actor);
+    context.effectKeys = EFFECT_KEYS;
     if (!sys.pools) return context;
 
     context.pools = Object.entries(SINLESS.POOLS).map(([key, label]) => ({
@@ -91,6 +95,12 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.physicalBoxes = boxes(sys.condition.physical.value, sys.condition.physical.max);
     context.stunBoxes = boxes(sys.condition.stun.value, sys.condition.stun.max);
     return context;
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    lockOverriddenInputs(this);
   }
 
   /* ------------------------------------------------------------------ */
@@ -174,12 +184,13 @@ export class CharacterSheet extends SinlessActorSheet {
     gear: { template: T("actor/tab-items.hbs"), scrollable: [""] },
     magic: { template: T("actor/tab-items.hbs"), scrollable: [""] },
     social: { template: T("actor/tab-social.hbs"), scrollable: [""] },
+    effects: { template: T("actor/tab-effects.hbs"), scrollable: [""] },
     bio: { template: T("actor/tab-bio.hbs"), scrollable: [""] }
   };
 
   static TABS = {
     primary: {
-      tabs: [{ id: "main" }, { id: "gear" }, { id: "magic" }, { id: "social" }, { id: "bio" }],
+      tabs: [{ id: "main" }, { id: "gear" }, { id: "magic" }, { id: "social" }, { id: "effects" }, { id: "bio" }],
       initial: "main",
       labelPrefix: "SINLESS.Tab"
     }
@@ -188,9 +199,11 @@ export class CharacterSheet extends SinlessActorSheet {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     const sys = this.actor.system;
-    context.attributes = Object.entries(SINLESS.ATTRIBUTES).map(([key, label]) => ({
-      key, label, ...sys.attributes[key]
-    }));
+    const source = this.actor._source.system.attributes ?? {};
+    context.attributes = Object.entries(SINLESS.ATTRIBUTES).map(([key, label]) => {
+      const base = source[key]?.value ?? sys.attributes[key].value;
+      return { key, label, ...sys.attributes[key], base, modified: base !== sys.attributes[key].value };
+    });
     const opts = obj => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, typeof v === "string" ? v : v.label]));
     context.heritageChoices = opts(SINLESS.HERITAGES);
     context.talentChoices = SINLESS.MAGIC_TALENTS;
@@ -217,12 +230,13 @@ export class NpcSheet extends SinlessActorSheet {
     tabs: { template: "templates/generic/tab-navigation.hbs" },
     main: { template: T("actor/tab-main.hbs"), scrollable: [""] },
     gear: { template: T("actor/tab-items.hbs"), scrollable: [""] },
+    effects: { template: T("actor/tab-effects.hbs"), scrollable: [""] },
     bio: { template: T("actor/tab-bio.hbs"), scrollable: [""] }
   };
 
   static TABS = {
     primary: {
-      tabs: [{ id: "main" }, { id: "gear" }, { id: "bio" }],
+      tabs: [{ id: "main" }, { id: "gear" }, { id: "effects" }, { id: "bio" }],
       initial: "main",
       labelPrefix: "SINLESS.Tab"
     }

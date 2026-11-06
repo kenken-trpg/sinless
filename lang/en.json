@@ -208,7 +208,8 @@
       "social": "Etiquette & Assets",
       "bio": "Biography",
       "resources": "Resources & Assets",
-      "members": "Members"
+      "members": "Members",
+      "effects": "Effects"
     },
     "Sheet": {
       "character": "Sinless Character Sheet",
@@ -823,6 +824,20 @@
       "armorBonus": "Armor bonus",
       "physicalFull": "Physical track full: one simple action per turn. Brawn test each turn needs {n} successes or fall unconscious and bleed out.",
       "stunFull": "Stun track full: one simple action per turn. Brawn test each turn needs {n} successes or fall unconscious."
+    },
+    "Effect": {
+      "title": "Active Effects",
+      "create": "Create effect",
+      "edit": "Edit effect",
+      "delete": "Delete effect",
+      "toggle": "Enable / disable",
+      "new": "New Effect",
+      "none": "No effects.",
+      "suppressed": "Inactive (item not equipped or carried)",
+      "overridden": "Set by an Active Effect. Edit or disable the effect to change it.",
+      "effective": "Value after Active Effects",
+      "keysTitle": "Attribute keys",
+      "keysHint": "Use these keys in an effect's changes (other skills, pools and etiquettes follow the same pattern). Effects on items apply while armor is equipped and gear is carried; implant effects always apply."
     }
   }
 }

@@ -1,0 +1,33 @@
+<section class="effects-list">
+  <header class="item-group-header">
+    <h3>{{localize "SINLESS.Effect.title"}}</h3>
+    {{#if @root.editable}}
+    <button type="button" class="icon" data-action="effectCreate" data-tooltip="{{localize "SINLESS.Effect.create"}}"><i class="fa-solid fa-plus"></i></button>
+    {{/if}}
+  </header>
+  <ol class="item-list">
+    {{#each effects}}
+    <li class="item effect{{#if disabled}} disabled{{/if}}{{#if suppressed}} suppressed{{/if}}" data-effect-uuid="{{uuid}}">
+      <img src="{{img}}" alt="" class="item-img">
+      <a class="item-name" data-action="effectEdit">{{name}}{{#if source}} <span class="effect-source">({{source}})</span>{{/if}}</a>
+      <span class="item-summary">
+        {{#if suppressed}}<em>{{localize "SINLESS.Effect.suppressed"}}</em> · {{/if}}{{changes}}
+      </span>
+      <span class="item-controls">
+        {{#if @root.editable}}
+        <a data-action="effectToggle" class="{{#unless disabled}}active{{/unless}}" data-tooltip="{{localize "SINLESS.Effect.toggle"}}"><i class="fa-solid fa-power-off"></i></a>
+        {{/if}}
+        <a data-action="effectEdit" data-tooltip="{{localize "SINLESS.Effect.edit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
+        {{#if @root.editable}}<a data-action="effectDelete" data-tooltip="{{localize "SINLESS.Effect.delete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
+      </span>
+    </li>
+    {{else}}
+    <li class="empty">{{localize "SINLESS.Effect.none"}}</li>
+    {{/each}}
+  </ol>
+  <details class="effect-keys">
+    <summary>{{localize "SINLESS.Effect.keysTitle"}}</summary>
+    <p>{{localize "SINLESS.Effect.keysHint"}}</p>
+    <ul>{{#each effectKeys}}<li><code>{{this}}</code></li>{{/each}}</ul>
+  </details>
+</section>

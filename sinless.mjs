@@ -6,6 +6,7 @@ import {
   WeaponData, ArmorData, GearData, ImplantData, PowerData, RitualData, KnowledgeData, AssetData
 } from "./module/data/item.mjs";
 import { SinlessActor } from "./module/documents/actor.mjs";
+import { SinlessActiveEffect } from "./module/documents/active-effect.mjs";
 import { SinlessCombatant, registerCombatHooks } from "./module/documents/combat.mjs";
 import { CharacterSheet, NpcSheet } from "./module/sheets/actor-sheet.mjs";
 import { BrandSheet } from "./module/sheets/brand-sheet.mjs";
@@ -20,6 +21,7 @@ Hooks.once("init", () => {
   game.sinless = { rules, config: SINLESS };
 
   CONFIG.Actor.documentClass = SinlessActor;
+  CONFIG.ActiveEffect.documentClass = SinlessActiveEffect;
   CONFIG.Combatant.documentClass = SinlessCombatant;
   Object.assign(CONFIG.Actor.dataModels, { character: CharacterData, npc: NpcData, brand: BrandData });
   Object.assign(CONFIG.Item.dataModels, {
@@ -60,7 +62,8 @@ Hooks.once("init", () => {
 
   foundry.applications.handlebars.loadTemplates([
     `systems/${SYSTEM_ID}/templates/actor/partials/item-list.hbs`,
-    `systems/${SYSTEM_ID}/templates/actor/partials/condition-track.hbs`
+    `systems/${SYSTEM_ID}/templates/actor/partials/condition-track.hbs`,
+    `systems/${SYSTEM_ID}/templates/actor/partials/effect-list.hbs`
   ]);
 });
 

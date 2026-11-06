@@ -21,6 +21,16 @@ TRPG **Sinless** を Foundry Virtual Tabletop で遊ぶための、非公式の�
   その後コンディショントラックに書き込む（朦朧→肉体→超過とあふれる）。
 - NPC はクリーチャー・ルールの固定防御ダイス（回避／ソーク／抵抗）を使える。プールは消費しない。
   空欄ならプレイヤーと同じくプールから振る。武器にも同様に固定の攻撃ダイスを設定できる。
+- アクター・アイテムのアクティブ・エフェクト。アイテムの効果は、防具なら装備中、装備品なら携帯中だけ適用される。
+  インプラントの効果は常に適用される。主な変更キー：
+  - `system.attributes.str.value`
+  - `system.pools.brawn.bonus`
+  - `system.condition.physical.bonus`
+  - `system.armorBonus.ballistic`
+  - `system.skills.firearms.rank`
+  - `system.initiativeBonus`
+  - `system.zoetic.bonus`
+  能力値の欄は元の値のまま表示され、編集できる。それ以外で効果が値を設定している欄はロックされる。
 - イニシアチブ＝反応＋集中プール全部の成功数。NPC は固定値。戦闘ラウンドごとにプール自動回復。
 - ワールド設定：ラン難易度（ベテラン／プロフェッショナル／プライム）、オペレーショナル・ヒート、
   コンディション基本マス数、負傷ペナルティの有無。

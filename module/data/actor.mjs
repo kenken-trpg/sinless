@@ -33,12 +33,14 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
     return {
       skills: skillsField(),
       etiquettes: etiquettesField(),
+      // `bonus` fields are targets for Active Effects (implants, spells ...).
       pools: new SchemaField(Object.fromEntries(keys(POOLS).map(k => [k, new SchemaField({
-        spent: int(0)
+        spent: int(0),
+        bonus: int(0, { min: undefined })
       })]))),
       condition: new SchemaField({
-        physical: new SchemaField({ value: int(0) }),
-        stun: new SchemaField({ value: int(0) }),
+        physical: new SchemaField({ value: int(0), bonus: int(0, { min: undefined }) }),
+        stun: new SchemaField({ value: int(0), bonus: int(0, { min: undefined }) }),
         overflow: int(0)
       }),
       armorBonus: new SchemaField({
@@ -68,13 +70,13 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
   prepareDerivedData() {
     const base = this._basePoolMax();
     for (const [key, pool] of Object.entries(this.pools)) {
-      pool.max = base[key] ?? 0;
+      pool.max = Math.max(0, (base[key] ?? 0) + pool.bonus);
       pool.value = Math.max(0, pool.max - pool.spent);
     }
 
     const max = this._conditionMax();
-    this.condition.physical.max = max.physical;
-    this.condition.stun.max = max.stun;
+    this.condition.physical.max = Math.max(0, max.physical + this.condition.physical.bonus);
+    this.condition.stun.max = Math.max(0, max.stun + this.condition.stun.bonus);
     const woundsOn = game.settings?.get("sinless", "woundPenalties") ?? true;
     this.condition.penalty = woundsOn
       ? woundPenalty(this.condition.physical.value, this.condition.stun.value)

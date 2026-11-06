@@ -171,3 +171,21 @@
 .sinless-damage-dialog .sinless-damage-preview { margin-top: 0.5rem; padding: 0.35rem; border: 1px solid var(--sl-border, #888); border-radius: 4px; }
 .sinless-card .defend { display: flex; flex-direction: column; gap: 3px; margin-top: 0.3rem; }
 .sinless-card .weapon-line .formula { opacity: 0.75; font-size: 0.8rem; margin-left: 0.25rem; }
+
+/* ---------- Active Effects ---------- */
+.sinless.sheet .attribute .effective { color: var(--sl-accent, #c2185b); }
+.sinless.sheet input.overridden, .sinless.sheet select.overridden { border-color: var(--sl-accent, #c2185b); opacity: 0.85; }
+.sinless.sheet .effects-list .effect.disabled .item-name, .sinless.sheet .effects-list .effect.suppressed .item-name { opacity: 0.5; text-decoration: line-through; }
+.sinless.sheet .effects-list .effect-source { font-size: 0.8rem; opacity: 0.7; }
+.sinless.sheet .effects-list .empty { opacity: 0.6; padding: 0.25rem; }
+.sinless.sheet .effect-keys { margin-top: 0.5rem; font-size: 0.8rem; }
+.sinless.sheet .effect-keys ul { margin: 0.25rem 0; padding-left: 1rem; columns: 2; }
+.sinless.sheet .item-effects { padding: 0 0.5rem; }
+.sinless.sheet .effects-list .item-name { font-size: 1rem; }
+/* Narrow item sheet: name on the first row, changes below it. */
+.sinless.sheet .item-effects .effect { grid-template-columns: 1.75rem minmax(0, 1fr) auto; grid-template-areas: "img name controls" "img summary controls"; }
+.sinless.sheet .item-effects .effect .item-img { grid-area: img; }
+.sinless.sheet .item-effects .effect .item-name { grid-area: name; }
+.sinless.sheet .item-effects .effect .item-summary { grid-area: summary; }
+.sinless.sheet .item-effects .effect .item-controls { grid-area: controls; }
+.sinless.sheet.item .window-content { overflow-y: auto; }

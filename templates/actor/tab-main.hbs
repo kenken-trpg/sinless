@@ -3,8 +3,8 @@
   <div class="attributes">
     {{#each attributes}}
     <div class="attribute">
-      <span class="label">{{localize label}}</span>
-      <input type="number" name="system.attributes.{{key}}.value" value="{{value}}" min="0">
+      <span class="label">{{localize label}}{{#if modified}} <span class="effective" data-tooltip="{{localize "SINLESS.Effect.effective"}}">→ {{value}}</span>{{/if}}</span>
+      <input type="number" name="system.attributes.{{key}}.value" value="{{base}}" min="0" data-source-value>
       <span class="slash">/</span>
       <input type="number" class="max" name="system.attributes.{{key}}.max" value="{{max}}" min="0">
     </div>
