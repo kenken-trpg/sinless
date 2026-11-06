@@ -38,9 +38,15 @@
         <span>{{localize "SINLESS.Armor.impact"}} <strong>{{system.armor.impact.total}}</strong> ({{system.armor.impact.highest}})</span>
       </div>
       {{#each defenses}}
-      <button type="button" class="defense" data-action="rollDefense" data-defense="{{key}}">
-        <i class="fa-solid fa-shield-halved"></i> {{localize label}}
-      </button>
+      <div class="defense-row">
+        <button type="button" class="defense" data-action="rollDefense" data-defense="{{key}}">
+          <i class="fa-solid fa-shield-halved"></i> {{localize label}}
+        </button>
+        {{#if ../hasFixedDefenses}}
+        <input type="number" class="fixed-defense" name="system.defenses.{{key}}" value="{{fixed}}" min="0"
+          placeholder="{{poolLabel}}" data-tooltip="{{localize "SINLESS.Npc.FIELDS.defenses.hint"}}">
+        {{/if}}
+      </div>
       {{/each}}
       <button type="button" class="refresh" data-action="refreshPools"><i class="fa-solid fa-rotate"></i> {{localize "SINLESS.RefreshPools"}}</button>
     </div>

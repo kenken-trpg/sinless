@@ -123,15 +123,39 @@ export class SinlessActor extends Actor {
     }));
   }
 
-  /** Roll a pool for defense (dodge, soak, resist): no limit applies (p.29). */
+  /**
+   * Roll a pool for defense (dodge, soak, resist): no limit applies (p.29).
+   * Opponents with bestiary defenses roll their listed dice instead (p.195).
+   */
   async rollDefense(key) {
     const def = SINLESS.DEFENSES[key];
     if (!def) return null;
+    const fixed = this.system.fixedDefense?.(key) ?? null;
+    if (fixed !== null) return this._rollFixedDefense(key, fixed);
     const defaults = this._testDefaults({
       label: game.i18n.localize(def.label), pool: def.pool, mode: "defense"
     });
     defaults.penalty = 0;
     defaults.spendPool = this.inConflict;
+    return this._runTest(defaults);
+  }
+
+  /** Critter rules (p.195): roll the listed dice, no pool is spent. */
+  async _rollFixedDefense(key, dice) {
+    const label = game.i18n.localize(SINLESS.DEFENSES[key].label);
+    const defaults = this._testDefaults({
+      label, mode: "rank", rank: dice,
+      notes: [game.i18n.localize("SINLESS.Npc.fixedDiceNote")]
+    });
+    Object.assign(defaults, {
+      simple: true,
+      pool: null,
+      mode: "rank",
+      rankLabel: game.i18n.localize("SINLESS.Npc.fixedDice"),
+      penalty: 0,
+      spendPool: false,
+      conflict: false
+    });
     return this._runTest(defaults);
   }
 

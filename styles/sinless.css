@@ -50,6 +50,9 @@
 .sinless.sheet .condition-footer input { width: 3rem; }
 .sinless.sheet .defenses { display: flex; flex-direction: column; gap: 0.25rem; width: 12rem; }
 .sinless.sheet .defenses .armor { display: flex; justify-content: space-between; font-size: 0.85rem; }
+.sinless.sheet .defenses .defense-row { display: flex; gap: 4px; }
+.sinless.sheet .defenses .defense-row .defense { flex: 1; }
+.sinless.sheet .defenses .fixed-defense { flex: 0 0 3.5rem; width: 3.5rem; text-align: center; }
 
 /* Pools */
 .sinless.sheet .pools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }

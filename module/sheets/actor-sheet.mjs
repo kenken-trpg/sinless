@@ -78,8 +78,11 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       key, label, rank: sys.etiquettes[key].rank
     }));
 
+    context.hasFixedDefenses = !!sys.defenses;
     context.defenses = Object.entries(SINLESS.DEFENSES).map(([key, d]) => ({
-      key, label: d.label, pool: d.pool, value: sys.pools[d.pool].value
+      key, label: d.label, pool: d.pool, value: sys.pools[d.pool].value,
+      fixed: sys.defenses ? sys.defenses[key] : undefined,
+      poolLabel: d.pool ? game.i18n.localize(SINLESS.POOLS[d.pool]) : ""
     }));
 
     const boxes = (value, max) => Array.from({ length: max }, (_, i) => ({

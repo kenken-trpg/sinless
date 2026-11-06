@@ -20,6 +20,8 @@ this system contains no rules text.
   dodge and soak from it. The dialog applies armor: ballistic armor against penetration
   (stun or physical), impact armor minus armor piercing, energy weapons stripping armor, and
   explosives. Damage then goes on the condition tracks, with stun → physical → overflow.
+- NPCs can use bestiary defenses (critter rules): fixed dodge / soak / resist dice that never
+  spend a pool. Leave a field empty to defend from the pool like a player character.
 - Initiative = Reaction + successes on the full Focus pool; NPCs use a static number.
   Pools refresh automatically every combat round.
 - World settings for run difficulty (Veteran / Professional / Prime), operational heat,

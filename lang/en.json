@@ -376,8 +376,14 @@
         "agonarch": {
           "label": "Agonarch controlled",
           "hint": "Agonarch opponents always roll against 4+."
+        },
+        "defenses": {
+          "label": "Fixed defense dice",
+          "hint": "Bestiary dice for this defense (p.195): rolled every time, no pool is spent. Leave empty to defend from the pool like a player character."
         }
-      }
+      },
+      "fixedDice": "Dice",
+      "fixedDiceNote": "Fixed dice (no pool spent)"
     },
     "Item": {
       "FIELDS": {

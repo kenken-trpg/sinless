@@ -1,5 +1,5 @@
 import {
-  ATTRIBUTES, POOLS, SKILLS, ETIQUETTES, HERITAGES, MAGIC_TALENTS, LIFESTYLES
+  ATTRIBUTES, POOLS, SKILLS, ETIQUETTES, HERITAGES, MAGIC_TALENTS, LIFESTYLES, DEFENSES
 } from "../config.mjs";
 import {
   computePools, conditionTrackSize, woundPenalty, kismetPoolSize
@@ -194,6 +194,11 @@ export class NpcData extends SinlessActorBase {
       conditionMax: new SchemaField({ physical: int(6), stun: int(6) }),
       initiative: int(10),
       strength: int(3),
+      // Bestiary defenses (p.195): a fixed number of dice that never depletes a pool.
+      // Empty means the opponent defends from its pools like a player character.
+      defenses: new SchemaField(Object.fromEntries(keys(DEFENSES).map(k => [k, new NumberField({
+        required: true, nullable: true, integer: true, min: 0, initial: null
+      })]))),
       agonarch: new BooleanField({ initial: true })
     };
   }
@@ -208,6 +213,12 @@ export class NpcData extends SinlessActorBase {
 
   _conditionMax() {
     return { ...this.conditionMax };
+  }
+
+  /** Fixed dice for a defense, or null to roll from the pool. */
+  fixedDefense(key) {
+    const value = this.defenses?.[key];
+    return Number.isInteger(value) ? value : null;
   }
 }
 
