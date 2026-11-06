@@ -14,7 +14,9 @@
       "ritual": "Ritual",
       "knowledge": "Knowledge Skill",
       "asset": "Asset",
-      "resource": "Resource"
+      "resource": "Resource",
+      "deck": "Cyberdeck",
+      "software": "Software"
     }
   },
   "SINLESS": {
@@ -209,7 +211,8 @@
       "bio": "Biography",
       "resources": "Resources & Assets",
       "members": "Members",
-      "effects": "Effects"
+      "effects": "Effects",
+      "grid": "Grid"
     },
     "Sheet": {
       "character": "Sinless Character Sheet",
@@ -237,6 +240,14 @@
       "refreshPoolsOnRound": {
         "name": "Refresh pools each round",
         "hint": "Automatically refresh dice pools of all combatants when a new combat round begins."
+      },
+      "intrusion": {
+        "name": "Intrusion difficulty",
+        "hint": "Site security for decking tests: secure −1, red site −2, black site −4 penalty dice (p.129)."
+      },
+      "alert": {
+        "name": "Alert level",
+        "hint": "Current alert level of the operation. Decking actions raise it (p.130)."
       }
     },
     "Notify": {
@@ -244,7 +255,10 @@
       "noSectorActions": "No sector actions left this turn.",
       "tooManyTraits": "More traits than the brand's market cap allows.",
       "noMember": "The brand has no member you control to make this test.",
-      "noDefender": "Select a token you control to defend."
+      "noDefender": "Select a token you control to defend.",
+      "noDeck": "Equip a cyberdeck to make decking tests.",
+      "noNan": "This software needs control of a network access node.",
+      "noHackingProgram": "Mark one software item as the base hacking program."
     },
     "Test": {
       "roll": "Roll",
@@ -452,7 +466,7 @@
           "label": "Ammo"
         },
         "alert": {
-          "label": "Alert"
+          "label": "Alert (flat)"
         },
         "layer": {
           "label": "Slot"
@@ -536,6 +550,61 @@
         "blast": {
           "label": "Explosive (area)",
           "hint": "Successes reduce scatter instead of adding damage and cannot be dodged away."
+        },
+        "mcp": {
+          "label": "MCP",
+          "hint": "Master Control Persona: MCP dice added to Focus for decking, and the length of the cohesion track."
+        },
+        "threads": {
+          "label": "Threads",
+          "hint": "Software that can be loaded at once."
+        },
+        "core": {
+          "label": "Core",
+          "hint": "Extra exploit actions for loaded software."
+        },
+        "io": {
+          "label": "I/O"
+        },
+        "mods": {
+          "label": "Mod slots"
+        },
+        "nerveRig": {
+          "label": "Nerve rig",
+          "hint": "Without a nerve rig the decker cannot hot-seat: −2 penalty dice on decking tests."
+        },
+        "cohesion": {
+          "label": "Cohesion damage"
+        },
+        "base": {
+          "label": "Base hacking program",
+          "hint": "Always running; used to hack devices and network access nodes. Must be rated at least half the MCP."
+        },
+        "requiresNan": {
+          "label": "Requires NAN control"
+        },
+        "attack": {
+          "label": "Attack software"
+        },
+        "alertPerSuccess": {
+          "label": "Alert per success"
+        },
+        "alertNote": {
+          "label": "Alert note",
+          "hint": "For variable alert, e.g. “hardening of target”."
+        },
+        "reducesAlert": {
+          "label": "Reduces alert (Shadow Protocols)",
+          "hint": "While running in the I/O, alert raised by other software drops by this rating."
+        },
+        "costPerRating": {
+          "label": "Cost per rating (ㄓ)"
+        },
+        "loaded": {
+          "label": "Loaded (thread)"
+        },
+        "running": {
+          "label": "Running (I/O)"
         }
       }
     },
@@ -878,6 +947,60 @@
       "finishConfirm": "Hide the creation panel? Unspent points and cash are lost. You can turn creation mode back on in the Biography tab.",
       "ghostFlavor": "Ghost Rating (2d6)",
       "seedFlavor": "Seed money (4d6 × 100ㄓ)"
+    },
+    "Intrusion": {
+      "open": "Open",
+      "secure": "Secure",
+      "red": "Red site",
+      "black": "Black site"
+    },
+    "DeckCore": {
+      "0": "None",
+      "1": "Single",
+      "2": "Double",
+      "3": "Tri",
+      "4": "Quad"
+    },
+    "SoftwareAction": {
+      "simple": "Simple action",
+      "complex": "Complex action"
+    },
+    "SoftwareIO": {
+      "no": "No",
+      "yes": "Yes",
+      "optional": "Optional"
+    },
+    "Grid": {
+      "intrusion": "Intrusion",
+      "alert": "Alert",
+      "influence": "NAN influence",
+      "rangePenaltyHint": "Extending influence beyond 40 m: −2 dice, another −2 every 20 m (p.134).",
+      "resetInfluence": "Lose control of the node (reset influence)",
+      "mcpHint": "MCP dice add to the Focus pool for decking tests only and refresh each round (p.130).",
+      "mcpDice": "MCP dice",
+      "noNerveRig": "No nerve rig",
+      "cohesion": "Cohesion",
+      "issue": {
+        "threads": "Loaded software {loaded} exceeds threads ({max}).",
+        "io": "Running software {running} exceeds I/O ({max}).",
+        "noBase": "No base hacking program.",
+        "baseRating": "The base hacking program must be rated at least {min} (half the MCP)."
+      },
+      "hack": {
+        "device": "Hack device",
+        "brute": "Brute force hack",
+        "stealth": "Stealth infiltration"
+      },
+      "noDeckHint": "Create a cyberdeck and software below, then equip the deck.",
+      "rangePenalty": "Range −{n}",
+      "deviceHint": "Needs successes ≥ twice the target's hardening; successes can accumulate (p.133).",
+      "mcpUsed": "MCP dice used: {n}",
+      "influenceGain": "Influence +{n} m",
+      "alertRaise": "Alert +{n}",
+      "shadowReduced": "(Shadow Protocols −{n})",
+      "alertNow": "Alert is now {n}.",
+      "applyInfluence": "Extend influence +{n} m",
+      "applyAlert": "Raise alert +{n}"
     }
   }
 }

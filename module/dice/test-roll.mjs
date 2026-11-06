@@ -1,5 +1,7 @@
 import { SYSTEM_ID } from "../config.mjs";
 import { resolveTest, rerollCount } from "../helpers/rules.mjs";
+import { splitDeckingDice, softwareAlert, nanHackResult } from "../helpers/grid.mjs";
+import { adjustAlert } from "../settings.mjs";
 import { damageDialog, controlledDefenders } from "../apps/damage-dialog.mjs";
 
 const CARD_TEMPLATE = `systems/${SYSTEM_ID}/templates/chat/test-card.hbs`;
@@ -37,8 +39,13 @@ export async function performTest(o) {
   });
 
   const updates = {};
+  let mcpUsed = 0;
   if (o.spendPool && plan.usesPool && o.pool && plan.poolDice > 0) {
-    updates[`system.pools.${o.pool}.spent`] = actor.system.pools[o.pool].spent + plan.poolDice;
+    // MCP dice are spent before Focus dice on decking tests (p.130).
+    const split = splitDeckingDice(plan.poolDice, o.mcpAvailable ?? 0);
+    mcpUsed = split.mcp;
+    if (split.focus) updates[`system.pools.${o.pool}.spent`] = actor.system.pools[o.pool].spent + split.focus;
+    if (split.mcp) updates["system.grid.mcpSpent"] = actor.system.grid.mcpSpent + split.mcp;
   }
   if (plan.kismetDice > 0 && actor.system.kismet) {
     updates["system.kismet.spent"] = actor.system.kismet.spent + plan.kismetDice;
@@ -61,7 +68,8 @@ export async function performTest(o) {
     rerollCancelled: result.rerollCancelled,
     abf: result.abf,
     kismetAdded: [],
-    autoSuccesses: o.autoSuccesses ?? 0
+    autoSuccesses: o.autoSuccesses ?? 0,
+    mcpUsed
   };
 
   const rolls = [main.roll, rerolls.roll].filter(Boolean);
@@ -102,6 +110,14 @@ export async function renderCard(state) {
     // A hit needs successes, except explosives which always land somewhere (p.93).
     canDefend: !!state.extra?.weapon && !state.abf && (sum.successes > 0 || !!state.extra.blast)
   };
+  // Decking: alert raised and NAN influence gained, recomputed when Kismet dice are added.
+  const x = state.extra ?? {};
+  if (x.nan && !state.abf) {
+    const r = nanHackResult(x.nan, sum.successes, x.io);
+    context.grid = { gain: r.gain, alert: r.alert, nan: true };
+  } else if (x.software && !state.abf) {
+    context.grid = { alert: softwareAlert(x, sum.successes, x.shadow), nan: false };
+  }
   return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, context);
 }
 
@@ -156,6 +172,18 @@ export function onRenderChatMessage(message, html) {
     }
     guard(button, () => damageDialog(message, actor));
   }
+  // Decking results: influence is applied by the roller, alert by the GM.
+  const influence = html.querySelector("[data-sinless-action='apply-influence']");
+  if (influence) {
+    if (message.isOwner) guard(influence, () => applyGridResult(message, "influence"));
+    else influence.remove();
+  }
+  const alert = html.querySelector("[data-sinless-action='apply-alert']");
+  if (alert) {
+    if (game.user.isGM) guard(alert, () => applyGridResult(message, "alert"));
+    else alert.remove();
+  }
+
   const selected = html.querySelector("[data-sinless-action='defend-selected']");
   if (selected) {
     guard(selected, async () => {
@@ -167,4 +195,23 @@ export function onRenderChatMessage(message, html) {
       for (const actor of defenders) await damageDialog(message, actor);
     });
   }
+}
+
+/** Apply the influence gain or alert increase shown on a decking card once. */
+async function applyGridResult(message, what) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
+  if (!state?.extra) return;
+  const sum = summarize(state);
+  const x = state.extra;
+  if (what === "influence" && x.nan && !x.influenceApplied) {
+    const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
+    const { gain } = nanHackResult(x.nan, sum.successes, x.io);
+    await actor?.addInfluence(gain);
+    x.influenceApplied = true;
+  } else if (what === "alert" && !x.alertApplied) {
+    const value = x.nan ? nanHackResult(x.nan, sum.successes, x.io).alert : softwareAlert(x, sum.successes, x.shadow);
+    x.alertNow = await adjustAlert(value);
+    x.alertApplied = true;
+  } else return;
+  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
 }

@@ -1,4 +1,4 @@
-import { SYSTEM_ID, DIFFICULTIES, HEAT_LEVELS, AGONARCH_TN } from "./config.mjs";
+import { SYSTEM_ID, DIFFICULTIES, HEAT_LEVELS, AGONARCH_TN, INTRUSION_LEVELS } from "./config.mjs";
 import { playerTargetNumber, heatBonusDice } from "./helpers/rules.mjs";
 
 export function registerSettings() {
@@ -30,6 +30,27 @@ export function registerSettings() {
     config: true,
     type: Number,
     choices: choices(HEAT_LEVELS),
+    default: 0,
+    onChange: rerenderActors
+  });
+
+  game.settings.register(SYSTEM_ID, "intrusion", {
+    name: "SINLESS.Setting.intrusion.name",
+    hint: "SINLESS.Setting.intrusion.hint",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: INTRUSION_LEVELS,
+    default: "open",
+    onChange: rerenderActors
+  });
+
+  game.settings.register(SYSTEM_ID, "alert", {
+    name: "SINLESS.Setting.alert.name",
+    hint: "SINLESS.Setting.alert.hint",
+    scope: "world",
+    config: true,
+    type: Number,
     default: 0,
     onChange: rerenderActors
   });
@@ -77,4 +98,12 @@ export function currentTargetNumber(isAgonarch = false) {
 /** Operational heat bonus dice for player tests. */
 export function currentHeatBonus(isAgonarch = false) {
   return isAgonarch ? 0 : heatBonusDice(Number(getSetting("heat")) || 0);
+}
+
+/** Change the world alert level (GM only). */
+export async function adjustAlert(delta) {
+  if (!game.user.isGM) return null;
+  const value = Math.max(0, (Number(getSetting("alert")) || 0) + delta);
+  await game.settings.set(SYSTEM_ID, "alert", value);
+  return value;
 }

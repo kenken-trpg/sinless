@@ -37,7 +37,17 @@ this system contains no rules text.
   Pools refresh automatically every combat round.
 - World settings for run difficulty (Veteran / Professional / Prime), operational heat,
   base condition boxes and wound penalties.
-- Item types: weapon, armor, gear, implant, spell/power, ritual, knowledge skill, asset, resource.
+- Item types: weapon, armor, gear, implant, spell/power, ritual, knowledge skill, asset, resource,
+  cyberdeck, software.
+- Decking (ch.7), from a Grid tab:
+  - The equipped cyberdeck shows MCP dice, threads, core, I/O, nerve rig and a cohesion track.
+  - Software tests use skill + software rating as the limit and Focus + MCP dice as the pool.
+    MCP dice are spent first and refresh each round.
+  - Penalties are applied automatically: intrusion difficulty (world setting) and a missing
+    nerve rig.
+  - Device hacks, brute force and stealth NAN hacks. Cards compute influence gained (with the
+    40 m range penalty) and alert raised (less Shadow Protocols). Buttons apply the influence
+    (roller) and raise the world alert level (GM).
 - Brand actor for sector play: five statistics, brand traits, market cap / upkeep / bank,
   sector heat effects, sector action tests (with heat and Competence), end-of-turn banking,
   resources with damage / influence tracks, members and asset tests rolled by the best member.

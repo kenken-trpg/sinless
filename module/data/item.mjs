@@ -1,5 +1,5 @@
 import {
-  SKILLS, ETIQUETTES, WEAPON_CATEGORIES, ARMOR_LAYERS, ARMOR_TYPES, IMPLANT_KINDS, POWER_CATEGORIES, POOLS
+  SKILLS, ETIQUETTES, WEAPON_CATEGORIES, ARMOR_LAYERS, ARMOR_TYPES, DECK_CORES, SOFTWARE_ACTIONS, SOFTWARE_IO, IMPLANT_KINDS, POWER_CATEGORIES, POOLS
 } from "../config.mjs";
 
 const { NumberField, StringField, BooleanField, HTMLField } = foundry.data.fields;
@@ -144,5 +144,56 @@ export class AssetData extends SinlessItemBase {
       operation: str(),
       sector: str()
     };
+  }
+}
+
+/** Cyberdeck (pp.129-131). Hardening comes from the physical item fields. */
+export class DeckData extends PhysicalItemData {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      mcp: int(1),
+      threads: int(1),
+      core: new NumberField({ required: true, nullable: false, integer: true, initial: 0, choices: () => DECK_CORES }),
+      mods: int(0),
+      io: int(1),
+      equipped: new BooleanField({ initial: true }),
+      nerveRig: new BooleanField({ initial: true }),
+      cohesion: int(0)
+    };
+  }
+
+  /** Cohesion track length equals the MCP rating (p.130). */
+  get cohesionMax() {
+    return this.mcp;
+  }
+}
+
+/** Decking software (pp.133-138). */
+export class SoftwareData extends SinlessItemBase {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      rating: int(1),
+      skill: new StringField({ required: true, initial: "hacking", choices: skillChoices }),
+      action: new StringField({ required: true, initial: "complex", choices: () => SOFTWARE_ACTIONS }),
+      io: new StringField({ required: true, initial: "no", choices: () => SOFTWARE_IO }),
+      base: new BooleanField({ initial: false }),
+      requiresNan: new BooleanField({ initial: false }),
+      attack: new BooleanField({ initial: false }),
+      alert: int(0),
+      alertPerSuccess: int(0),
+      alertNote: str(),
+      // Shadow Protocols: while running in the I/O, alert increases drop by the rating (p.136).
+      reducesAlert: new BooleanField({ initial: false }),
+      costPerRating: int(0),
+      loaded: new BooleanField({ initial: true }),
+      running: new BooleanField({ initial: false }),
+      effect: str()
+    };
+  }
+
+  get cost() {
+    return this.costPerRating * Math.max(1, this.rating);
   }
 }

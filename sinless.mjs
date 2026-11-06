@@ -3,7 +3,8 @@ import { registerSettings } from "./module/settings.mjs";
 import { CharacterData, NpcData } from "./module/data/actor.mjs";
 import { BrandData, ResourceData } from "./module/data/brand.mjs";
 import {
-  WeaponData, ArmorData, GearData, ImplantData, PowerData, RitualData, KnowledgeData, AssetData
+  WeaponData, ArmorData, GearData, ImplantData, PowerData, RitualData, KnowledgeData, AssetData,
+  DeckData, SoftwareData
 } from "./module/data/item.mjs";
 import { SinlessActor } from "./module/documents/actor.mjs";
 import { SinlessActiveEffect } from "./module/documents/active-effect.mjs";
@@ -33,7 +34,9 @@ Hooks.once("init", () => {
     ritual: RitualData,
     knowledge: KnowledgeData,
     asset: AssetData,
-    resource: ResourceData
+    resource: ResourceData,
+    deck: DeckData,
+    software: SoftwareData
   });
 
   CONFIG.Actor.trackableAttributes = {

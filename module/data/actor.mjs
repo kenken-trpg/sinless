@@ -137,6 +137,11 @@ export class CharacterData extends SinlessActorBase {
       }),
       initiativeBonus: int(0, { min: undefined }),
       movement: int(0),
+      // Decking (ch.7): MCP dice spent this round and NAN influence radius in meters.
+      grid: new SchemaField({
+        mcpSpent: int(0),
+        influence: int(0)
+      }),
       // Character creation helper (pp.44-46).
       creation: new SchemaField({
         active: new BooleanField({ initial: false }),
@@ -169,12 +174,21 @@ export class CharacterData extends SinlessActorBase {
     this.kismet.pool = { max: poolMax, value: Math.max(0, poolMax - this.kismet.spent) };
 
     this._prepareZoetic();
+    this._prepareDeck();
     this.carryCapacity = this.attributes.str.value;
     this.carried = this.parent.items.reduce(
       (sum, i) => sum + (i.system.carried ? (i.system.weight ?? 0) * (i.system.quantity ?? 1) : 0), 0
     );
     this.encumbrance = Math.max(0, Math.floor(this.carried - this.carryCapacity));
     this.totalPenalty += this.encumbrance;
+  }
+
+  /** Equipped deck and its MCP dice, usable only for decking tests (p.130). */
+  _prepareDeck() {
+    const deck = this.parent.items.find(i => i.type === "deck" && i.system.equipped) ?? null;
+    const max = deck?.system.mcp ?? 0;
+    this.grid.deckId = deck?.id ?? null;
+    this.grid.mcp = { max, value: Math.max(0, max - this.grid.mcpSpent) };
   }
 
   /** Zoetic Potential (pp.34, 37, 45). */

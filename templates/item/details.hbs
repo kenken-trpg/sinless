@@ -26,6 +26,33 @@
     {{formGroup fields.rating value=system.rating}}
     {{formGroup fields.limitBonus value=system.limitBonus}}
   {{/if}}
+  {{#if isType.deck}}
+    {{formGroup fields.mcp value=system.mcp}}
+    {{formGroup fields.threads value=system.threads}}
+    {{formGroup fields.core value=system.core localize=true}}
+    {{formGroup fields.io value=system.io}}
+    {{formGroup fields.mods value=system.mods}}
+    {{formGroup fields.equipped value=system.equipped}}
+    {{formGroup fields.nerveRig value=system.nerveRig}}
+    {{formGroup fields.cohesion value=system.cohesion}}
+  {{/if}}
+  {{#if isType.software}}
+    {{formGroup fields.rating value=system.rating}}
+    {{formGroup fields.skill value=system.skill choices=skillChoices localize=true}}
+    {{formGroup fields.action value=system.action localize=true}}
+    {{formGroup fields.io value=system.io localize=true}}
+    {{formGroup fields.base value=system.base}}
+    {{formGroup fields.requiresNan value=system.requiresNan}}
+    {{formGroup fields.attack value=system.attack}}
+    {{formGroup fields.alert value=system.alert}}
+    {{formGroup fields.alertPerSuccess value=system.alertPerSuccess}}
+    {{formGroup fields.alertNote value=system.alertNote}}
+    {{formGroup fields.reducesAlert value=system.reducesAlert}}
+    {{formGroup fields.costPerRating value=system.costPerRating}}
+    {{formGroup fields.loaded value=system.loaded}}
+    {{formGroup fields.running value=system.running}}
+    {{formGroup fields.effect value=system.effect}}
+  {{/if}}
   {{#if isType.implant}}
     {{formGroup fields.kind value=system.kind localize=true}}
     {{formGroup fields.rating value=system.rating}}

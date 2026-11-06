@@ -174,6 +174,32 @@ export const DAMAGE_TRACKS = Object.freeze({
   stun: L("Condition.stun")
 });
 
+/* ---------------- The Grid (ch.7) ---------------- */
+
+/** Intrusion difficulty of the site (p.129). */
+export const INTRUSION_LEVELS = Object.freeze({
+  open: L("Intrusion.open"),
+  secure: L("Intrusion.secure"),
+  red: L("Intrusion.red"),
+  black: L("Intrusion.black")
+});
+
+/** Deck cores: extra exploit actions for loaded software (p.131). */
+export const DECK_CORES = Object.freeze({
+  0: L("DeckCore.0"), 1: L("DeckCore.1"), 2: L("DeckCore.2"), 3: L("DeckCore.3"), 4: L("DeckCore.4")
+});
+
+export const SOFTWARE_ACTIONS = Object.freeze({
+  simple: L("SoftwareAction.simple"),
+  complex: L("SoftwareAction.complex")
+});
+
+export const SOFTWARE_IO = Object.freeze({
+  no: L("SoftwareIO.no"),
+  yes: L("SoftwareIO.yes"),
+  optional: L("SoftwareIO.optional")
+});
+
 export const IMPLANT_KINDS = Object.freeze({
   cyber: L("ImplantKind.cyber"),
   bio: L("ImplantKind.bio")
@@ -279,7 +305,8 @@ export const BRAND_ACTIONS = Object.freeze({
 export const SINLESS = {
   ATTRIBUTES, POOLS, SKILLS, SKILL_GROUPS, ETIQUETTES, HERITAGES, MAGIC_TALENTS,
   LIFESTYLES, DIFFICULTIES, AGONARCH_TN, HEAT_LEVELS, WEAPON_CATEGORIES, FIRING_MODES,
-  ARMOR_LAYERS, ARMOR_TYPES, DAMAGE_TRACKS, IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES,
+  ARMOR_LAYERS, ARMOR_TYPES, DAMAGE_TRACKS, INTRUSION_LEVELS, DECK_CORES, SOFTWARE_ACTIONS, SOFTWARE_IO,
+  IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES,
   BRAND_STATS, BRAND_TRAITS, RESOURCE_TAGS, RESOURCE_CLASSES, SECTOR_HEAT, BRAND_ACTIONS
 };
 

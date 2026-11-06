@@ -1,0 +1,54 @@
+<section class="tab grid {{tab.cssClass}}" data-tab="grid" data-group="primary">
+  <div class="grid-status">
+    <div class="grid-box">
+      <span class="label">{{localize "SINLESS.Grid.intrusion"}}</span>
+      <strong>{{localize grid.intrusionLabel}}</strong>{{#if grid.intrusionPenalty}} <span class="penalty">−{{grid.intrusionPenalty}}</span>{{/if}}
+    </div>
+    <div class="grid-box">
+      <span class="label">{{localize "SINLESS.Grid.alert"}}</span>
+      {{#if isGM}}<a data-action="adjustAlert" data-delta="-1"><i class="fa-solid fa-minus"></i></a>{{/if}}
+      <strong>{{grid.alert}}</strong>
+      {{#if isGM}}<a data-action="adjustAlert" data-delta="1"><i class="fa-solid fa-plus"></i></a>{{/if}}
+    </div>
+    <div class="grid-box">
+      <span class="label">{{localize "SINLESS.Grid.influence"}}</span>
+      <input type="number" name="system.grid.influence" value="{{grid.influence}}" min="0"> m
+      {{#if grid.influencePenalty}}<span class="penalty" data-tooltip="{{localize "SINLESS.Grid.rangePenaltyHint"}}">−{{grid.influencePenalty}}</span>{{/if}}
+      <a data-action="resetInfluence" data-tooltip="{{localize "SINLESS.Grid.resetInfluence"}}"><i class="fa-solid fa-rotate-left"></i></a>
+    </div>
+  </div>
+
+  {{#if grid.deck}}
+  <div class="deck-panel">
+    <header>
+      <h3>{{grid.deck.name}}</h3>
+      <span class="mcp" data-tooltip="{{localize "SINLESS.Grid.mcpHint"}}">{{localize "SINLESS.Grid.mcpDice"}} <strong>{{grid.mcp.value}}</strong> / {{grid.mcp.max}}</span>
+    </header>
+    <div class="deck-stats">
+      <span>{{localize "SINLESS.Item.FIELDS.hardening.label"}} <strong>{{grid.deck.system.hardening}}</strong></span>
+      <span>{{localize "SINLESS.Item.FIELDS.threads.label"}} <strong>{{grid.loaded}}</strong> / {{grid.deck.system.threads}}</span>
+      <span>{{localize "SINLESS.Item.FIELDS.core.label"}} <strong>{{localize grid.coreLabel}}</strong></span>
+      <span>I/O <strong>{{grid.running}}</strong> / {{grid.deck.system.io}}</span>
+      <span>{{#if grid.deck.system.nerveRig}}{{localize "SINLESS.Item.FIELDS.nerveRig.label"}}{{else}}<span class="penalty">{{localize "SINLESS.Grid.noNerveRig"}} −2</span>{{/if}}</span>
+    </div>
+    <div class="track track-cohesion">
+      <span class="track-label">{{localize "SINLESS.Grid.cohesion"}}</span>
+      <div class="boxes">
+        {{#each grid.cohesionBoxes}}<a class="box{{#if filled}} filled{{/if}}{{#if mark}} mark{{/if}}" data-action="setCohesion" data-n="{{n}}">{{#if mark}}<span>-1</span>{{/if}}</a>{{/each}}
+      </div>
+    </div>
+    {{#if grid.issues.length}}<ul class="issues">{{#each grid.issues}}<li>{{this}}</li>{{/each}}</ul>{{/if}}
+    <div class="hack-buttons">
+      <button type="button" data-action="rollNanHack" data-mode="device" {{#unless grid.hasProgram}}disabled{{/unless}}><i class="fa-solid fa-plug-circle-bolt"></i> {{localize "SINLESS.Grid.hack.device"}}</button>
+      <button type="button" data-action="rollNanHack" data-mode="brute" {{#unless grid.hasProgram}}disabled{{/unless}}><i class="fa-solid fa-hammer"></i> {{localize "SINLESS.Grid.hack.brute"}}</button>
+      <button type="button" data-action="rollNanHack" data-mode="stealth" {{#unless grid.hasProgram}}disabled{{/unless}}><i class="fa-solid fa-user-secret"></i> {{localize "SINLESS.Grid.hack.stealth"}}</button>
+    </div>
+  </div>
+  {{else}}
+  <p class="hint">{{localize "SINLESS.Grid.noDeckHint"}}</p>
+  {{/if}}
+
+  {{#each groups}}
+  {{> "systems/sinless/templates/actor/partials/item-list.hbs" this}}
+  {{/each}}
+</section>

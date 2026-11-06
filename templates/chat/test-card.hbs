@@ -33,7 +33,21 @@
     {{#if (eq sum.outcome "success")}}<strong class="outcome success">{{localize "SINLESS.Card.success" threshold=threshold}}</strong>{{/if}}
     {{#if (eq sum.outcome "failure")}}<strong class="outcome failure">{{localize "SINLESS.Card.failure" threshold=threshold}}</strong>{{/if}}
   </div>
+  {{#if mcpUsed}}<p class="reroll-note">{{localize "SINLESS.Grid.mcpUsed" n=mcpUsed}}</p>{{/if}}
   {{#if extra.effect}}<p class="effect">{{extra.effect}}</p>{{/if}}
+  {{#if grid}}
+  <div class="grid-result">
+    {{#if grid.nan}}<p>{{localize "SINLESS.Grid.influenceGain" n=grid.gain}}</p>{{/if}}
+    <p>{{localize "SINLESS.Grid.alertRaise" n=grid.alert}}{{#if extra.alertNote}} <span class="formula">({{extra.alertNote}})</span>{{/if}}{{#if extra.shadow}} <span class="formula">{{localize "SINLESS.Grid.shadowReduced" n=extra.shadow}}</span>{{/if}}</p>
+    {{#if extra.alertApplied}}<p class="effect">{{localize "SINLESS.Grid.alertNow" n=extra.alertNow}}</p>{{/if}}
+    {{#if grid.nan}}{{#unless extra.influenceApplied}}{{#if grid.gain}}
+    <button type="button" data-sinless-action="apply-influence"><i class="fa-solid fa-tower-broadcast"></i> {{localize "SINLESS.Grid.applyInfluence" n=grid.gain}}</button>
+    {{/if}}{{/unless}}{{/if}}
+    {{#unless extra.alertApplied}}{{#if grid.alert}}
+    <button type="button" data-sinless-action="apply-alert"><i class="fa-solid fa-bell"></i> {{localize "SINLESS.Grid.applyAlert" n=grid.alert}}</button>
+    {{/if}}{{/unless}}
+  </div>
+  {{/if}}
   {{#if extra.heatRaised}}<p class="effect warn">{{localize "SINLESS.Card.heatRaised" heat=extra.heatRaised}}</p>{{/if}}
   {{#if extra.weapon}}
   <p class="weapon-line">

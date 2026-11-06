@@ -1,5 +1,6 @@
 import { SYSTEM_ID, SINLESS, skillLabel } from "../config.mjs";
-import { currentTargetNumber } from "../settings.mjs";
+import { currentTargetNumber, getSetting, adjustAlert } from "../settings.mjs";
+import { deckStatus, influencePenalty, INTRUSION_PENALTY } from "../helpers/grid.mjs";
 import { actorEffects, effectActions, lockOverriddenInputs, EFFECT_KEYS } from "./effects.mjs";
 import { creationReport, creationSpending, PRIORITY_CATEGORIES } from "../helpers/creation.mjs";
 
@@ -9,6 +10,7 @@ const T = path => `systems/${SYSTEM_ID}/templates/${path}`;
 
 const ITEM_GROUPS = {
   gear: ["weapon", "armor", "gear", "implant"],
+  grid: ["deck", "software"],
   magic: ["power", "ritual"],
   social: ["asset", "knowledge"]
 };
@@ -129,6 +131,8 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       case "weapon": return this.actor.rollWeapon(item);
       case "ritual": return this.actor.rollRitual(item);
       case "asset": return this.actor.rollAsset(item);
+      case "software": return this.actor.rollSoftware(item);
+      case "deck": return item.sheet.render(true);
       case "resource": return item.sheet.render(true);
       default: return item.toMessage?.();
     }
@@ -180,6 +184,10 @@ export class CharacterSheet extends SinlessActorSheet {
     classes: ["character"],
     actions: {
       rollGhost: CharacterSheet.#onRollGhost,
+      rollNanHack: CharacterSheet.#onRollNanHack,
+      adjustAlert: CharacterSheet.#onAdjustAlert,
+      resetInfluence: CharacterSheet.#onResetInfluence,
+      setCohesion: CharacterSheet.#onSetCohesion,
       rollSeedMoney: CharacterSheet.#onRollSeedMoney,
       finishCreation: CharacterSheet.#onFinishCreation
     }
@@ -192,13 +200,14 @@ export class CharacterSheet extends SinlessActorSheet {
     gear: { template: T("actor/tab-items.hbs"), scrollable: [""] },
     magic: { template: T("actor/tab-items.hbs"), scrollable: [""] },
     social: { template: T("actor/tab-social.hbs"), scrollable: [""] },
+    grid: { template: T("actor/tab-grid.hbs"), scrollable: [""] },
     effects: { template: T("actor/tab-effects.hbs"), scrollable: [""] },
     bio: { template: T("actor/tab-bio.hbs"), scrollable: [""] }
   };
 
   static TABS = {
     primary: {
-      tabs: [{ id: "main" }, { id: "gear" }, { id: "magic" }, { id: "social" }, { id: "effects" }, { id: "bio" }],
+      tabs: [{ id: "main" }, { id: "gear" }, { id: "magic" }, { id: "social" }, { id: "grid" }, { id: "effects" }, { id: "bio" }],
       initial: "main",
       labelPrefix: "SINLESS.Tab"
     }
@@ -220,7 +229,58 @@ export class CharacterSheet extends SinlessActorSheet {
     const TextEditor = foundry.applications.ux.TextEditor.implementation;
     context.enrichedBiography = await TextEditor.enrichHTML(sys.biography, { relativeTo: this.actor, secrets: this.actor.isOwner });
     if (sys.creation.active) context.creation = this.#creationContext();
+    context.grid = this.#gridContext();
     return context;
+  }
+
+  /** Deck, MCP dice, intrusion, alert and NAN influence for the Grid tab (ch.7). */
+  #gridContext() {
+    const actor = this.actor;
+    const sys = actor.system;
+    const deck = actor.deck;
+    const intrusion = getSetting("intrusion");
+    const software = actor.items.filter(i => i.type === "software").map(i => i.system);
+    const ctx = {
+      deck,
+      mcp: sys.grid.mcp,
+      intrusionLabel: SINLESS.INTRUSION_LEVELS[intrusion],
+      intrusionPenalty: INTRUSION_PENALTY[intrusion] ?? 0,
+      alert: Number(getSetting("alert")) || 0,
+      influence: sys.grid.influence,
+      influencePenalty: influencePenalty(sys.grid.influence),
+      hasProgram: !!actor.hackingProgram
+    };
+    if (!deck) return ctx;
+    const d = deck.system;
+    const status = deckStatus({ mcp: d.mcp, threads: d.threads, io: d.io }, software);
+    ctx.loaded = status.loaded;
+    ctx.running = status.running;
+    ctx.coreLabel = SINLESS.DECK_CORES[d.core];
+    ctx.issues = status.issues.map(i => game.i18n.format(`SINLESS.Grid.issue.${i.code}`, i.data ?? {}));
+    ctx.cohesionBoxes = Array.from({ length: d.mcp }, (_, i) => ({
+      n: i + 1, filled: i < d.cohesion, mark: (i + 1) % 3 === 0
+    }));
+    return ctx;
+  }
+
+  static async #onRollNanHack(event, target) {
+    return this.actor.rollNanHack(target.dataset.mode);
+  }
+
+  static async #onAdjustAlert(event, target) {
+    return adjustAlert(Number(target.dataset.delta) || 0);
+  }
+
+  static async #onResetInfluence() {
+    return this.actor.update({ "system.grid.influence": 0 });
+  }
+
+  /** Click a deck cohesion box: fill up to it, or clear it if it is the last filled box. */
+  static async #onSetCohesion(event, target) {
+    const deck = this.actor.deck;
+    if (!deck) return;
+    const n = Number(target.dataset.n);
+    return deck.update({ "system.cohesion": deck.system.cohesion === n ? n - 1 : n });
   }
 
   /** Budgets and rule problems for the creation panel (pp.44-46). */
@@ -301,7 +361,7 @@ export class CharacterSheet extends SinlessActorSheet {
   async _preparePartContext(partId, context, options) {
     context = await super._preparePartContext(partId, context, options);
     if (partId in context.tabs) context.tab = context.tabs[partId];
-    if (partId === "gear" || partId === "magic") context.groups = context.itemGroups[partId];
+    if (partId === "gear" || partId === "magic" || partId === "grid") context.groups = context.itemGroups[partId];
     return context;
   }
 }

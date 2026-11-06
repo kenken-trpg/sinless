@@ -203,3 +203,19 @@
 .sinless.sheet .creation-panel .hint { font-size: 0.8rem; margin: 0.25rem 0; }
 .sinless.sheet .creation-panel .creation-buttons { display: flex; gap: 0.5rem; margin: 0.25rem 0; }
 .sinless.sheet .creation-toggle { display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; }
+
+/* ---------- Grid ---------- */
+.sinless.sheet .grid-status { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; margin: 0.5rem 0; }
+.sinless.sheet .grid-box { display: flex; align-items: center; gap: 0.4rem; border: 1px solid var(--sl-border); border-radius: 4px; padding: 0.25rem 0.5rem; }
+.sinless.sheet .grid-box .label { font-size: 0.8rem; font-weight: bold; margin-right: auto; }
+.sinless.sheet .grid-box input { width: 3.5rem; }
+.sinless.sheet .grid .penalty { color: var(--sl-fail, #b71c1c); font-weight: bold; }
+.sinless.sheet .deck-panel { border: 1px solid var(--sl-accent, #c2185b); border-radius: 4px; padding: 0.25rem 0.5rem; }
+.sinless.sheet .deck-panel header { display: flex; justify-content: space-between; align-items: baseline; }
+.sinless.sheet .deck-panel h3 { margin: 0; border: none; }
+.sinless.sheet .deck-stats { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.85rem; margin: 0.25rem 0; }
+.sinless.sheet .deck-panel .issues { margin: 0.25rem 0; padding-left: 1.25rem; font-size: 0.8rem; color: var(--sl-fail, #b71c1c); }
+.sinless.sheet .hack-buttons { display: flex; gap: 0.5rem; margin: 0.4rem 0 0.2rem; }
+.sinless.sheet .grid .hint { opacity: 0.75; font-size: 0.85rem; }
+.sinless-card .grid-result p { margin: 0.2rem 0; font-size: 0.85rem; }
+.sinless-card .grid-result button { margin-top: 0.2rem; }

@@ -2,7 +2,7 @@
   "id": "sinless",
   "title": "Sinless",
   "description": "Unofficial fan-made Foundry VTT system for the Sinless tabletop RPG. Not affiliated with or endorsed by the publisher.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "compatibility": {
     "minimum": "13",
     "verified": "14"
@@ -91,6 +91,16 @@
         ]
       },
       "resource": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "deck": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "software": {
         "htmlFields": [
           "description"
         ]

@@ -18,9 +18,18 @@
         {{#if (eq item.type "ritual")}}{{localize "SINLESS.Item.FIELDS.rank.label"}} {{item.system.rank}}{{/if}}
         {{#if (eq item.type "knowledge")}}{{localize "SINLESS.Item.FIELDS.rank.label"}} {{item.system.rank}}{{/if}}
         {{#if (eq item.type "asset")}}{{localize (lookup @root.config.ETIQUETTES item.system.etiquette)}}{{/if}}
+        {{#if (eq item.type "deck")}}MCP {{item.system.mcp}} · {{localize "SINLESS.Item.FIELDS.threads.label"}} {{item.system.threads}} · I/O {{item.system.io}}{{/if}}
+        {{#if (eq item.type "software")}}{{localize "SINLESS.Item.FIELDS.rating.label"}} {{item.system.rating}}{{#if item.system.base}} · {{localize "SINLESS.Item.FIELDS.base.label"}}{{/if}}{{#if item.system.requiresNan}} · NAN{{/if}}{{/if}}
         {{#if (eq item.type "gear")}}{{#if item.system.rating}}{{localize "SINLESS.Item.FIELDS.rating.label"}} {{item.system.rating}}{{/if}}{{/if}}
       </span>
       <span class="item-controls">
+        {{#if (eq item.type "software")}}{{#unless item.system.base}}
+        <a data-action="itemToggle" data-field="loaded" class="{{#if item.system.loaded}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.loaded.label"}}"><i class="fa-solid fa-layer-group"></i></a>
+        <a data-action="itemToggle" data-field="running" class="{{#if item.system.running}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.running.label"}}"><i class="fa-solid fa-microchip"></i></a>
+        {{/unless}}{{/if}}
+        {{#if (eq item.type "deck")}}
+        <a data-action="itemToggle" data-field="equipped" class="{{#if item.system.equipped}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.equipped.label"}}"><i class="fa-solid fa-plug"></i></a>
+        {{/if}}
         {{#if (eq item.type "armor")}}
         <a data-action="itemToggle" data-field="equipped" class="{{#if item.system.equipped}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.equipped.label"}}"><i class="fa-solid fa-shirt"></i></a>
         {{/if}}

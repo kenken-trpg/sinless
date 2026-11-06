@@ -1,7 +1,8 @@
 import { SINLESS, SYSTEM_ID, skillLabel, AGONARCH_TN } from "../config.mjs";
 import { autoSuccesses, sectorHeatPenalty } from "../helpers/brand.mjs";
 import { damageFormula, weaponArmorType, applyConditionDamage } from "../helpers/damage.mjs";
-import { currentTargetNumber, currentHeatBonus } from "../settings.mjs";
+import { currentTargetNumber, currentHeatBonus, getSetting } from "../settings.mjs";
+import { INTRUSION_PENALTY, NO_NERVE_RIG_PENALTY, influencePenalty } from "../helpers/grid.mjs";
 import { testDialog } from "../apps/test-dialog.mjs";
 import { performTest } from "../dice/test-roll.mjs";
 
@@ -101,7 +102,8 @@ export class SinlessActor extends Actor {
       threshold: config.threshold,
       notes,
       extra,
-      autoSuccesses: config.autoSuccesses
+      autoSuccesses: config.autoSuccesses,
+      mcpAvailable: config.pool === "focus" ? defaults.mcpAvailable ?? 0 : 0
     });
   }
 
@@ -303,6 +305,111 @@ export class SinlessActor extends Actor {
     return null;
   }
 
+  /* ---------------- Decking (ch.7) ---------------- */
+
+  /** The equipped deck item, if any. */
+  get deck() {
+    const id = this.system.grid?.deckId;
+    return id ? this.items.get(id) : null;
+  }
+
+  /** The base hacking program on the equipped deck (p.133). */
+  get hackingProgram() {
+    return this.items.find(i => i.type === "software" && i.system.base) ?? null;
+  }
+
+  /**
+   * Dialog defaults for a decking test: Focus pool plus MCP dice, limit skill +
+   * software rating, intrusion difficulty and missing nerve rig penalties.
+   */
+  _deckingDefaults({ label, skillKey, rating, extraPenalty = 0, notes = [] }) {
+    const deck = this.deck;
+    if (!deck) {
+      ui.notifications.warn("SINLESS.Notify.noDeck", { localize: true });
+      return null;
+    }
+    const def = SINLESS.SKILLS[skillKey];
+    let rank = this.system.skills[skillKey]?.rank ?? 0;
+    let mode = "skill";
+    if (rank <= 0) {
+      const g = this.groupRank(skillKey);
+      if (g > 0) { mode = "default"; rank = g; }
+      else if (!def?.trainedOnly) mode = "untrained";
+    }
+    const defaults = this._testDefaults({
+      label, pool: "focus", mode, rank, gear: rating,
+      notes: [game.i18n.localize(skillLabel(skillKey)), deck.name, ...notes]
+    });
+    const intrusion = getSetting("intrusion");
+    const intrusionPenalty = INTRUSION_PENALTY[intrusion] ?? 0;
+    if (intrusionPenalty) {
+      defaults.penalty += intrusionPenalty;
+      defaults.notes.push(`${game.i18n.localize(SINLESS.INTRUSION_LEVELS[intrusion])} −${intrusionPenalty}`);
+    }
+    if (!deck.system.nerveRig) {
+      defaults.penalty += NO_NERVE_RIG_PENALTY;
+      defaults.notes.push(`${game.i18n.localize("SINLESS.Grid.noNerveRig")} −${NO_NERVE_RIG_PENALTY}`);
+    }
+    if (extraPenalty) defaults.penalty += extraPenalty;
+    const mcp = this.system.grid.mcp;
+    defaults.mcpAvailable = defaults.conflict ? mcp.value : mcp.max;
+    defaults.poolValues = { ...defaults.poolValues, focus: (defaults.poolValues.focus ?? 0) + defaults.mcpAvailable };
+    return defaults;
+  }
+
+  /** Use a piece of decking software (p.133). */
+  async rollSoftware(item) {
+    const sys = item.system;
+    if (sys.base) return this.rollNanHack("device", item);
+    const defaults = this._deckingDefaults({ label: item.name, skillKey: sys.skill, rating: sys.rating });
+    if (!defaults) return null;
+    if (sys.requiresNan && (this.system.grid.influence ?? 0) <= 0) {
+      ui.notifications.warn("SINLESS.Notify.noNan", { localize: true });
+    }
+    const shadow = this.items
+      .filter(i => i.type === "software" && i.system.running && i.system.reducesAlert && i.id !== item.id)
+      .reduce((max, i) => Math.max(max, i.system.rating), 0);
+    return this._runTest(defaults, {
+      software: true,
+      alert: sys.alert,
+      alertPerSuccess: sys.alertPerSuccess,
+      alertNote: sys.alertNote,
+      shadow,
+      effect: sys.effect
+    });
+  }
+
+  /**
+   * Hacking with the base program (p.134): a device, or a network access node by
+   * brute force or stealth infiltration.
+   * @param {"device"|"brute"|"stealth"} mode
+   */
+  async rollNanHack(mode = "brute", program = this.hackingProgram) {
+    if (!program) {
+      ui.notifications.warn("SINLESS.Notify.noHackingProgram", { localize: true });
+      return null;
+    }
+    const influence = this.system.grid.influence ?? 0;
+    const extraPenalty = mode === "device" ? 0 : influencePenalty(influence);
+    const defaults = this._deckingDefaults({
+      label: game.i18n.localize(`SINLESS.Grid.hack.${mode}`),
+      skillKey: program.system.skill,
+      rating: program.system.rating,
+      extraPenalty,
+      notes: extraPenalty ? [game.i18n.format("SINLESS.Grid.rangePenalty", { n: extraPenalty })] : []
+    });
+    if (!defaults) return null;
+    const extra = { software: true, nan: mode === "device" ? null : mode, io: this.deck?.system.io ?? 0 };
+    if (mode === "device") extra.effect = game.i18n.localize("SINLESS.Grid.deviceHint");
+    return this._runTest(defaults, extra);
+  }
+
+  /** Add meters of influence around the hacked node. */
+  async addInfluence(meters) {
+    if (!this.system.grid) return null;
+    return this.update({ "system.grid.influence": Math.max(0, this.system.grid.influence + meters) });
+  }
+
   async rollRitual(item) {
     return this._runTest(this._testDefaults({
       label: item.name, pool: item.system.pool, rank: item.system.rank
@@ -452,6 +559,7 @@ export class SinlessActor extends Actor {
     if (!this.system.pools) return this;
     const updates = {};
     for (const key of Object.keys(this.system.pools)) updates[`system.pools.${key}.spent`] = 0;
+    if (this.system.grid) updates["system.grid.mcpSpent"] = 0;
     return this.update(updates);
   }
 
