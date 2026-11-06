@@ -29,13 +29,13 @@ As GM, create a fresh actor of the matching type in the Actors directory, then u
 
 1. **戦闘**：01 と 04 をシーンへ配置。GM が戦闘に追加して開始し、01 の所有者が 04 をターゲットして銃を振ります。防御・ソークとダメージ反映を確認し、次のラウンドでプール回復を確認します。戦闘外と戦闘中では判定モードが変わります。
 2. **魔法**：02 から 04 に攻撃呪文を使用し、抵抗とドレインを確認。持続呪文ではチャットカードから効果を適用し、抵抗で解除できることを確認します。レイラインの設定も試せます。召喚判定はそのまま試せますが、精霊トークンを配置するには別途精霊用 NPC を作り、召喚アイテムのアクター参照を設定してください。04 は精霊ではありません。
-3. **グリッド**：03 のグリッドタブで装備中のデッキとソフトを確認。04 をターゲットして攻撃ソフトを使用し、チャットのダメージ処理を試します。凝集ダメージ専用の相手を試す場合は、04 を複製してネットワーク実体を有効にし、ハードニングを設定してください。
+3. **グリッド**：03 のグリッドタブで装備中のデッキとソフトを確認。侵入プログラムを読み込み済みなので、機器・NANへのハックも試せます。04 をターゲットして攻撃ソフトを使用し、チャットのダメージ処理を試します。凝集ダメージ専用の相手を試す場合は、04 を複製してネットワーク実体を有効にし、ハードニングを設定してください。
 4. **乗り物**：05 のシートへ 01 をドロップしてリガーに設定。01 に所有権のあるプレイヤーには 05 にも所有権を与え、機動と搭載武器を試します。
 5. **ブランド**：06 のメンバータブへ 01〜03 をドロップして、メンバー・アセット・セクター行動を確認。ターン終了は資金・生活費を変更するため、体験データで実行します。
 
 1. **Combat:** Place 01 and 04 on a scene. As GM, add them to combat and start it. The owner of 01 targets 04 and rolls a weapon attack. Try defense, soak and applying damage, then advance to the next round to check pool recovery. Test mode differs outside combat.
 2. **Magic:** Use 02 against 04; try spell resistance, drain, sustained effects and ley-line settings. Summoning rolls work immediately; placing a spirit token requires a separate spirit NPC linked in the summoning item. Actor 04 is not a spirit.
-3. **Grid:** Open 03's Grid tab, check its equipped deck and loaded software, target 04 and try digital attack cards. To test cohesion-only damage, duplicate 04, enable Network Entity and set hardening.
+3. **Grid:** Open 03's Grid tab and check its equipped deck and loaded software. A base hacking program is included for device and NAN tests. Target 04 and try digital attack cards. To test cohesion-only damage, duplicate 04, enable Network Entity and set hardening.
 4. **Vehicle:** Drop 01 onto 05's sheet to assign the rigger. Grant the player ownership of both actors, then try maneuvers and the mounted weapon.
 5. **Brand:** Drop 01–03 into 06's Members tab and try assets and sector actions. Ending a sector turn changes money and lifestyle balances; use demo data.
 

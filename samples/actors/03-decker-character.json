@@ -69,7 +69,7 @@
         "description": "<p>動作確認用の架空データ / Fictional test equipment.</p>",
         "source": "Sinless public-server sample",
         "mcp": 6,
-        "threads": 3,
+        "threads": 5,
         "core": 1,
         "io": 3,
         "hardening": 3,
@@ -145,6 +145,22 @@
         "running": true
       },
       "effects": []
+    },
+    {
+      "name": "テスト侵入プログラム / Test hacking program",
+      "type": "software",
+      "img": "icons/svg/item-bag.svg",
+      "system": {
+        "description": "<p>機器・NANへの侵入判定用。 / For device and NAN hacking tests.</p>",
+        "source": "Sinless public-server sample",
+        "rating": 3,
+        "skill": "hacking",
+        "action": "complex",
+        "io": "no",
+        "base": true,
+        "loaded": true
+      },
+      "effects": []
     }
   ],
   "effects": [],
@@ -154,7 +170,10 @@
     "disposition": 1,
     "texture": {
       "src": "icons/svg/mystery-man.svg"
-    }
+    },
+    "depth": 1,
+    "width": 1,
+    "height": 1
   },
   "flags": {
     "exportSource": {

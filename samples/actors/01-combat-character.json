@@ -70,7 +70,12 @@
       "earned": 10,
       "unspent": 10
     },
-    "notes": "<p>公開サーバー動作確認用。作成予算に準拠した完成キャラクターではありません。/ Test fixture; not a rules-legal starting character.</p>"
+    "notes": "<p>公開サーバー動作確認用。作成予算に準拠した完成キャラクターではありません。/ Test fixture; not a rules-legal starting character.</p>",
+    "etiquettes": {
+      "street": {
+        "rank": 3
+      }
+    }
   },
   "items": [
     {
@@ -147,7 +152,10 @@
     "disposition": 1,
     "texture": {
       "src": "icons/svg/mystery-man.svg"
-    }
+    },
+    "depth": 1,
+    "width": 1,
+    "height": 1
   },
   "flags": {
     "exportSource": {
