@@ -74,6 +74,10 @@
     {{#if extra.damageFormula}}<span class="formula">({{extra.damageText}} → {{extra.damageFormula}})</span>{{/if}}
     {{#if extra.damageNote}}<span class="formula">+ {{extra.damageNote}}</span>{{/if}}
   </p>
+  {{#if extra.recoil}}
+  <p class="recoil-line">{{localize "SINLESS.Combat.recoilStatus" tokens=extra.recoil.tokens capacity=extra.recoil.capacity}}{{#if extra.recoil.gained}} (+{{extra.recoil.gained}}){{/if}}</p>
+  {{#if extra.recoil.jammed}}<p class="effect warn">{{localize "SINLESS.Combat.recoilMiss"}}</p>{{/if}}
+  {{/if}}
   {{#if canDefend}}
   <div class="defend">
     {{#each extra.targets}}

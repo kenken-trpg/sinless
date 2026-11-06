@@ -1,6 +1,7 @@
 import { SYSTEM_ID, SINLESS } from "../config.mjs";
 import { planTest } from "../helpers/rules.mjs";
 import { forceFormula, drainIsLethal } from "../helpers/magic.mjs";
+import { combatModifiers, specializedRank, recoilJammed } from "../helpers/combat.mjs";
 
 const TEMPLATE = `systems/${SYSTEM_ID}/templates/dialog/test-dialog.hbs`;
 const { DialogV2 } = foundry.applications.api;
@@ -19,7 +20,10 @@ export async function testDialog(defaults) {
     poolChoices: choices(SINLESS.POOLS),
     modeChoices: choices(SINLESS.TEST_MODES),
     rerollChoices: choices(SINLESS.REROLL_OPTIONS),
-    firingChoices: choices(SINLESS.FIRING_MODES)
+    firingChoices: choices(SINLESS.FIRING_MODES),
+    lightChoices: SINLESS.LIGHT_LEVELS,
+    coverChoices: SINLESS.COVER_LEVELS,
+    recoilJammed: defaults.combat?.recoil ? recoilJammed(defaults.combat.recoil.tokens, defaults.combat.recoil.capacity) : false
   });
 
   const read = form => {
@@ -28,14 +32,45 @@ export async function testDialog(defaults) {
     const pool = data.pool || null;
     const firingBonus = SINLESS.FIRING_MODES[data.firingMode]?.bonus ?? 0;
     const poolAvailable = pool ? defaults.poolValues[pool] : 0;
+    const mode = data.mode ?? defaults.mode;
+    const notes = [];
+    // Specialization (p.41): ±1 rank for a skill the actor has.
+    let rank = n(data.rank);
+    if (defaults.spec && (mode === "skill" || mode === "rank")) {
+      const applies = !!data.specApplies;
+      rank = specializedRank(rank, defaults.spec, applies);
+      notes.push(game.i18n.format(applies ? "SINLESS.Spec.applies" : "SINLESS.Spec.general", { spec: defaults.spec }));
+    }
+    // Ranged combat modifiers (pp.88-92).
+    let gear = n(data.gear);
+    let combat = null;
+    if (defaults.combat) {
+      const m = combatModifiers({
+        light: data.light, cover: data.cover, pointBlank: !!data.pointBlank, prone: !!data.prone,
+        aim: n(data.aim), accuracy: defaults.combat.accuracy, extraTargets: n(data.extraTargets),
+        dualWield: !!data.dualWield, range: n(data.range)
+      });
+      // Two guns: the weapon's accuracy no longer raises the limit (p.91).
+      if (data.dualWield) gear = Math.max(0, gear - defaults.combat.accuracy);
+      for (const p of m.parts) {
+        const sign = p.value > 0 ? "+" : "−";
+        // Light and cover labels already show their value.
+        if (p.key === "light") notes.push(game.i18n.localize(SINLESS.LIGHT_LEVELS[data.light]));
+        else if (p.key === "cover") notes.push(game.i18n.localize(SINLESS.COVER_LEVELS[data.cover]));
+        else notes.push(`${game.i18n.localize(`SINLESS.Combat.part.${p.key}`)} ${sign}${Math.abs(p.value)}`);
+      }
+      combat = { ...m, recoil: defaults.combat.recoil };
+    }
     const config = {
       pool,
-      mode: data.mode ?? defaults.mode,
-      rank: n(data.rank),
-      gear: n(data.gear),
-      bonus: n(data.bonus) + firingBonus,
+      mode,
+      rank,
+      gear,
+      bonus: n(data.bonus) + firingBonus + (combat?.bonus ?? 0),
       bonusField: n(data.bonus),
-      penalty: n(data.penalty),
+      penalty: n(data.penalty) + (combat?.penalty ?? 0),
+      notes,
+      combat,
       kismet: Math.min(n(data.kismet), defaults.kismetAvailable ?? 0),
       poolDice: data.poolDice === "" || data.poolDice === null || data.poolDice === undefined ? undefined : n(data.poolDice),
       target: Math.clamp(n(data.target, 4), 2, 6),
@@ -54,7 +89,7 @@ export async function testDialog(defaults) {
   const updatePreview = dialog => {
     const form = dialog.element.querySelector("form");
     if (!form) return;
-    const { plan, poolAvailable, force } = read(form);
+    const { plan, poolAvailable, force, notes } = read(form);
     const out = dialog.element.querySelector(".sinless-test-preview");
     const fmt = plan.usesPool ? "SINLESS.Test.preview" : "SINLESS.Test.previewDice";
     out.innerHTML = plan.impossible
@@ -67,6 +102,11 @@ export async function testDialog(defaults) {
         kismet: plan.kismetDice,
         total: plan.total
       });
+    if (notes.length) out.innerHTML += `<br><span class="modifiers">${foundry.utils.escapeHTML(notes.join(" · "))}</span>`;
+    const recoil = defaults.combat?.recoil;
+    if (recoil && recoilJammed(recoil.tokens, recoil.capacity)) {
+      out.innerHTML += `<br><strong class="impossible">${game.i18n.localize("SINLESS.Combat.recoilJammed")}</strong>`;
+    }
     // Spells: show the drain the chosen force will cause (p.167).
     if (defaults.force?.drain) {
       const drain = forceFormula(defaults.force.drain, force) ?? 0;
@@ -80,7 +120,7 @@ export async function testDialog(defaults) {
   return DialogV2.wait({
     window: { title: defaults.label, icon: "fa-solid fa-dice-six" },
     classes: ["sinless", "sinless-test-dialog"],
-    position: { width: 460 },
+    position: { width: defaults.combat ? 520 : 460 },
     content,
     buttons: [
       {

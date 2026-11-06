@@ -29,6 +29,7 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       rollEtiquette: SinlessActorSheet.#onRollEtiquette,
       rollItem: SinlessActorSheet.#onRollItem,
       refreshPools: SinlessActorSheet.#onRefreshPools,
+      stabilize: SinlessActorSheet.#onStabilize,
       refreshKismet: SinlessActorSheet.#onRefreshKismet,
       setCondition: SinlessActorSheet.#onSetCondition,
       itemCreate: SinlessActorSheet.#onItemCreate,
@@ -52,6 +53,7 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.config = SINLESS;
     context.isGM = game.user.isGM;
     context.targetNumber = currentTargetNumber(sys.isAgonarch);
+    context.recoilJammed = !!sys.combat && sys.combat.recoil >= sys.combat.recoilCapacity;
 
     context.items = {};
     context.itemGroups = {};
@@ -147,6 +149,10 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async #onRefreshPools() {
     return this.actor.refreshPools();
+  }
+
+  static async #onStabilize() {
+    return this.actor.stabilize();
   }
 
   static async #onRefreshKismet() {

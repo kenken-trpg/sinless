@@ -16,6 +16,14 @@ this system contains no rules text.
   rerolls of 1s / 1s and 2s, Kismet dice and pool spending during conflict.
 - Chat card with successes, Argle Bargle Foofaraw detection and a button to add Kismet dice
   after the roll.
+- Ranged attack modifiers in the attack dialog: light, cover, point blank, prone target,
+  aiming (+accuracy per simple action, up to two), additional targets, two guns (−1, no
+  accuracy) and the weapon's range modifier. Recoil tokens accumulate on the character
+  (two simple-action shots = 1, full auto = 2) against a capacity from Strength 12/24, Active
+  Effects (`system.combat.recoilBonus`) and weapon recoil compensation. At capacity the
+  attack automatically misses; a Stabilize button (and the end of combat) clears the tokens.
+- Skill specializations: +1 when the specialization applies, −1 for other uses of the skill.
+  The dialog pre-checks it when the specialization names the weapon, spell or vehicle.
 - Attack cards remember the targeted tokens. Each defender opens a damage dialog to roll
   dodge and soak from it. The dialog applies armor: ballistic armor against penetration
   (stun or physical), impact armor minus armor piercing, energy weapons stripping armor, and

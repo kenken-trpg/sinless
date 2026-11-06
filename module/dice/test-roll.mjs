@@ -114,7 +114,9 @@ export async function renderCard(state) {
     kismetDice: state.kismetAdded.map(v => dieView(v, { kismet: true })),
     canAddKismet: !state.abf,
     // A hit needs successes, except explosives which always land somewhere (p.93).
-    canDefend: !!state.extra?.weapon && !state.abf && (sum.successes > 0 || !!state.extra.blast)
+    // Recoil capacity reached: the shot cannot hit (p.92).
+    canDefend: !!state.extra?.weapon && !state.abf && !state.extra.recoil?.jammed
+      && (sum.successes > 0 || !!state.extra.blast)
   };
   // Rigging and decking results, recomputed when Kismet dice are added.
   const x = state.extra ?? {};

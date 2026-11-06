@@ -154,6 +154,21 @@ export const FIRING_MODES = Object.freeze({
   fullAuto: { label: L("FiringMode.fullAuto"), bonus: 20 }
 });
 
+/** Ranged combat modifiers (p.90). */
+export const LIGHT_LEVELS = Object.freeze({
+  bright: L("Light.bright"),
+  normal: L("Light.normal"),
+  dim: L("Light.dim"),
+  dark: L("Light.dark")
+});
+
+export const COVER_LEVELS = Object.freeze({
+  none: L("Cover.none"),
+  low: L("Cover.low"),
+  high: L("Cover.high"),
+  total: L("Cover.total")
+});
+
 export const ARMOR_LAYERS = Object.freeze({
   internal: L("ArmorLayer.internal"),
   under: L("ArmorLayer.under"),
@@ -333,7 +348,7 @@ export const BRAND_ACTIONS = Object.freeze({
 
 export const SINLESS = {
   ATTRIBUTES, POOLS, SKILLS, SKILL_GROUPS, ETIQUETTES, HERITAGES, MAGIC_TALENTS,
-  LIFESTYLES, DIFFICULTIES, AGONARCH_TN, HEAT_LEVELS, WEAPON_CATEGORIES, FIRING_MODES,
+  LIFESTYLES, DIFFICULTIES, AGONARCH_TN, HEAT_LEVELS, WEAPON_CATEGORIES, FIRING_MODES, LIGHT_LEVELS, COVER_LEVELS,
   ARMOR_LAYERS, ARMOR_TYPES, DAMAGE_TRACKS, INTRUSION_LEVELS, DECK_CORES, SOFTWARE_ACTIONS, SOFTWARE_IO,
   VEHICLE_KINDS, VEHICLE_FRAMES, VEHICLE_MOBILITY, CONTROL_MODES,
   IMPLANT_KINDS, POWER_CATEGORIES, REROLL_OPTIONS, TEST_MODES, DEFENSES,

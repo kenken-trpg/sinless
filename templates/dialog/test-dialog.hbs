@@ -20,6 +20,12 @@
     <label>{{#if rankLabel}}{{rankLabel}}{{else}}{{localize "SINLESS.Test.rank"}}{{/if}}</label>
     <input type="number" name="rank" value="{{rank}}" min="0">
   </div>
+  {{#if spec}}
+  <div class="form-group">
+    <label data-tooltip="{{localize "SINLESS.Spec.hint"}}">{{localize "SINLESS.Spec.label" spec=spec}}</label>
+    <input type="checkbox" name="specApplies" {{checked specApplies}}>
+  </div>
+  {{/if}}
   {{#unless simple}}
   <div class="form-group">
     <label data-tooltip="{{localize "SINLESS.Test.gearHint"}}">{{localize "SINLESS.Test.gear"}}</label>
@@ -31,6 +37,41 @@
     <label>{{localize "SINLESS.Test.firingMode"}}</label>
     <select name="firingMode">{{selectOptions firingChoices selected=firingMode localize=true}}</select>
   </div>
+  {{/if}}
+  {{#if combat}}
+  <fieldset class="combat-modifiers">
+    <legend>{{localize "SINLESS.Combat.modifiers"}}</legend>
+    <div class="form-group">
+      <label>{{localize "SINLESS.Combat.light"}}</label>
+      <select name="light">{{selectOptions lightChoices selected="normal" localize=true}}</select>
+    </div>
+    <div class="form-group">
+      <label data-tooltip="{{localize "SINLESS.Combat.coverHint"}}">{{localize "SINLESS.Combat.cover"}}</label>
+      <select name="cover">{{selectOptions coverChoices selected="none" localize=true}}</select>
+    </div>
+    <div class="form-group">
+      <label data-tooltip="{{localize "SINLESS.Combat.rangeHint"}}">{{localize "SINLESS.Combat.range"}}{{#if combat.range}} <span class="hint">({{combat.range}})</span>{{/if}}</label>
+      <input type="number" name="range" value="0">
+    </div>
+    <div class="form-group checks">
+      <label data-tooltip="{{localize "SINLESS.Combat.pointBlankHint"}}"><input type="checkbox" name="pointBlank"> {{localize "SINLESS.Combat.part.pointBlank"}} +4</label>
+      <label data-tooltip="{{localize "SINLESS.Combat.proneHint"}}"><input type="checkbox" name="prone"> {{localize "SINLESS.Combat.part.prone"}} −2</label>
+      <label data-tooltip="{{localize "SINLESS.Combat.dualWieldHint"}}"><input type="checkbox" name="dualWield"> {{localize "SINLESS.Combat.part.dualWield"}} −1</label>
+    </div>
+    <div class="form-group">
+      <label data-tooltip="{{localize "SINLESS.Combat.aimHint"}}">{{localize "SINLESS.Combat.aim"}}</label>
+      <input type="number" name="aim" value="0" min="0" max="2">
+    </div>
+    <div class="form-group">
+      <label data-tooltip="{{localize "SINLESS.Combat.targetsHint"}}">{{localize "SINLESS.Combat.extraTargets"}}</label>
+      <input type="number" name="extraTargets" value="0" min="0">
+    </div>
+    {{#if combat.recoil}}
+    <p class="recoil{{#if recoilJammed}} jammed{{/if}}" data-tooltip="{{localize "SINLESS.Combat.recoilHint"}}">
+      {{localize "SINLESS.Combat.recoilStatus" tokens=combat.recoil.tokens capacity=combat.recoil.capacity}}
+    </p>
+    {{/if}}
+  </fieldset>
   {{/if}}
   <div class="form-group">
     <label>{{localize "SINLESS.Test.bonus"}}</label>

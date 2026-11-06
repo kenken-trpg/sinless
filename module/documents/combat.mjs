@@ -32,4 +32,11 @@ export function registerCombatHooks() {
     const actors = new Set(combat.combatants.map(c => c.actor).filter(Boolean));
     for (const actor of actors) await actor.refreshPools();
   });
+
+  // Recoil tokens do not outlast the fight (p.92).
+  Hooks.on("deleteCombat", async combat => {
+    if (!game.user.isActiveGM) return;
+    const actors = new Set(combat.combatants.map(c => c.actor).filter(a => a?.system.combat?.recoil || a?.system.combat?.recoilPrimed));
+    for (const actor of actors) await actor.stabilize();
+  });
 }

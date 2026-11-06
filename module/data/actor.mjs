@@ -6,6 +6,7 @@ import {
 } from "../helpers/rules.mjs";
 import { PRIORITY_CATEGORIES, PRIORITY_LEVELS } from "../helpers/creation.mjs";
 import { amplificationCost } from "../helpers/magic.mjs";
+import { recoilCapacity } from "../helpers/combat.mjs";
 
 const { NumberField, StringField, SchemaField, BooleanField, HTMLField } = foundry.data.fields;
 
@@ -49,9 +50,20 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
         ballistic: int(0, { min: undefined }),
         impact: int(0, { min: undefined })
       }),
+      // Recoil (p.91): tokens on the character, `primed` marks an odd simple-action shot.
+      combat: new SchemaField({
+        recoil: int(0),
+        recoilPrimed: new BooleanField({ initial: false }),
+        recoilBonus: int(0, { min: undefined })
+      }),
       penalty: int(0),
       notes: new HTMLField({ required: true, blank: true })
     };
+  }
+
+  /** Strength for recoil capacity; implemented by subclasses. */
+  get _strength() {
+    return 0;
   }
 
   /** Whether this actor rolls as the Agonarch (always TN 4+). */
@@ -84,6 +96,7 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
       ? woundPenalty(this.condition.physical.value, this.condition.stun.value)
       : 0;
     this.totalPenalty = this.condition.penalty + this.penalty;
+    this.combat.recoilCapacity = recoilCapacity({ strength: this._strength, bonus: this.combat.recoilBonus });
 
     this._prepareArmor();
   }
@@ -109,6 +122,10 @@ class SinlessActorBase extends foundry.abstract.TypeDataModel {
 
 export class CharacterData extends SinlessActorBase {
   static LOCALIZATION_PREFIXES = [...super.LOCALIZATION_PREFIXES, "SINLESS.Character"];
+
+  get _strength() {
+    return this.attributes.str.value;
+  }
 
   static defineSchema() {
     return {
@@ -247,6 +264,10 @@ export class NpcData extends SinlessActorBase {
 
   get isAgonarch() {
     return this.agonarch;
+  }
+
+  get _strength() {
+    return this.strength;
   }
 
   _basePoolMax() {

@@ -5,6 +5,9 @@ import { currentTargetNumber, currentHeatBonus, getSetting } from "../settings.m
 import { INTRUSION_PENALTY, NO_NERVE_RIG_PENALTY, influencePenalty } from "../helpers/grid.mjs";
 import { CONTROL_PENALTY, effectiveControl, hotseatFeedback } from "../helpers/rigging.mjs";
 import { forceFormula, drainIsLethal } from "../helpers/magic.mjs";
+import {
+  RANGED_CATEGORIES, RECOIL_CATEGORIES, firingAction, recoilAfterShot, recoilJammed, specMatches
+} from "../helpers/combat.mjs";
 import { testDialog } from "../apps/test-dialog.mjs";
 import { performTest } from "../dice/test-roll.mjs";
 
@@ -47,7 +50,7 @@ export class SinlessActor extends Actor {
   }
 
   /** Common defaults for the test dialog. */
-  _testDefaults({ label, pool = null, mode = "skill", rank = 0, gear = 0, bonus = 0, notes = [] }) {
+  _testDefaults({ label, pool = null, mode = "skill", rank = 0, gear = 0, bonus = 0, notes = [], spec = "", specApplies = false }) {
     const sys = this.system;
     const conflict = this.inConflict;
     if (mode === "skill" && !conflict) mode = "rank";
@@ -75,6 +78,9 @@ export class SinlessActor extends Actor {
       poolValues,
       showFiring: false,
       firingMode: "none",
+      // Specialization (p.41): +1 when it applies, −1 otherwise; only for a skill the actor has.
+      spec: mode === "skill" || mode === "rank" ? spec : "",
+      specApplies,
       notes
     };
   }
@@ -94,6 +100,7 @@ export class SinlessActor extends Actor {
     if (config.firingMode && config.firingMode !== "none") {
       notes.push(game.i18n.localize(SINLESS.FIRING_MODES[config.firingMode].label));
     }
+    notes.push(...(config.notes ?? []));
     return performTest({
       actor: this,
       label: defaults.label,
@@ -123,27 +130,16 @@ export class SinlessActor extends Actor {
       if (g > 0) { mode = "default"; rank = g; }
       else if (!def?.trainedOnly) mode = "untrained";
     }
-    return { mode, rank, pool: def?.pool ?? "focus" };
+    const spec = mode === "skill" ? this.system.skills?.[skillKey]?.spec ?? "" : "";
+    return { mode, rank, pool: def?.pool ?? "focus", spec };
   }
 
   /** Roll an active skill. Chooses defaulting or untrained use automatically. */
   async rollSkill(skillKey) {
-    const def = SINLESS.SKILLS[skillKey];
-    if (!def) return null;
-    const skill = this.system.skills[skillKey];
-    let mode = "skill";
-    let rank = skill.rank;
-    const notes = [];
-    if (rank <= 0) {
-      const groupRank = this.groupRank(skillKey);
-      if (groupRank > 0) {
-        mode = "default";
-        rank = groupRank;
-      } else if (!def.trainedOnly) mode = "untrained";
-    }
-    if (skill.spec) notes.push(skill.spec);
+    if (!SINLESS.SKILLS[skillKey]) return null;
+    const { mode, rank, pool, spec } = this._skillMode(skillKey);
     return this._runTest(this._testDefaults({
-      label: game.i18n.localize(skillLabel(skillKey)), pool: def.pool, mode, rank, notes
+      label: game.i18n.localize(skillLabel(skillKey)), pool, mode, rank, spec
     }));
   }
 
@@ -220,22 +216,54 @@ export class SinlessActor extends Actor {
     if (this.type === "vehicle") return this.rollVehicleWeapon(item);
     if (this.type === "npc" && Number.isInteger(sys.attackDice)) {
       const defaults = this._fixedDiceDefaults(item.name, sys.attackDice, [game.i18n.localize(skillLabel(skillKey))]);
+      this._combatDefaults(defaults, item, { fixed: true });
       return this._runTest(defaults, await this._weaponCardData(item));
     }
-    const def = SINLESS.SKILLS[skillKey];
-    let rank = this.system.skills[skillKey]?.rank ?? 0;
-    let mode = "skill";
-    if (rank <= 0) {
-      const g = this.groupRank(skillKey);
-      if (g > 0) { mode = "default"; rank = g; }
-      else if (!def?.trainedOnly) mode = "untrained";
-    }
+    const { mode, rank, spec } = this._skillMode(skillKey);
     const defaults = this._testDefaults({
-      label: item.name, pool: def?.pool ?? "finesse", mode, rank,
-      gear: sys.accuracy, notes: [game.i18n.localize(skillLabel(skillKey))]
+      label: item.name, pool: SINLESS.SKILLS[skillKey]?.pool ?? "finesse", mode, rank,
+      gear: sys.accuracy, notes: [game.i18n.localize(skillLabel(skillKey))],
+      spec, specApplies: specMatches(spec, item.name)
     });
     defaults.showFiring = sys.category === "firearm" || sys.category === "energy" || sys.category === "heavy";
-    return this._runTest(defaults, await this._weaponCardData(item));
+    this._combatDefaults(defaults, item);
+    return this._runTest(defaults, config => this._attackCardData(item, config));
+  }
+
+  /** Ranged modifiers (pp.88-92) and recoil state for an attack dialog. */
+  _combatDefaults(defaults, item, { fixed = false } = {}) {
+    const sys = item.system;
+    if (!RANGED_CATEGORIES.includes(sys.category)) return defaults;
+    const range = [sys.rangeClose, sys.rangeMax].filter(Boolean).join(" / ");
+    const tracksRecoil = !fixed && !!this.system.combat && RECOIL_CATEGORIES.includes(sys.category);
+    const capacity = (this.system.combat?.recoilCapacity ?? 1) + (sys.recoilComp ?? 0);
+    defaults.combat = {
+      accuracy: fixed ? 0 : sys.accuracy,
+      range,
+      recoil: tracksRecoil ? { tokens: this.system.combat.recoil, capacity, primed: this.system.combat.recoilPrimed } : null
+    };
+    return defaults;
+  }
+
+  /**
+   * Attack card data plus recoil (p.91): the shot misses when the capacity was
+   * already reached, then the firing action adds recoil tokens.
+   */
+  async _attackCardData(item, config) {
+    const data = await this._weaponCardData(item);
+    const recoil = config.combat?.recoil;
+    if (!recoil) return data;
+    const jammed = recoilJammed(recoil.tokens, recoil.capacity);
+    const next = recoilAfterShot({ tokens: recoil.tokens, primed: recoil.primed }, firingAction(config.firingMode));
+    await this.update({ "system.combat.recoil": next.tokens, "system.combat.recoilPrimed": next.primed });
+    data.recoil = { tokens: next.tokens, capacity: recoil.capacity, gained: next.gained, jammed };
+    return data;
+  }
+
+  /** Stabilize the weapon (p.92): remove all recoil tokens. */
+  async stabilize() {
+    if (!this.system.combat) return this;
+    return this.update({ "system.combat.recoil": 0, "system.combat.recoilPrimed": false });
   }
 
   /** Strength used for melee and thrown damage (p.94). */
@@ -389,10 +417,10 @@ export class SinlessActor extends Actor {
       ui.notifications.warn("SINLESS.Notify.notController", { localize: true });
       return null;
     }
-    const { mode, rank, pool } = rigger._skillMode(skillKey);
+    const { mode, rank, pool, spec } = rigger._skillMode(skillKey);
     const control = this.controlMode;
     const defaults = rigger._testDefaults({
-      label, pool, mode, rank, gear,
+      label, pool, mode, rank, gear, spec, specApplies: specMatches(spec, this.name, label),
       notes: [game.i18n.localize(skillLabel(skillKey)), this.name, game.i18n.localize(SINLESS.CONTROL_MODES[control]), ...notes]
     });
     const v = this.system;
@@ -455,6 +483,8 @@ export class SinlessActor extends Actor {
     if (!prepared) return null;
     const { rigger, defaults } = prepared;
     defaults.showFiring = ["firearm", "energy", "heavy", "vehicle"].includes(sys.category);
+    // Drones have recoil compensation and do not track recoil (p.148).
+    this._combatDefaults(defaults, item);
     return rigger._runTest(defaults, await this._weaponCardData(item));
   }
 
@@ -481,16 +511,9 @@ export class SinlessActor extends Actor {
       ui.notifications.warn("SINLESS.Notify.noDeck", { localize: true });
       return null;
     }
-    const def = SINLESS.SKILLS[skillKey];
-    let rank = this.system.skills[skillKey]?.rank ?? 0;
-    let mode = "skill";
-    if (rank <= 0) {
-      const g = this.groupRank(skillKey);
-      if (g > 0) { mode = "default"; rank = g; }
-      else if (!def?.trainedOnly) mode = "untrained";
-    }
+    const { mode, rank, spec } = this._skillMode(skillKey);
     const defaults = this._testDefaults({
-      label, pool: "focus", mode, rank, gear: rating,
+      label, pool: "focus", mode, rank, gear: rating, spec, specApplies: specMatches(spec, label),
       notes: [game.i18n.localize(skillLabel(skillKey)), deck.name, ...notes]
     });
     const intrusion = getSetting("intrusion");
@@ -592,9 +615,10 @@ export class SinlessActor extends Actor {
    */
   async castSpell(item) {
     const sys = item.system;
-    const { mode, rank } = this._skillMode("sorcery");
+    const { mode, rank, spec } = this._skillMode("sorcery");
     const defaults = this._testDefaults({
       label: item.name, pool: "resolve", mode, rank, gear: sys.focus,
+      spec, specApplies: specMatches(spec, item.name, sys.school),
       notes: [game.i18n.localize(skillLabel("sorcery")), sys.school].filter(Boolean)
     });
     defaults.force = { value: Math.max(1, sys.force), max: Math.max(1, sys.force), drain: sys.drain, zoetic: this.zoeticPotential };
@@ -636,9 +660,10 @@ export class SinlessActor extends Actor {
   /** Summon a spirit (p.183): Conjuring + focus against the spirit's force less the spirit bag. */
   async summonSpirit(item) {
     const sys = item.system;
-    const { mode, rank } = this._skillMode("conjuring");
+    const { mode, rank, spec } = this._skillMode("conjuring");
     const defaults = this._testDefaults({
       label: item.name, pool: "resolve", mode, rank, gear: sys.focus,
+      spec, specApplies: specMatches(spec, item.name),
       notes: [game.i18n.localize(skillLabel("conjuring"))]
     });
     defaults.force = { value: Math.max(1, sys.force), max: Math.max(1, sys.force), drain: "", zoetic: this.zoeticPotential };
@@ -661,10 +686,10 @@ export class SinlessActor extends Actor {
 
   /** Channeling test to resist drain: Channeling + fetish rank from Resolve (p.167). */
   async rollChanneling(fetish = 0, label = null) {
-    const { mode, rank } = this._skillMode("channeling");
+    const { mode, rank, spec } = this._skillMode("channeling");
     return this._runTest(this._testDefaults({
       label: label ?? game.i18n.localize("SINLESS.Magic.channeling"),
-      pool: "resolve", mode, rank, gear: fetish,
+      pool: "resolve", mode, rank, gear: fetish, spec,
       notes: [game.i18n.localize(skillLabel("channeling"))]
     }));
   }

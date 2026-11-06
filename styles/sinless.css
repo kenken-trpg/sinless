@@ -53,6 +53,11 @@
 .sinless.sheet .defenses .defense-row { display: flex; gap: 4px; }
 .sinless.sheet .defenses .defense-row .defense { flex: 1; }
 .sinless.sheet .defenses .fixed-defense { flex: 0 0 3.5rem; width: 3.5rem; text-align: center; }
+.sinless.sheet .defenses .recoil { display: flex; align-items: center; justify-content: space-between; gap: 4px; font-size: 0.85rem; }
+.sinless.sheet .defenses .recoil label { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.sinless.sheet .defenses .recoil input { width: 2.5rem; text-align: center; }
+.sinless.sheet .defenses .recoil .stabilize { flex: 0 0 auto; width: auto; padding: 0 6px; line-height: 1.6; }
+.sinless.sheet .defenses .recoil.jammed label { color: var(--sl-fail, #b71c1c); font-weight: bold; }
 
 /* Pools */
 .sinless.sheet .pools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
@@ -97,6 +102,13 @@
 .sinless-test-dialog .sinless-test .form-group { display: grid; grid-template-columns: 11rem minmax(0, 1fr); align-items: center; }
 .sinless-test-dialog .sinless-test-preview { margin-top: 0.5rem; padding: 0.35rem; border: 1px solid var(--sl-border); border-radius: 4px; }
 .sinless-test-dialog .impossible { color: var(--sl-fail); }
+.sinless-test-dialog .combat-modifiers { margin: 0.4rem 0; padding: 0.25rem 0.5rem; }
+.sinless-test-dialog .combat-modifiers .form-group.checks { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+.sinless-test-dialog .combat-modifiers .checks label { display: flex; flex: 0 0 auto; align-items: center; gap: 4px; white-space: nowrap; }
+.sinless-test-dialog .combat-modifiers .hint { font-size: 0.8em; opacity: 0.75; }
+.sinless-test-dialog .combat-modifiers .recoil { margin: 0.25rem 0 0; }
+.sinless-test-dialog .combat-modifiers .recoil.jammed { color: var(--sl-fail, #b71c1c); font-weight: bold; }
+.sinless-test-dialog .sinless-test-preview .modifiers { font-size: 0.85em; opacity: 0.85; }
 .sinless-test-dialog .notes span + span::before, .sinless-card .notes span + span::before { content: " · "; }
 
 /* ---------- Chat card ---------- */
@@ -241,4 +253,5 @@
 
 /* ---------- Magic ---------- */
 .sinless-card .spell-result p { margin: 0.2rem 0; font-size: 0.85rem; }
+.sinless-card .recoil-line { margin: 0.15rem 0; font-size: 0.85em; opacity: 0.85; }
 .sinless-card .lethal, .sinless-test-dialog .lethal { color: var(--sl-fail, #b71c1c); font-weight: bold; }

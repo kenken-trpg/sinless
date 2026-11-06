@@ -646,6 +646,10 @@
         "spiritBag": {
           "label": "Spirit bag",
           "hint": "Each rank lowers the spirit's force for summoning (p.183)."
+        },
+        "recoilComp": {
+          "label": "Recoil compensation",
+          "hint": "Recoil capacity added by mods such as a bipod, gyro-mount or gas vent."
         }
       }
     },
@@ -1175,6 +1179,54 @@
         "bound": "Spirit bound for {n} service(s).",
         "uncontrolled": "The spirit appears but is not controlled.",
         "failed": "The spirit does not appear (needed {needed} successes)."
+      }
+    },
+    "Light": {
+      "bright": "Bright light (+2)",
+      "normal": "Normal light",
+      "dim": "Dim light (−1)",
+      "dark": "Darkness (−4)"
+    },
+    "Cover": {
+      "none": "No cover",
+      "low": "Low cover (−1)",
+      "high": "High cover (−2)",
+      "total": "Total cover (−4)"
+    },
+    "Spec": {
+      "label": "Specialization: {spec}",
+      "hint": "Checked: the specialization applies, skill +1. Unchecked: general use, skill −1 (p.41).",
+      "applies": "Specialization {spec} +1",
+      "general": "Outside specialization {spec} −1"
+    },
+    "Combat": {
+      "modifiers": "Ranged modifiers",
+      "light": "Light",
+      "cover": "Cover",
+      "coverHint": "Low: something obscures the target. High: the target is taking cover. Total: not visible; penetration must beat the barrier (pp.88, 90).",
+      "range": "Range modifier",
+      "rangeHint": "From the weapon's range table: positive for bonus dice, negative for penalty dice.",
+      "pointBlankHint": "Within 4 m (2″), or the target is caught out (p.90).",
+      "proneHint": "Non-adjacent ranged attacks against a prone target (p.87).",
+      "dualWieldHint": "Two pistols or SMGs: −1 and no accuracy. Roll each gun separately (p.91).",
+      "aim": "Aiming (simple actions)",
+      "aimHint": "+accuracy bonus dice per simple action spent aiming, up to two (p.91).",
+      "extraTargets": "Earlier targets this turn",
+      "targetsHint": "Each additional target this turn adds a cumulative −1 (p.91).",
+      "recoil": "Recoil",
+      "recoilStatus": "Recoil {tokens} / {capacity}",
+      "recoilHint": "Two consecutive simple actions firing give 1 token, a complex action (full auto) 2. At capacity, attacks automatically miss (pp.91-92).",
+      "recoilJammed": "Recoil capacity reached: this attack automatically misses. Stabilize first.",
+      "recoilMiss": "Recoil capacity was reached: the attack automatically misses.",
+      "stabilize": "Stabilize",
+      "stabilizeHint": "Free action whenever the character uses an action other than firing: remove all recoil tokens (p.92).",
+      "part": {
+        "pointBlank": "Point blank",
+        "prone": "Target prone",
+        "aim": "Aiming",
+        "targets": "Additional target",
+        "dualWield": "Two guns",
+        "range": "Range"
       }
     }
   }

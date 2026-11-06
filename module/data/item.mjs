@@ -54,6 +54,8 @@ export class WeaponData extends PhysicalItemData {
       blast: new BooleanField({ initial: false }),
       reach: int(0),
       modes: str(),
+      // Recoil compensation mods (bipod, gyro-mount, gas vent): + recoil capacity (p.94).
+      recoilComp: int(0),
       rangeClose: str(),
       rangeMax: str(),
       ammo: str(),
