@@ -164,7 +164,11 @@ npm run check:i18n   # locale parity, placeholders, missing keys
 npm run lint:syntax  # parse-check every module and JSON file
 npm run check        # all three
 npm run build        # dist/sinless.zip
+npm run verify -- list  # browser checks against a running Foundry (not in CI)
 ```
+
+The browser checks need Playwright and a running Foundry; see
+[docs/verification/README.md](docs/verification/README.md).
 
 GitHub Actions runs these checks and the build on every push to `main` and on pull
 requests (`.github/workflows/ci.yml`).

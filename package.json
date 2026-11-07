@@ -10,6 +10,7 @@
     "lint:syntax": "node tools/check-syntax.mjs",
     "build": "node tools/build.mjs",
     "bump": "node tools/bump.mjs",
+    "verify": "node tools/verify.mjs",
     "check": "npm test && npm run check:i18n && npm run lint:syntax"
   },
   "license": "MIT"
