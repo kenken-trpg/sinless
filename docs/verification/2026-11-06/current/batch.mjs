@@ -5,6 +5,9 @@ import {createFixtures,removeFixtures} from "./fixtures.mjs";
 import {checkOutput} from "./batch-checks.mjs";
 import {format} from "node:util";
 const source=fileURLToPath(new URL("../original",import.meta.url)),lib=fileURLToPath(new URL("../../lib.mjs",import.meta.url)),out=process.env.SINLESS_VERIFY_OUT??"/private/tmp/sinless-verification";
+// The scripts in original/ wait fixed times, sized for the slow software canvas of the time.
+// Scale those waits; SINLESS_BATCH_WAIT=1 restores them.
+globalThis.__sinlessWaitScale=Number(process.env.SINLESS_BATCH_WAIT??0.2);
 const session=await joinGM();
 globalThis.__sinlessVerificationSession={...session,browser:{close:async()=>{}}};
 const shared=out+"/shared-lib.mjs";writeFileSync(shared,"export async function joinGM(){return globalThis.__sinlessVerificationSession;}\n");
@@ -19,6 +22,9 @@ try{
   let code=readFileSync(source+"/"+name+".mjs","utf8").replace('"./lib.mjs"',JSON.stringify(shared));
   code=code.replaceAll('page.setDefaultTimeout(8000)', 'page.setDefaultTimeout(30000)');
   code=code.replaceAll('timeout: 10000', 'timeout: 30000');
+  code=code.replaceAll('.waitForTimeout(', '.waitForTimeout(globalThis.__sinlessWaitScale*');
+  // magic: the defend dialog is still closing when the drain dialog opens; wait until it leaves.
+  code=code.replace('await page.click(".sinless-damage-dialog button[data-action=cancel]");\n','await page.click(".sinless-damage-dialog button[data-action=cancel]");await page.waitForSelector(".sinless-damage-dialog",{state:"detached"});\n');
   code=code.replace('await page.evaluate(() => game.actors.getName("SMOKE D Ben").rollSkill("firearms"));','await page.evaluate(() => { game.actors.getName("SMOKE D Ben").rollSkill("firearms"); });');
   code=code.replace('const ben = fn => page.evaluate(fn);','const ben = (fn, arg) => page.evaluate(fn, arg);');
   const path=out+"/"+name+"-batch.mjs";writeFileSync(path,code);process.argv=[process.argv[0],path,out];
