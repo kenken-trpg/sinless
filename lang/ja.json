@@ -1634,6 +1634,9 @@
       "dropHint": "ここに NPC アクター（精霊のデータ）をドロップ。",
       "npcOnly": "精霊としてリンクできるのは NPC アクターだけです。"
     },
+    "Pack": {
+      "samples": "サンプルアクター"
+    },
     "Help": {
       "title": "Sinless ヘルプ",
       "language": "ヘルプの言語",

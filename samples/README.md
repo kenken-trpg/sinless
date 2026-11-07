@@ -1,20 +1,26 @@
 # 公開サーバー体験用アクター / Public server sample actors
 
-Sinless 0.13.0 用の架空の動作確認データです。装備名・数値はテスト用で、公式データや作成ルールに準拠したプリジェネではありません。ルールブックの本文は含みません。
+Sinless 用の架空の動作確認データです。装備名・数値はテスト用で、公式データや作成ルールに準拠したプリジェネではありません。ルールブックの本文は含みません。
 
-Fictional test fixtures for Sinless 0.13.0, including embedded equipment. These are not official characters or rules-legal starting builds, and contain no rulebook text.
+Fictional test fixtures for Sinless, including embedded equipment. These are not official characters or rules-legal starting builds, and contain no rulebook text.
 
-## ダウンロードとインポート / Download and import
+## ワールドへの取り込み / Bringing them into a world
 
-配布 ZIP にこのフォルダーを同梱しています。ZIP を展開して `samples/actors/` の JSON を使用してください。システムをインストールしたサーバーでは、Foundry の公開 URL を基準に `systems/sinless/samples/actors/01-combat-character.json` などからも取得できます。サブパスを使うサーバーではそのパスの後ろに付けてください。
+システムにコンペンディウム「サンプルアクター」として同梱しています。GM がサイドバーのコンペンディウムタブで開き、使うアクターをアクターディレクトリへドラッグします。パックを右クリックして「全てをインポート」を選べば、6 体をまとめて取り込めます。取り込んだアクターはワールドのコピーなので、自由に変更して構いません。
+
+The system ships them as the **Sample actors** compendium. As GM, open it in the Compendium tab of the sidebar and drag the actors you want into the Actors directory, or right-click the pack and choose Import All to bring in all six. The imported actors are world copies, free to change.
+
+### JSON から読み込む場合 / From the JSON files
+
+同じアクターを、配布 ZIP の `samples/actors/` に JSON でも入れています。システムをインストールしたサーバーでは、Foundry の公開 URL を基準に `systems/sinless/samples/actors/01-combat-character.json` などからも取得できます。サブパスを使うサーバーではそのパスの後ろに付けてください。
 
 GM がアクターディレクトリで、対応する種類の空アクターを新規作成し、そのアクターの右クリックメニュー「データのインポート」から JSON を選びます。1 ファイルにつき 1 アクターです。既存のプレイ用アクターへのインポートはデータを置き換えるため、必ず体験用に新規作成してください。
 
 プレイヤーに操作してもらうキャラクターは、GM がアクターの権限設定で、そのユーザーを「所有者」にしてください。NPC は GM が操作します。JSON にユーザー ID や所有権は含めていません。
 
-The release ZIP includes this folder. Extract it and use the JSON files under `samples/actors/`. On an installed server, files are also available relative to the Foundry public URL, for example `systems/sinless/samples/actors/01-combat-character.json` (preserve any server URL prefix).
+The same actors are in the release ZIP as JSON under `samples/actors/`. On an installed server, files are also available relative to the Foundry public URL, for example `systems/sinless/samples/actors/01-combat-character.json` (preserve any server URL prefix). As GM, create a fresh actor of the matching type in the Actors directory, then use its context menu → Import Data and select one JSON per actor. Import replaces the destination actor's data, so use new demo actors.
 
-As GM, create a fresh actor of the matching type in the Actors directory, then use its context menu → Import Data and select one JSON per actor. Import replaces the destination actor's data, so use new demo actors. Grant each player Owner permission on their demo character; the GM controls the NPC. No user IDs or ownership grants are included.
+Grant each player Owner permission on their demo character; the GM controls the NPC. No user IDs or ownership grants are included.
 
 | JSON | 作成する種類 / Type | 試す内容 / Try |
 | --- | --- | --- |

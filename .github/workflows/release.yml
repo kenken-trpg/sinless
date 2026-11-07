@@ -18,6 +18,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - name: Install dev dependencies
+        run: npm ci
       - name: Unit tests
         run: npm test
       - name: Localization check (en / ja)

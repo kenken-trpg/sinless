@@ -13,6 +13,11 @@ try{
   assert.equal(result.invalid,false);assert.equal(result.items,JSON.parse(json).items.length);pass('import '+file,result);
   await page.waitForTimeout(300);await page.screenshot({path:out+'/'+file+'.png',fullPage:true});await page.evaluate(async id=>game.actors.get(id).sheet.close(),result.id);
  }
+ // The bundled compendium pack holds the same actors, in file order, and they import intact.
+ const files=readdirSync(root+'/samples/actors').filter(f=>f.endsWith('.json')).sort();
+ const expected=files.map(f=>{const j=JSON.parse(readFileSync(root+'/samples/actors/'+f,'utf8'));return {name:j.name,type:j.type,items:j.items.length};});
+ const packed=await page.evaluate(async()=>{const pack=game.packs.get('sinless.samples');if(!pack)return null;const docs=(await pack.getDocuments()).sort((a,b)=>a.sort-b.sort);const made=await Actor.createDocuments(docs.map(d=>game.actors.fromCompendium(d)));const out={label:pack.title,actors:made.map(a=>({name:a.name,type:a.type,items:a.items.size})),invalid:made.filter(a=>a.invalid).length,source:made.every(a=>a._stats.compendiumSource?.startsWith('Compendium.sinless.samples.Actor.'))};await Actor.deleteDocuments(made.map(a=>a.id));return out;});
+ assert.ok(packed,'the sinless.samples pack is loaded');assert.deepEqual(packed.actors.toSorted((a,b)=>a.name.localeCompare(b.name)),expected.toSorted((a,b)=>a.name.localeCompare(b.name)));assert.equal(packed.invalid,0);assert.equal(packed.source,true);pass('compendium pack matches samples/actors',packed);
  const setup=await page.evaluate(async()=>{const f=window.sampleReview;const [pc,mage,decker,npc,vehicle,brand]=f.actors.map(id=>game.actors.get(id));await vehicle.setVehicleController(pc);for(const a of [pc,mage,decker])await brand.addBrandMember(a);
   const scene=await Scene.create({name:'SAMPLE REVIEW '+Date.now(),width:1600,height:1000,grid:{size:100,type:1,distance:2,units:'m'},tokenVision:false});f.scenes.push(scene.id);
   const tokens=[];for(const [i,a] of [pc,mage,decker,npc,vehicle].entries()){const t=await a.getTokenDocument({x:100+i*200,y:200});tokens.push(t.toObject());}await scene.createEmbeddedDocuments('Token',tokens);await scene.view();return {scene:scene.id,controller:vehicle.system.controller,members:brand.system.members,zoetic:mage.system.zoetic.value,mcp:decker.system.grid.mcp.max};});

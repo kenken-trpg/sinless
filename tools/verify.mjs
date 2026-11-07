@@ -17,7 +17,7 @@ const SCRIPTS = {
   player: { script: `${dir}/current/extra.mjs`, args: [], about: "player view in a second browser, combat flow" },
   batch: { script: `${dir}/current/batch.mjs`, args: [], about: "the nine feature scripts in original/ with fixtures" },
   magic: { script: `${dir}/current/magic-review.mjs`, args: [], about: "sustained spells, wards, spirits, resource saving" },
-  samples: { script: `${dir}/sample-actors/initial-workflow.mjs`, args: [], about: "import the bundled sample actors and run the main tests" },
+  samples: { script: `${dir}/sample-actors/initial-workflow.mjs`, args: [], about: "import the sample actors (JSON and the compendium pack) and run the main tests" },
   permissions: { script: "docs/verification/2026-11-07/permissions.mjs", args: [], about: "a player acting on documents someone else owns" },
   "help-window": { script: "docs/verification/2026-11-07/help.mjs", args: [], about: "help window, languages, journal import and update" },
   "sheet-actions": { script: "docs/verification/2026-11-07/sheet-actions.mjs", args: [], about: "every kind of actor sheet button: rolls, boxes, item rows, confirmations" }

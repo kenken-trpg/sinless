@@ -9,9 +9,14 @@
     "check:i18n": "node tools/check-i18n.mjs",
     "lint:syntax": "node tools/check-syntax.mjs",
     "build": "node tools/build.mjs",
+    "build:packs": "node tools/packs.mjs",
     "bump": "node tools/bump.mjs",
     "verify": "node tools/verify.mjs",
     "check": "npm test && npm run check:i18n && npm run lint:syntax"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^3.0.5",
+    "classic-level": "^3.0.0"
+  }
 }

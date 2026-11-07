@@ -116,22 +116,25 @@ English: see [README.md](README.md).
 
 ## 公開サーバーでの体験用データ
 
-戦闘・魔法・デッキングのキャラクター、訓練用 NPC、乗り物、ブランドのアクター JSON を配布 ZIP に同梱しています。
-[サンプル一覧とインポート・確認手順](samples/README.md)に従って、GM が新規アクターへ読み込み、プレイヤーに所有権を付与してください。装備を含む架空の動作確認データです。
+コンペンディウム「サンプルアクター」に、戦闘・魔法・デッキングのキャラクター、訓練用 NPC、乗り物、ブランドを装備ごと同梱しています。
+GM がコンペンディウムタブで開いてアクターをワールドへドラッグし(パックの右クリック「全てをインポート」でまとめて取り込むこともできます)、プレイヤーに所有権を付与してください。
+同じアクターは配布 ZIP の `samples/actors/` にも JSON で入っています。[サンプル一覧と確認手順](samples/README.md)を参照してください。架空の動作確認データです。
 
 ## 開発
 
-ビルド不要です（Foundry が ES モジュールを直接読み込みます）。
+Foundry が ES モジュールを直接読み込みます。ビルドが要るのはコンペンディウムのパックだけで、JSON の元データから Git の管理外の `packs/` フォルダーに書き出します。
 
 ```sh
 # Foundry のデータフォルダーにリンクする
 ln -s "$PWD" "<FoundryData>/Data/systems/sinless"
+npm ci               # 開発用の依存(パックを書く Foundry CLI)
+npm run build:packs  # samples/actors から packs/samples を作る(先にワールドを終了する)
 
 npm test             # ルールの単体テスト＋i18n チェック
 npm run check:i18n   # 言語ファイルのキー・プレースホルダ整合性
 npm run lint:syntax  # 全モジュールと JSON の構文チェック
 npm run check        # 上の 3 つをまとめて実行
-npm run build        # dist/sinless.zip を作成
+npm run build        # dist/sinless.zip を作成(パックを含む)
 npm run verify -- list  # 起動中の Foundry に対する画面検証(CI には含まない)
 ```
 

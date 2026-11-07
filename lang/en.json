@@ -1634,6 +1634,9 @@
       "dropHint": "Drop an NPC actor here (the spirit's stat block).",
       "npcOnly": "Only NPC actors can be linked as spirits."
     },
+    "Pack": {
+      "samples": "Sample actors"
+    },
     "Help": {
       "title": "Sinless Help",
       "language": "Help language",
