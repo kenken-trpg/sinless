@@ -39,6 +39,8 @@
     "ItemCreate": "Create",
     "ItemEdit": "Edit",
     "ItemDelete": "Delete",
+    "Decrease": "Decrease {name}",
+    "Increase": "Increase {name}",
     "Carry": "Carried weight {carried} / {capacity}",
     "ABF": "Argle Bargle Foofaraw!",
     "Attribute": {
@@ -1455,7 +1457,8 @@
       "relic": "Relic worth {n}ㄓ (takes a sector turn to sell).",
       "injuryReminder": "Permanent injury test due (overflow damage): {names}.",
       "fallout": "Fallout",
-      "shadowAlert": "Shadow test: alert +{n} (0 successes +2, 1 success +1, 2+ none; p.236)"
+      "shadowAlert": "Shadow test: alert +{n} (0 successes +2, 1 success +1, 2+ none; p.236)",
+      "removeResponse": "Remove response"
     },
     "Chase": {
       "title": "Car chase",
@@ -1536,7 +1539,8 @@
       "success": "success",
       "failure": "failure",
       "apply": "Apply to the chase",
-      "applied": "Applied to the chase."
+      "applied": "Applied to the chase.",
+      "removeEnemy": "Remove pursuer"
     },
     "Digital": {
       "attack": {

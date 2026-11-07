@@ -90,7 +90,7 @@
       <label data-tooltip="{{localize "SINLESS.Item.FIELDS.spiritActor.hint"}}">{{localize "SINLESS.Item.FIELDS.spiritActor.label"}}</label>
       <div class="form-fields">
         {{#if spiritActor}}<a class="content-link" data-action="openSpiritActor"><i class="fa-solid fa-ghost"></i> {{spiritActor.name}}</a>
-        <a data-action="clearSpiritActor" data-tooltip="{{localize "SINLESS.Spirit.clear"}}"><i class="fa-solid fa-xmark"></i></a>
+        <a data-action="clearSpiritActor" data-tooltip="{{localize "SINLESS.Spirit.clear"}}" aria-label="{{localize "SINLESS.Spirit.clear"}}"><i class="fa-solid fa-xmark"></i></a>
         {{else}}<span class="hint">{{localize "SINLESS.Spirit.dropHint"}}</span>{{/if}}
       </div>
     </div>

@@ -81,12 +81,21 @@ const sweep = (page, uuid, checkJapanese) => page.evaluate(async ({ uuid, checkJ
       const cjk = t.match(/[぀-ヿ㐀-鿿！-｠]+/g);
       if (cjk) res.bad.push(`${where} ja-text: ${[...new Set(cjk)].slice(0, 10).join(", ")}`);
     }
-    // unlocalized attributes (placeholders, titles, tooltips)
-    for (const el of sheet.element.querySelectorAll("[placeholder],[title],[data-tooltip]")) {
-      for (const a of ["placeholder", "title", "data-tooltip"]) {
+    // unlocalized attributes (placeholders, titles, tooltips, accessible names)
+    for (const el of sheet.element.querySelectorAll("[placeholder],[title],[data-tooltip],[aria-label]")) {
+      for (const a of ["placeholder", "title", "data-tooltip", "aria-label"]) {
         const v = el.getAttribute(a);
         if (v && /^SINLESS\.|undefined|\[object/.test(v)) res.bad.push(`${where} @${a}: ${v}`);
+        if (checkJapanese && v && /[぀-ヿ㐀-鿿！-｠]/.test(v)) res.bad.push(`${where} @${a} ja-text: ${v}`);
       }
+    }
+  };
+  // Icon-only controls need an accessible name. The window header and the rich-text editor
+  // belong to Foundry, not to the system's templates.
+  const unnamed = () => {
+    for (const el of sheet.element.querySelectorAll("button, a")) {
+      if (el.textContent.trim() || !el.querySelector("i") || el.closest(".window-header, prose-mirror")) continue;
+      if (!el.getAttribute("aria-label")?.trim()) res.bad.push(`icon without aria-label: ${el.dataset.action ?? el.outerHTML.slice(0, 80)}`);
     }
   };
   const tabs = sheet.constructor.TABS?.primary?.tabs?.map(t => t.id) ?? [null];
@@ -94,6 +103,7 @@ const sweep = (page, uuid, checkJapanese) => page.evaluate(async ({ uuid, checkJ
     if (tab) { sheet.changeTab(tab, "primary"); await sleep(250); }
     res.tabs[tab ?? "-"] = sheet.element.querySelector(`.tab[data-tab="${tab}"]`)?.innerText.trim().length ?? sheet.element.innerText.length;
     scan(tab ?? "sheet");
+    unnamed();
   }
   // Inputs: change each editable field and check the document follows.
   const names = [...new Set([...sheet.element.querySelectorAll("input[name], select[name], textarea[name]")]

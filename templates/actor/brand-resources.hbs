@@ -2,7 +2,7 @@
   <section class="item-group" data-type="resource">
     <header class="item-group-header">
       <h3>{{localize "TYPES.Item.resource"}}</h3>
-      {{#if editable}}<button type="button" class="icon" data-action="itemCreate" data-type="resource" data-tooltip="{{localize "SINLESS.ItemCreate"}}"><i class="fa-solid fa-plus"></i></button>{{/if}}
+      {{#if editable}}<button type="button" class="icon" data-action="itemCreate" data-type="resource" data-tooltip="{{localize "SINLESS.ItemCreate"}}" aria-label="{{localize "SINLESS.ItemCreate"}}"><i class="fa-solid fa-plus"></i></button>{{/if}}
     </header>
     <ol class="item-list resource-list">
       {{#each resources}}
@@ -20,14 +20,14 @@
         </div>
         <span class="resource-adjust">
           <span data-tooltip="{{localize "SINLESS.Resource.FIELDS.damage.label"}}"><i class="fa-solid fa-xmark"></i>
-            <a data-action="adjustItem" data-field="damage" data-delta="-1"><i class="fa-solid fa-minus"></i></a>{{item.system.damage}}<a data-action="adjustItem" data-field="damage" data-delta="1"><i class="fa-solid fa-plus"></i></a></span>
+            <a data-action="adjustItem" data-field="damage" data-delta="-1" data-tooltip="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Resource.FIELDS.damage.label")}}" aria-label="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Resource.FIELDS.damage.label")}}"><i class="fa-solid fa-minus"></i></a>{{item.system.damage}}<a data-action="adjustItem" data-field="damage" data-delta="1" data-tooltip="{{localize "SINLESS.Increase" name=(localize "SINLESS.Resource.FIELDS.damage.label")}}" aria-label="{{localize "SINLESS.Increase" name=(localize "SINLESS.Resource.FIELDS.damage.label")}}"><i class="fa-solid fa-plus"></i></a></span>
           <span data-tooltip="{{localize "SINLESS.Resource.FIELDS.influence.label"}}"><i class="fa-solid fa-slash"></i>
-            <a data-action="adjustItem" data-field="influence" data-delta="-1"><i class="fa-solid fa-minus"></i></a>{{item.system.influence}}<a data-action="adjustItem" data-field="influence" data-delta="1"><i class="fa-solid fa-plus"></i></a></span>
+            <a data-action="adjustItem" data-field="influence" data-delta="-1" data-tooltip="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Resource.FIELDS.influence.label")}}" aria-label="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Resource.FIELDS.influence.label")}}"><i class="fa-solid fa-minus"></i></a>{{item.system.influence}}<a data-action="adjustItem" data-field="influence" data-delta="1" data-tooltip="{{localize "SINLESS.Increase" name=(localize "SINLESS.Resource.FIELDS.influence.label")}}" aria-label="{{localize "SINLESS.Increase" name=(localize "SINLESS.Resource.FIELDS.influence.label")}}"><i class="fa-solid fa-plus"></i></a></span>
         </span>
         <span class="item-controls">
-          <a data-action="itemToggle" data-field="controlled" class="{{#if item.system.controlled}}active{{/if}}" data-tooltip="{{localize "SINLESS.Resource.FIELDS.controlled.label"}}"><i class="fa-solid fa-flag"></i></a>
-          <a data-action="itemEdit" data-tooltip="{{localize "SINLESS.ItemEdit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
-          {{#if @root.editable}}<a data-action="itemDelete" data-tooltip="{{localize "SINLESS.ItemDelete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
+          <a data-action="itemToggle" data-field="controlled" class="{{#if item.system.controlled}}active{{/if}}" data-tooltip="{{localize "SINLESS.Resource.FIELDS.controlled.label"}}" aria-label="{{localize "SINLESS.Resource.FIELDS.controlled.label"}}"><i class="fa-solid fa-flag"></i></a>
+          <a data-action="itemEdit" data-tooltip="{{localize "SINLESS.ItemEdit"}}" aria-label="{{localize "SINLESS.ItemEdit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
+          {{#if @root.editable}}<a data-action="itemDelete" data-tooltip="{{localize "SINLESS.ItemDelete"}}" aria-label="{{localize "SINLESS.ItemDelete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
         </span>
       </li>
       {{/each}}
