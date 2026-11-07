@@ -52,6 +52,53 @@ try {
   assert.deepEqual({ notFocusable: links.notFocusable, unnamed: links.unnamed }, { notFocusable: [], unnamed: [] });
   pass("action links are named, focusable buttons", { count: links.count });
 
+  // Compare real Tab and Shift+Tab with DOM order, including inputs on every tab.
+  const tabs = await page.evaluate(async uuid => [...(await fromUuid(uuid)).sheet.element.querySelectorAll('nav [data-tab]')].map(e => e.dataset.tab), f.ch);
+  for (const tab of tabs) {
+    const count = await page.evaluate(async ({uuid, tab}) => {
+      const sheet = (await fromUuid(uuid)).sheet;
+      sheet.changeTab(tab, 'primary');
+      const controls = [...sheet.element.querySelectorAll('a,button,input,select,textarea,summary,[contenteditable=true],[tabindex]')]
+        .filter(e => e.getClientRects().length && !e.disabled && e.tabIndex >= 0);
+      if (controls.some(e => e.tabIndex > 0)) throw new Error('positive tabindex');
+      controls.forEach((e, i) => e.dataset.verifyFocus = String(i));
+      controls[0].focus();
+      return controls.length;
+    }, {uuid:f.ch, tab});
+    for (let i = 1; i < count; i++) {
+      await page.keyboard.press('Tab');
+      assert.equal(await page.evaluate(() => document.activeElement.dataset.verifyFocus ?? document.activeElement.outerHTML.slice(0,250)), String(i), `${tab}: Tab ${i}`);
+    }
+    for (let i = count - 2; i >= 0; i--) {
+      await page.keyboard.press('Shift+Tab');
+      assert.equal(await page.evaluate(() => document.activeElement.dataset.verifyFocus ?? document.activeElement.outerHTML.slice(0,250)), String(i), `${tab}: Shift+Tab ${i}`);
+    }
+    await page.evaluate(() => document.querySelectorAll("[data-verify-focus]").forEach(e => e.removeAttribute("data-verify-focus")));
+    pass(`tab order ${tab}`, {controls:count});
+  }
+
+  // Dialog focus enters the dialog, and Escape restores the invoking control.
+  for (const [selector, closeAction] of [
+    ['[data-action=rollDefense]', null],
+    ['[data-action=rollDefense]', 'close'],
+    ['[data-action=payLifestyle]', null],
+    ['[data-action=payLifestyle]', 'no']
+  ]) {
+    assert.ok(await focus(selector, 'main'));
+    await settle();
+    assert.ok(await focus(selector));
+    await page.keyboard.press('Enter');
+    await settle();
+    assert.equal(await page.evaluate(() => !!document.activeElement.closest('dialog.application')), true);
+    if (closeAction) {
+      await page.evaluate(action => document.activeElement.closest('dialog.application').querySelector(`[data-action="${action}"]`).focus(), closeAction);
+      await page.keyboard.press('Enter');
+    } else await page.keyboard.press('Escape');
+    await settle();
+    assert.equal(await page.evaluate(async ({uuid,selector}) => document.activeElement === (await fromUuid(uuid)).sheet.element.querySelector(selector), {uuid:f.ch,selector}), true, `return to ${selector}`);
+    pass(`dialog focus ${selector} ${closeAction ?? 'Escape'}`, {restored:true});
+  }
+
   // Enter on a condition box fills the track to it; focus stays on that box.
   const box = n => `[data-action=setCondition][data-track=physical][data-n='${n}']`;
   assert.ok(await focus(box(2)), "box 2 takes focus");

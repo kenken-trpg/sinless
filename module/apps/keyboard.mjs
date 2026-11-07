@@ -10,6 +10,8 @@ export const CLICKABLE = "a[data-action]:not([href])";
 
 /** Where to put focus back after the next render: the application and the control's selector. */
 let pending = null;
+let lastFocused = null;
+const dialogOrigins = new Map();
 
 /** Make the action links in a rendered Sinless window focusable buttons. */
 export function makeFocusable(element) {
@@ -25,9 +27,10 @@ export function controlSelector(el) {
     .filter(a => a.name.startsWith("data-") && !a.name.startsWith("data-tooltip"))
     .map(a => `[${a.name}="${CSS.escape(a.value)}"]`).join("");
   const row = el.parentElement?.closest("[data-item-id], [data-effect-id]");
-  if (!row) return `a${own}`;
+  const tag = el.localName;
+  if (!row) return `${tag}${own}`;
   const key = row.hasAttribute("data-item-id") ? "data-item-id" : "data-effect-id";
-  return `[${key}="${CSS.escape(row.getAttribute(key))}"] a${own}`;
+  return `[${key}="${CSS.escape(row.getAttribute(key))}"] ${tag}${own}`;
 }
 
 function onKeydown(event) {
@@ -43,7 +46,29 @@ function onKeydown(event) {
 
 /** Focus moving to another window (a dialog the click opened) cancels the pending return. */
 function onFocusIn(event) {
+  const target = event.target;
+  const dialog = target.closest?.("dialog.application");
+  if (dialog && !dialogOrigins.has(dialog.id) && lastFocused?.isConnected
+      && !dialog.contains(lastFocused) && lastFocused.closest(".application.sinless, dialog.application")) {
+    dialogOrigins.set(dialog.id, { root: dialog, origin: lastFocused,
+      appId: lastFocused.closest('.application')?.id,
+      selector: lastFocused.matches('[data-action]') ? controlSelector(lastFocused) : null });
+  }
+  lastFocused = target;
   if (pending && !event.target.closest?.(`#${CSS.escape(pending.appId)}`)) pending = null;
+}
+
+function onClose(app) {
+  const entry = dialogOrigins.get(app.id);
+  if (!entry) return;
+  const { root, origin, appId, selector } = entry;
+  dialogOrigins.delete(app.id);
+  requestAnimationFrame(() => {
+    const active = document.activeElement;
+    const target = origin.isConnected ? origin : selector && document.getElementById(appId)?.querySelector(selector);
+    if (target && (active === document.body || !active || root.contains(active)
+        || active.closest?.('.application')?.id === appId)) target.focus();
+  });
 }
 
 function onRender(app, element) {
@@ -59,6 +84,11 @@ function onRender(app, element) {
 
 export function registerKeyboard() {
   Hooks.on("renderApplicationV2", onRender);
+  Hooks.on("closeApplicationV2", onClose);
   document.addEventListener("keydown", onKeydown);
   document.addEventListener("focusin", onFocusIn);
+  // A link used as a button inside a label must not activate the label's input.
+  document.addEventListener("click", event => {
+    if (event.target.closest?.(CLICKABLE)?.closest('.application.sinless')) event.preventDefault();
+  });
 }
