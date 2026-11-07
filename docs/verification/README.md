@@ -48,7 +48,7 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 | `2026-11-06/current/magic-review.mjs` | `magic` | 魔法拡張(持続呪文、結界、精霊)とリソース保存 |
 | `2026-11-06/sample-actors/initial-workflow.mjs` | `samples` | 同梱サンプルアクターの読み込みと主要な判定 |
 | `2026-11-06/current/extra.mjs` | `player` | プレイヤー視点(別ブラウザー)と戦闘の進行 |
-| `2026-11-06/current/batch.mjs` | `batch` | `original/` の機能別スクリプト 9 本を順に実行。前提データは `current/fixtures.mjs` が作る |
+| `2026-11-06/current/batch.mjs` | `batch` | `original/` の機能別スクリプト 9 本を順に実行。前提データは `current/fixtures.mjs` が作り、出力を `current/batch-checks.mjs` で判定する |
 | `2026-11-06/current/sinless-verify.mjs <mode> <arg>` | — | `original/` の旧スクリプトを補正して実行(diagnose / sweep / legacy / batch / extra) |
 
 各スクリプトは作成したテスト用データを終了時に削除する。

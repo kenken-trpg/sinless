@@ -18,47 +18,165 @@
     {
       "name": "shoot",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "setup",
+          "burst: dice",
+          "burst: spec, defend button, primed",
+          "dual wield + extra target: dice",
+          "second shot gains recoil",
+          "third shot: dice, recoil, not jammed",
+          "stabilize clears recoil",
+          "skill test: specialization unchecked",
+          "skill test: dice, off-spec note",
+          "npc weapon",
+          "npc in darkness: 8 − 4 dice",
+          "npc: no recoil section"
+        ],
+        "failed": []
+      }
     },
     {
       "name": "cond",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "setup",
+          "overload dialog: brawn − penalty",
+          "failed overload: unconscious, bleeding out in 3",
+          "new round counts bleed-out down",
+          "guard gets a whispered overload prompt",
+          "guard prompt threshold",
+          "bleed-out reaches death",
+          "damage past the whole track kills",
+          "permanent injury threshold",
+          "organ damage lowers one attribute maximum by 1"
+        ],
+        "failed": []
+      }
     },
     {
       "name": "adv",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "award 14 on top of 8",
+          "firearms 4 → 5 costs 4",
+          "buy firearms",
+          "first boon choices",
+          "first boon",
+          "second boon choices",
+          "resilience boon",
+          "resilience adds a kismet die",
+          "undo the resilience boon"
+        ],
+        "failed": []
+      }
     },
     {
       "name": "op",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "operation tool and brand",
+          "typed responses saved",
+          "alert 26 triggers one GM response card",
+          "shadow test raises alert by 0–2",
+          "alert 51 sets heat 2",
+          "heat 4 schedules HTR in 2d6 rounds",
+          "heat 4 posts two cards",
+          "fallout card",
+          "ending resets alert, heat and HTR",
+          "fallout adds sector heat +2"
+        ],
+        "failed": []
+      }
     },
     {
       "name": "life",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "sector turn pays lifestyles",
+          "pay from the sheet",
+          "buy 2 months: months, zuzu"
+        ],
+        "failed": []
+      }
     },
     {
       "name": "chase",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "start: two paths of 6, two pursuers",
+          "two flips: turn 3, path A drew 2",
+          "five chase actions on the vehicle sheet",
+          "switch threshold",
+          "switch makes path B primary",
+          "ground pursuer falls out, flyer stays",
+          "wrecking the last pursuer ends the chase"
+        ],
+        "failed": []
+      }
     },
     {
       "name": "digital",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "setup",
+          "de-rez crashes the BEE",
+          "acid burn strips hardening",
+          "sting deals physical damage to the hot-seated decker",
+          "shrink: influence 10 m − 2 m per success",
+          "electric strike: BEE stays crashed",
+          "sensor dodge doubled (2 × 2)",
+          "npc decker brute-force card"
+        ],
+        "failed": []
+      }
     },
     {
       "name": "magic",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "setup: zoetic and old spell resistance",
+          "powerbolt at force 4",
+          "drain dialog: 5, lethal, soak disabled",
+          "damage taken = drain − channelled successes",
+          "spirit invocation drain is lethal"
+        ],
+        "failed": []
+      }
     },
     {
       "name": "magic9",
       "completed": true,
-      "errors": []
+      "errors": [],
+      "checks": {
+        "passed": [
+          "ley line",
+          "hold: 4 + 6 bonus dice",
+          "sustained spell on the guard",
+          "needs at least 1 success to shake off",
+          "resist dialog: resolve pool",
+          "resisting accumulates or ends the spell",
+          "summon: 4 + 8 bonus dice",
+          "spirit token placed with force 3",
+          "spirit dodge vs physical: 2 + force 3"
+        ],
+        "failed": []
+      }
     }
   ],
   "cleanup": {
