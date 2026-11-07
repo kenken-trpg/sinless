@@ -46,7 +46,7 @@ Foundry がソースを直接読み込む。開発時のバンドルは不要で
 - Actor 種別: character / npc / brand / vehicle。
 - シート検証では NPC を通常 NPC / ネットワーク実体 / 精霊に分けて扱うため、アクターの検証パターンは 6 個。
 - Item 種別: weapon / armor / gear / implant / power / ritual / knowledge / asset / resource / deck / software / vcr。
-- ルール計算は module/helpers/、行動・保存処理の中心は module/documents/actor.mjs。
+- ルール計算は module/helpers/、行動・保存処理の中心は module/documents/actor.mjs(2026-11-07 に分野ごとの mixin として module/documents/actor/ へ分割した)。
 - 判定は actor → ダイアログ → planTest → performTest → ChatMessage の flags.sinless → カードの後続操作、の流れ。
 
 インストール用マニフェスト:

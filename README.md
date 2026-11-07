@@ -205,6 +205,6 @@ To add a language, drop `lang/<code>.json` and register it in `system.json`.
 | `module/helpers/rules.mjs` | Pure rule logic (no Foundry globals), unit-tested |
 | `module/config.mjs` | Skills, pools, etiquettes etc. as i18n keys |
 | `module/data/` | TypeDataModels for actors and items |
-| `module/documents/` | Actor (tests) and Combatant (initiative) |
+| `module/documents/` | Actor (shared test plumbing in `actor.mjs`, one mixin per rules area in `actor/`) and Combatant (initiative) |
 | `module/sheets/`, `templates/` | ApplicationV2 sheets and Handlebars templates |
 | `module/dice/` | Rolling and chat cards |
