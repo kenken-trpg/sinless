@@ -13,7 +13,7 @@ const dir = "docs/verification/2026-11-06";
 /** name → script and arguments; "{out}" is the run's output folder. */
 const SCRIPTS = {
   "sweep-ja": { script: `${dir}/current/sweep-fixed.mjs`, args: ["{out}", "ja"], about: "every sheet, tab and editable field (Japanese)" },
-  "sweep-en": { script: `${dir}/current/sweep-fixed-en.mjs`, args: ["{out}", "en"], about: "every sheet, tab and editable field (English, flags Japanese text)" },
+  "sweep-en": { script: `${dir}/current/sweep-fixed.mjs`, args: ["{out}", "en"], about: "every sheet, tab and editable field (English, flags Japanese text)" },
   player: { script: `${dir}/current/extra.mjs`, args: [], about: "player view in a second browser, combat flow" },
   batch: { script: `${dir}/current/batch.mjs`, args: [], about: "the nine feature scripts in original/ with fixtures" },
   magic: { script: `${dir}/current/magic-review.mjs`, args: [], about: "sustained spells, wards, spirits, resource saving" },

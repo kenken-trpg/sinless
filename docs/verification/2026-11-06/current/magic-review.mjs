@@ -73,6 +73,8 @@ try {
  await player.fill('.sinless-damage-dialog input[name=resist]','1');
  await player.click('.sinless-damage-dialog button[data-action=apply]');
  await player.evaluate(()=>window.reviewApply);
+ // The first dialog closes with an animation; wait until it leaves before counting dialogs.
+ await player.waitForSelector('.sinless-damage-dialog',{state:'detached'});
  const applied=await player.evaluate(({id,target})=>{const a=game.actors.get(target);return {owner:game.messages.get(id).isOwner,effects:a.effects.map(e=>e.flags.sinless?.sustained),receipts:game.messages.filter(m=>m.flags.sinless?.sustainedApplication?.message==='ChatMessage.'+id).length};},{id:cast,target:f.target});
  assert.equal(applied.owner,false);assert.equal(applied.effects.length,1);assert.equal(applied.effects[0].needed,3);assert.equal(applied.receipts,1);pass('player applies GM spell without message ownership',applied);
  await player.evaluate(async ({id,target})=>{const {applySustained}=await import('/systems/sinless/module/apps/spell-effects.mjs');await applySustained(game.messages.get(id),'Actor.'+target);},{id:cast,target:f.target});

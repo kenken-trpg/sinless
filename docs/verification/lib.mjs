@@ -17,18 +17,35 @@ export async function loadChromium() {
   }
 }
 
-/** Join the running world as a user (default Gamemaster) and wait for game.ready. */
-export async function joinGM({ user = "Gamemaster", viewport = { width: 1600, height: 1100 } } = {}) {
-  const chromium = await loadChromium();
-  const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport });
+// Headless Chromium draws WebGL in software (SwiftShader). The game canvas then keeps the page
+// busy, and every server reply waits about 300 ms for it. On macOS, draw with the GPU (Metal).
+const GPU_ARGS = process.platform === "darwin" ? ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist"] : [];
+
+/** Launch headless Chromium, with the GPU where it is available. */
+export async function launchBrowser() {
+  return (await loadChromium()).launch({ args: GPU_ARGS });
+}
+
+/**
+ * Join the running world as a user (default Gamemaster) and wait for game.ready.
+ * Pass `browser` to add another session (its own context) to a browser already launched.
+ * `noCanvas` turns off the game canvas for this session, for scripts that need no tokens.
+ */
+export async function joinGM({ user = "Gamemaster", viewport = { width: 1600, height: 1100 }, browser = null, noCanvas = false } = {}) {
+  const owned = !browser;
+  browser ??= await launchBrowser();
+  // Foundry keys the session on a cookie, so each session needs its own context.
+  const context = await browser.newContext({ viewport });
+  // A client setting, kept in this context's own localStorage.
+  if (noCanvas) await context.addInitScript(() => localStorage.setItem("core.noCanvas", "true"));
+  const page = await context.newPage();
   const logs = [];
   page.on("console", m => { if (["error", "warning"].includes(m.type())) logs.push(`${m.type()}: ${m.text().slice(0, 400)}`); });
   page.on("pageerror", e => logs.push(`pageerror: ${e.message}`));
   await page.goto(`${FOUNDRY_URL}/join`);
   const select = await page.waitForSelector("select[name=userid]", { timeout: 15000 }).catch(() => null);
   if (!select) {
-    await browser.close();
+    await (owned ? browser.close() : page.context().close());
     throw new Error(`No world is active at ${FOUNDRY_URL}. Launch one first (launchWorld).`);
   }
   await page.selectOption("select[name=userid]", { label: user });
