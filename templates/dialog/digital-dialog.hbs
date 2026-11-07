@@ -11,7 +11,7 @@
       <label data-tooltip="{{localize "SINLESS.Digital.defenseHint"}}">{{localize "SINLESS.Digital.defense"}}</label>
       <div class="with-button">
         <input type="number" name="defense" value="0" min="0">
-        {{#if canRoll}}<button type="button" data-sinless-roll="dodge" data-tooltip="{{localize "SINLESS.Damage.rollDodge"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+        {{#if canRoll}}<button type="button" data-sinless-roll="dodge" data-tooltip="{{localize "SINLESS.Damage.rollDodge"}}" aria-label="{{localize "SINLESS.Damage.rollDodge"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
       </div>
     </div>
     {{/if}}
@@ -55,7 +55,7 @@
       <label>{{localize "SINLESS.Damage.soakSuccesses"}}</label>
       <div class="with-button">
         <input type="number" name="soak" value="0" min="0">
-        {{#if canRoll}}<button type="button" data-sinless-roll="soak" data-tooltip="{{localize "SINLESS.Damage.rollSoak"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+        {{#if canRoll}}<button type="button" data-sinless-roll="soak" data-tooltip="{{localize "SINLESS.Damage.rollSoak"}}" aria-label="{{localize "SINLESS.Damage.rollSoak"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
       </div>
     </div>
     <p class="notes"><span>{{localize "SINLESS.Damage.track"}}: {{#if entity}}{{localize "SINLESS.Grid.cohesion"}}{{else}}{{localize trackLabel}}{{/if}}</span></p>

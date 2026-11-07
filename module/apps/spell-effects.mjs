@@ -45,12 +45,13 @@ export async function applySustained(message, uuid) {
   }
   const hits = summarize(state).successes;
   const poolLabel = game.i18n.localize(SINLESS.POOLS[spell.resistPool] ?? "");
+  const resistLabel = foundry.utils.escapeHTML(game.i18n.format("SINLESS.Magic.resist", { pool: poolLabel }));
   const content = `<div class="sinless-damage">
     <p class="notes"><span>${foundry.utils.escapeHTML(spell.label)}</span><span>${foundry.utils.escapeHTML(actor.name)}</span></p>
     <div class="form-group"><label>${game.i18n.localize("SINLESS.Damage.hits")}</label><input type="number" name="hits" value="${hits}" min="0"></div>
-    <div class="form-group"><label>${foundry.utils.escapeHTML(game.i18n.format("SINLESS.Magic.resist", { pool: poolLabel }))}</label>
+    <div class="form-group"><label>${resistLabel}</label>
       <div class="with-button"><input type="number" name="resist" value="0" min="0">
-      <button type="button" data-sinless-roll="resist"><i class="fa-solid fa-dice"></i></button></div></div>
+      <button type="button" data-sinless-roll="resist" data-tooltip="${resistLabel}" aria-label="${resistLabel}"><i class="fa-solid fa-dice"></i></button></div></div>
     <p class="sinless-damage-preview"></p></div>`;
   const read = form => {
     const data = new foundry.applications.ux.FormDataExtended(form).object;

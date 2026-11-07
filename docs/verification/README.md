@@ -47,7 +47,7 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 
 | スクリプト | `npm run verify` | 内容 |
 |---|---|---|
-| `2026-11-06/current/sweep-fixed.mjs <outdir> ja` | `sweep-ja` | 全アクター・アイテムのシート、全タブ、編集可能な全入力欄の総当たり |
+| `2026-11-06/current/sweep-fixed.mjs <outdir> ja` | `sweep-ja` | 全アクター・アイテムのシート、全タブ、編集可能な全入力欄の総当たり。アイコンだけのボタンに `aria-label` がなければ問題として数える |
 | `2026-11-06/current/sweep-fixed.mjs <outdir> en` | `sweep-en` | 同じ総当たりを英語で。日本語の文字が残っていれば問題として数える |
 | `2026-11-06/current/magic-review.mjs` | `magic` | 魔法拡張(持続呪文、結界、精霊)とリソース保存 |
 | `2026-11-06/sample-actors/initial-workflow.mjs` | `samples` | 同梱サンプルアクターの読み込み(JSON とコンペンディウム「サンプルアクター」の両方。パックの中身が `samples/actors` と一致すること)と主要な判定 |

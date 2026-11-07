@@ -2,7 +2,7 @@
   <header class="item-group-header">
     <h3>{{localize "SINLESS.Effect.title"}}</h3>
     {{#if @root.editable}}
-    <button type="button" class="icon" data-action="effectCreate" data-tooltip="{{localize "SINLESS.Effect.create"}}"><i class="fa-solid fa-plus"></i></button>
+    <button type="button" class="icon" data-action="effectCreate" data-tooltip="{{localize "SINLESS.Effect.create"}}" aria-label="{{localize "SINLESS.Effect.create"}}"><i class="fa-solid fa-plus"></i></button>
     {{/if}}
   </header>
   <ol class="item-list">
@@ -15,12 +15,12 @@
         {{#if sustained}}{{localize "SINLESS.Sustained.summary" n=sustained.accumulated needed=sustained.needed}}{{/if}}
       </span>
       <span class="item-controls">
-        {{#if sustained}}<a data-action="resistSustained" data-tooltip="{{localize "SINLESS.Sustained.resistHint"}}"><i class="fa-solid fa-hand-sparkles"></i></a>{{/if}}
+        {{#if sustained}}<a data-action="resistSustained" data-tooltip="{{localize "SINLESS.Sustained.resistHint"}}" aria-label="{{localize "SINLESS.Sustained.resistHint"}}"><i class="fa-solid fa-hand-sparkles"></i></a>{{/if}}
         {{#if @root.editable}}
-        <a data-action="effectToggle" class="{{#unless disabled}}active{{/unless}}" data-tooltip="{{localize "SINLESS.Effect.toggle"}}"><i class="fa-solid fa-power-off"></i></a>
+        <a data-action="effectToggle" class="{{#unless disabled}}active{{/unless}}" data-tooltip="{{localize "SINLESS.Effect.toggle"}}" aria-label="{{localize "SINLESS.Effect.toggle"}}"><i class="fa-solid fa-power-off"></i></a>
         {{/if}}
-        <a data-action="effectEdit" data-tooltip="{{localize "SINLESS.Effect.edit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
-        {{#if @root.editable}}<a data-action="effectDelete" data-tooltip="{{localize "SINLESS.Effect.delete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
+        <a data-action="effectEdit" data-tooltip="{{localize "SINLESS.Effect.edit"}}" aria-label="{{localize "SINLESS.Effect.edit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
+        {{#if @root.editable}}<a data-action="effectDelete" data-tooltip="{{localize "SINLESS.Effect.delete"}}" aria-label="{{localize "SINLESS.Effect.delete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
       </span>
     </li>
     {{else}}

@@ -39,6 +39,8 @@
     "ItemCreate": "作成",
     "ItemEdit": "編集",
     "ItemDelete": "削除",
+    "Decrease": "{name}を減らす",
+    "Increase": "{name}を増やす",
     "Carry": "携行重量 {carried} / {capacity}",
     "ABF": "アーグル・バーグル・フーファロウ！",
     "Attribute": {
@@ -1455,7 +1457,8 @@
       "relic": "{n}ㄓ 相当の遺物（売るのにセクター・ターンが 1 回必要）。",
       "injuryReminder": "後遺症の判定が必要（超過ダメージあり）：{names}。",
       "fallout": "フォールアウト",
-      "shadowAlert": "隠密判定：アラート +{n}（0 成功で +2、1 成功で +1、2 成功以上で上がらない。p.236）"
+      "shadowAlert": "隠密判定：アラート +{n}（0 成功で +2、1 成功で +1、2 成功以上で上がらない。p.236）",
+      "removeResponse": "対応を削除"
     },
     "Chase": {
       "title": "カーチェイス",
@@ -1536,7 +1539,8 @@
       "success": "成功",
       "failure": "失敗",
       "apply": "チェイスに反映",
-      "applied": "チェイスに反映済み。"
+      "applied": "チェイスに反映済み。",
+      "removeEnemy": "追手を外す"
     },
     "Digital": {
       "attack": {

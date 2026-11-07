@@ -14,9 +14,9 @@
     {{#if (eq system.kind "vehicle")}}
     <div class="inertia" data-tooltip="{{localize "SINLESS.Vehicle.FIELDS.inertia.hint"}}">
       <span class="label">{{localize "SINLESS.Vehicle.FIELDS.inertia.label"}}</span>
-      <a data-action="adjustInertia" data-delta="-1"><i class="fa-solid fa-minus"></i></a>
+      <a data-action="adjustInertia" data-delta="-1" data-tooltip="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Vehicle.FIELDS.inertia.label")}}" aria-label="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Vehicle.FIELDS.inertia.label")}}"><i class="fa-solid fa-minus"></i></a>
       <strong>{{system.inertia}}</strong>
-      <a data-action="adjustInertia" data-delta="1"><i class="fa-solid fa-plus"></i></a>
+      <a data-action="adjustInertia" data-delta="1" data-tooltip="{{localize "SINLESS.Increase" name=(localize "SINLESS.Vehicle.FIELDS.inertia.label")}}" aria-label="{{localize "SINLESS.Increase" name=(localize "SINLESS.Vehicle.FIELDS.inertia.label")}}"><i class="fa-solid fa-plus"></i></a>
     </div>
     {{/if}}
   </div>
@@ -57,7 +57,7 @@
       <span class="{{#if control.downgraded}}warn{{/if}}" data-tooltip="{{localize "SINLESS.Vehicle.controlHint"}}">
         {{localize control.label}}{{#if control.penalty}} −{{control.penalty}}{{/if}}
       </span>
-      {{#if editable}}<a data-action="removeController" data-tooltip="{{localize "SINLESS.Vehicle.removeController"}}"><i class="fa-solid fa-link-slash"></i></a>{{/if}}
+      {{#if editable}}<a data-action="removeController" data-tooltip="{{localize "SINLESS.Vehicle.removeController"}}" aria-label="{{localize "SINLESS.Vehicle.removeController"}}"><i class="fa-solid fa-link-slash"></i></a>{{/if}}
     </div>
     <div class="rig-actions">
       <button type="button" data-action="rollVehicleTest" data-kind="maneuver"><i class="fa-solid fa-route"></i> {{localize "SINLESS.Rig.action.maneuver"}} ({{localize skillLabel}})</button>

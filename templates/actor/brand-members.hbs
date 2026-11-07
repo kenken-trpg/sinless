@@ -8,7 +8,7 @@
       <a class="item-name" data-action="openMember">{{name}}</a>
       <span class="item-summary">{{#unless missing}}{{localize "SINLESS.Character.FIELDS.ghost.label"}} {{ghost}}{{/unless}}</span>
       <span class="item-controls">
-        {{#if @root.editable}}<a data-action="removeMember" data-tooltip="{{localize "SINLESS.Brand.removeMember"}}"><i class="fa-solid fa-user-minus"></i></a>{{/if}}
+        {{#if @root.editable}}<a data-action="removeMember" data-tooltip="{{localize "SINLESS.Brand.removeMember"}}" aria-label="{{localize "SINLESS.Brand.removeMember"}}"><i class="fa-solid fa-user-minus"></i></a>{{/if}}
       </span>
     </li>
     {{/each}}

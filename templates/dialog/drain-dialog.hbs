@@ -12,14 +12,14 @@
     <label>{{localize "SINLESS.Magic.channelSuccesses"}}</label>
     <div class="with-button">
       <input type="number" name="channel" value="0" min="0">
-      {{#if canRoll}}<button type="button" data-sinless-roll="channel" data-tooltip="{{localize "SINLESS.Magic.rollChannel"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+      {{#if canRoll}}<button type="button" data-sinless-roll="channel" data-tooltip="{{localize "SINLESS.Magic.rollChannel"}}" aria-label="{{localize "SINLESS.Magic.rollChannel"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
     </div>
   </div>
   <div class="form-group">
     <label>{{localize "SINLESS.Damage.soakSuccesses"}}</label>
     <div class="with-button">
       <input type="number" name="soak" value="0" min="0">
-      {{#if canRoll}}<button type="button" data-sinless-roll="soak" data-tooltip="{{localize "SINLESS.Damage.rollSoak"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
+      {{#if canRoll}}<button type="button" data-sinless-roll="soak" data-tooltip="{{localize "SINLESS.Damage.rollSoak"}}" aria-label="{{localize "SINLESS.Damage.rollSoak"}}"><i class="fa-solid fa-dice"></i></button>{{/if}}
     </div>
   </div>
   <p class="sinless-damage-preview sinless-drain-preview"></p>

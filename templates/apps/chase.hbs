@@ -5,8 +5,8 @@
     <span class="legs" data-tooltip="{{localize "SINLESS.Chase.legsHint"}}">
       {{localize "SINLESS.Chase.legs"}}
       {{#each legMarks}}<i class="fa-{{#if done}}solid{{else}}regular{{/if}} fa-circle"></i>{{/each}}
-      <a data-action="leg" data-delta="-1"><i class="fa-solid fa-minus"></i></a>
-      <a data-action="leg" data-delta="1"><i class="fa-solid fa-plus"></i></a>
+      <a data-action="leg" data-delta="-1" data-tooltip="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Chase.legs")}}" aria-label="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Chase.legs")}}"><i class="fa-solid fa-minus"></i></a>
+      <a data-action="leg" data-delta="1" data-tooltip="{{localize "SINLESS.Increase" name=(localize "SINLESS.Chase.legs")}}" aria-label="{{localize "SINLESS.Increase" name=(localize "SINLESS.Chase.legs")}}"><i class="fa-solid fa-plus"></i></a>
     </span>
   </header>
   {{#if outcomeLabel}}<p class="outcome">{{localize outcomeLabel}}</p>{{/if}}
@@ -29,15 +29,15 @@
       <div class="path{{#if primary}} primary{{/if}}">
         <header>
           <strong>{{localize "SINLESS.Chase.path" name=name}}</strong>
-          {{#if primary}}<span class="badge">{{localize "SINLESS.Chase.primary"}}</span>{{else}}<a data-action="primary" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.makePrimary"}}"><i class="fa-solid fa-arrows-turn-to-dots"></i></a>{{/if}}
+          {{#if primary}}<span class="badge">{{localize "SINLESS.Chase.primary"}}</span>{{else}}<a data-action="primary" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.makePrimary"}}" aria-label="{{localize "SINLESS.Chase.makePrimary"}}"><i class="fa-solid fa-arrows-turn-to-dots"></i></a>{{/if}}
         </header>
         <p class="count">{{localize "SINLESS.Chase.cardsLeft" n=count}}</p>
         <div class="top-card{{#if top.revealed}} revealed{{/if}}{{#if top.leg}} leg{{/if}}">
           {{#if top}}{{#if top.revealed}}{{#if top.leg}}<strong>{{localize "SINLESS.Chase.legCard"}}</strong> {{/if}}{{top.text}}{{else}}<i class="fa-solid fa-question"></i>{{/if}}{{else}}—{{/if}}
         </div>
         <div class="path-actions">
-          <a data-action="reveal" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.reveal"}}"><i class="fa-solid fa-eye"></i></a>
-          <a data-action="burn" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.burn"}}"><i class="fa-solid fa-fire"></i></a>
+          <a data-action="reveal" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.reveal"}}" aria-label="{{localize "SINLESS.Chase.reveal"}}"><i class="fa-solid fa-eye"></i></a>
+          <a data-action="burn" data-path="{{index}}" data-tooltip="{{localize "SINLESS.Chase.burn"}}" aria-label="{{localize "SINLESS.Chase.burn"}}"><i class="fa-solid fa-fire"></i></a>
         </div>
       </div>
       {{/each}}
@@ -53,12 +53,12 @@
       {{#each enemyViews}}
       <li class="{{#if wrecked}}wrecked{{/if}}{{#if (eq range "out")}} out{{/if}}">
         <a class="name" data-action="openActor" data-uuid="{{uuid}}">{{name}}</a>
-        <a data-action="moveEnemy" data-index="{{index}}" data-delta="-1" data-tooltip="{{localize "SINLESS.Chase.closeIn"}}"><i class="fa-solid fa-angles-left"></i></a>
+        <a data-action="moveEnemy" data-index="{{index}}" data-delta="-1" data-tooltip="{{localize "SINLESS.Chase.closeIn"}}" aria-label="{{localize "SINLESS.Chase.closeIn"}}"><i class="fa-solid fa-angles-left"></i></a>
         <select name="enemies.{{index}}.range">{{selectOptions ../rangeChoices selected=range localize=true}}</select>
-        <a data-action="moveEnemy" data-index="{{index}}" data-delta="1" data-tooltip="{{localize "SINLESS.Chase.fallBack"}}"><i class="fa-solid fa-angles-right"></i></a>
+        <a data-action="moveEnemy" data-index="{{index}}" data-delta="1" data-tooltip="{{localize "SINLESS.Chase.fallBack"}}" aria-label="{{localize "SINLESS.Chase.fallBack"}}"><i class="fa-solid fa-angles-right"></i></a>
         <label data-tooltip="{{localize "SINLESS.Chase.flyingHint"}}"><input type="checkbox" name="enemies.{{index}}.flying" {{checked flying}}> <i class="fa-solid fa-helicopter"></i></label>
         {{#if wrecked}}<span class="warn">{{localize "SINLESS.Chase.wrecked"}}</span>{{else if attackable}}<i class="fa-solid fa-crosshairs" data-tooltip="{{localize "SINLESS.Chase.attackable"}}"></i>{{/if}}
-        <a data-action="removeEnemy" data-index="{{index}}"><i class="fa-solid fa-trash"></i></a>
+        <a data-action="removeEnemy" data-index="{{index}}" data-tooltip="{{localize "SINLESS.Chase.removeEnemy"}}" aria-label="{{localize "SINLESS.Chase.removeEnemy"}}"><i class="fa-solid fa-trash"></i></a>
       </li>
       {{/each}}
     </ol>

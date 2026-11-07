@@ -28,15 +28,15 @@
     </div>
     <div class="grid-box">
       <span class="label">{{localize "SINLESS.Grid.alert"}}</span>
-      {{#if isGM}}<a data-action="adjustAlert" data-delta="-1"><i class="fa-solid fa-minus"></i></a>{{/if}}
+      {{#if isGM}}<a data-action="adjustAlert" data-delta="-1" data-tooltip="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Grid.alert")}}" aria-label="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Grid.alert")}}"><i class="fa-solid fa-minus"></i></a>{{/if}}
       <strong>{{grid.alert}}</strong>
-      {{#if isGM}}<a data-action="adjustAlert" data-delta="1"><i class="fa-solid fa-plus"></i></a>{{/if}}
+      {{#if isGM}}<a data-action="adjustAlert" data-delta="1" data-tooltip="{{localize "SINLESS.Increase" name=(localize "SINLESS.Grid.alert")}}" aria-label="{{localize "SINLESS.Increase" name=(localize "SINLESS.Grid.alert")}}"><i class="fa-solid fa-plus"></i></a>{{/if}}
     </div>
     <div class="grid-box">
       <span class="label">{{localize "SINLESS.Grid.influence"}}</span>
       <input type="number" name="system.grid.influence" value="{{grid.influence}}" min="0"> m
       {{#if grid.influencePenalty}}<span class="penalty" data-tooltip="{{localize "SINLESS.Grid.rangePenaltyHint"}}">−{{grid.influencePenalty}}</span>{{/if}}
-      <a data-action="resetInfluence" data-tooltip="{{localize "SINLESS.Grid.resetInfluence"}}"><i class="fa-solid fa-rotate-left"></i></a>
+      <a data-action="resetInfluence" data-tooltip="{{localize "SINLESS.Grid.resetInfluence"}}" aria-label="{{localize "SINLESS.Grid.resetInfluence"}}"><i class="fa-solid fa-rotate-left"></i></a>
     </div>
   </div>
 

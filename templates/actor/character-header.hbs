@@ -12,8 +12,8 @@
       <label>
         {{!-- Actions sit beside the caption so the select keeps room for its longest option. --}}
         <span class="label-row">{{localize "SINLESS.Character.FIELDS.lifestyle.label"}}
-          <a class="lifestyle-action" data-action="payLifestyle" data-tooltip="{{localize "SINLESS.Lifestyle.payHint"}}"><i class="fa-solid fa-calendar-check"></i></a>
-          <a class="lifestyle-action" data-action="buyLifestyle" data-tooltip="{{localize "SINLESS.Lifestyle.buyHint"}}"><i class="fa-solid fa-cart-plus"></i></a>
+          <a class="lifestyle-action" data-action="payLifestyle" data-tooltip="{{localize "SINLESS.Lifestyle.payHint"}}" aria-label="{{localize "SINLESS.Lifestyle.payHint"}}"><i class="fa-solid fa-calendar-check"></i></a>
+          <a class="lifestyle-action" data-action="buyLifestyle" data-tooltip="{{localize "SINLESS.Lifestyle.buyHint"}}" aria-label="{{localize "SINLESS.Lifestyle.buyHint"}}"><i class="fa-solid fa-cart-plus"></i></a>
         </span>
         <span class="inline">
           <select name="system.lifestyle">{{selectOptions lifestyleChoices selected=system.lifestyle localize=true}}</select>
@@ -44,7 +44,7 @@
     <div class="stat kismet">
       <span class="label">{{localize "SINLESS.KismetPool"}}</span>
       <span class="value">{{system.kismet.pool.value}}/{{system.kismet.pool.max}}</span>
-      <button type="button" class="icon" data-action="refreshKismet" data-tooltip="{{localize "SINLESS.RefreshKismet"}}"><i class="fa-solid fa-rotate"></i></button>
+      <button type="button" class="icon" data-action="refreshKismet" data-tooltip="{{localize "SINLESS.RefreshKismet"}}" aria-label="{{localize "SINLESS.RefreshKismet"}}"><i class="fa-solid fa-rotate"></i></button>
     </div>
   </div>
 </header>
