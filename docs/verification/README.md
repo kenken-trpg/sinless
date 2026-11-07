@@ -49,8 +49,12 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 | `2026-11-06/sample-actors/initial-workflow.mjs` | `samples` | 同梱サンプルアクターの読み込みと主要な判定 |
 | `2026-11-06/current/extra.mjs` | `player` | プレイヤー視点(別ブラウザー)と戦闘の進行 |
 | `2026-11-06/current/batch.mjs` | `batch` | `original/` の機能別スクリプト 9 本を順に実行。前提データは `current/fixtures.mjs` が作り、出力を `current/batch-checks.mjs` で判定する |
-| `2026-11-06/current/sinless-verify.mjs <mode> <arg>` | — | `original/` の旧スクリプトを補正して実行(diagnose / sweep / legacy / batch / extra) |
 
 各スクリプトは作成したテスト用データを終了時に削除する。
+その後の起動で Foundry のログに `Deleted N orphaned embedded documents from the scenes database` と出るのは想定どおり。リンクしていないトークンの効果を外すと削除印が残り、Foundry はトークンやシーンを削除してもそれを消さず、起動時に掃除する。削除の順序では防げず、害はない(2026-11-07 確認)。
 `2026-11-06/original/` は当時のスナップショットで、機械固有のパスを含むためそのままでは動かない。
-`current/sinless-verify.mjs` と `current/batch.mjs` は、読み込み時にそのパスを `lib.mjs` へ置き換えて実行する。
+`current/batch.mjs` は、読み込み時にそのパスを `lib.mjs` へ置き換えて実行する。
+
+旧入口の `current/sinless-verify.mjs`(diagnose / sweep / legacy / batch / extra)は 2026-11-07 に削除した。
+batch と extra は `npm run verify` の `batch` と `player` で、legacy は `batch` で足りる。sweep が生成した `sweep-fixed*.mjs` は、その後直接手を入れて使っている。
+旧入口の出力(`current/*.log`、`shoot-fixed.mjs`)は記録として残す。スクリプト本体は Git の履歴にある。
