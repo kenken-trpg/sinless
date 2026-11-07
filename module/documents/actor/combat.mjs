@@ -135,11 +135,16 @@ export const CombatActor = Base => class SinlessCombatActor extends Base {
     const crashed = this.isEntity && max.stun > 0 && after.stun >= max.stun && before.stun < max.stun;
     if (crashed) await this.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { active: true, overlay: true });
     // Hot-seated rigger takes the vehicle's physical damage as stun, less VCR hardening (p.142).
+    let feedbackPending = null;
     if (this.type === "vehicle" && this.controlMode === "hotseat" && result.final > 0) {
       const rigger = this.vehicleController;
       const damage = after.physical - before.physical;
       const feedback = hotseatFeedback(damage, rigger?.vcr?.system.hardeningBonus ?? 0);
-      if (rigger && feedback > 0) {
+      // Whoever cannot update the rigger leaves the feedback to the rigger's owner or the GM.
+      if (rigger && feedback > 0 && !rigger.isOwner) {
+        feedbackPending = { name: rigger.name, n: feedback };
+        ui.notifications.warn(game.i18n.format("SINLESS.Rig.feedbackPending", feedbackPending));
+      } else if (rigger && feedback > 0) {
         await rigger.applyDamage({
           hit: true, raw: damage, armorReduction: damage - feedback, afterArmor: feedback, final: feedback,
           track: "stun", stripped: [], source: game.i18n.format("SINLESS.Rig.feedback", { name: this.name })
@@ -163,6 +168,7 @@ export const CombatActor = Base => class SinlessCombatActor extends Base {
         strippedNames,
         killed,
         crashed,
+        feedbackPending,
         entity: this.isEntity
       }
     );

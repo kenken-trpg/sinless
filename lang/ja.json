@@ -1197,6 +1197,8 @@
     "Rig": {
       "title": "リギング",
       "feedback": "{name} からのホットシート・フィードバック",
+      "feedbackPending": "ホットシート・フィードバックは未適用：{name} が朦朧ダメージ {n} を受ける。所有者か GM が記入する。",
+      "inertiaNotReset": "体当たりで慣性はすべて失われるが、{name} を所有していないため変更できない。GM が 0 に戻す。",
       "inertiaNote": "慣性 −{n}",
       "vcrNote": "VCR ダイス +{n}",
       "action": {

@@ -167,7 +167,7 @@ export const BrandActor = Base => class SinlessBrandActor extends Base {
   async addBrandMember(actor) {
     if (this.type !== "brand" || actor?.type !== "character") return null;
     if (this.system.members.includes(actor.id)) return this;
-    await actor.update({ "system.brand": this.name });
+    if (actor.isOwner) await actor.update({ "system.brand": this.name });
     return this.update({ "system.members": [...this.system.members, actor.id] });
   }
 

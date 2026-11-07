@@ -13,6 +13,7 @@
     {{localize "SINLESS.Condition.stun"}} {{after.stun}}/{{max.stun}}{{#if after.overflow}} ·
     {{localize "SINLESS.Condition.overflow"}} {{after.overflow}}{{/if}}{{/if}}
   </p>
+  {{#if feedbackPending}}<p class="effect warn">{{localize "SINLESS.Rig.feedbackPending" name=feedbackPending.name n=feedbackPending.n}}</p>{{/if}}
   {{#each strippedNames}}<p class="effect">{{localize "SINLESS.Damage.stripped" armor=this}}</p>{{/each}}
   {{#if entity}}
   {{#if crashed}}<p class="effect warn">{{localize "SINLESS.Digital.crashed" name=name}}</p>{{/if}}

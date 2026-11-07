@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`batch`、`magic`、`samples`、`all`(この 6 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`batch`、`magic`、`samples`、`all`(この 7 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -48,6 +48,7 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 | `2026-11-06/current/magic-review.mjs` | `magic` | 魔法拡張(持続呪文、結界、精霊)とリソース保存 |
 | `2026-11-06/sample-actors/initial-workflow.mjs` | `samples` | 同梱サンプルアクターの読み込みと主要な判定 |
 | `2026-11-06/current/extra.mjs` | `player` | プレイヤー視点(別ブラウザー)と戦闘の進行 |
+| `2026-11-07/permissions.mjs` | `permissions` | 他人が所有する文書に触れるプレイヤー操作(ホットシートのフィードバック、体当たり、ブランドのメンバー)が、権限エラーなしで終わること |
 | `2026-11-06/current/batch.mjs` | `batch` | `original/` の機能別スクリプト 9 本を順に実行。前提データは `current/fixtures.mjs` が作り、出力を `current/batch-checks.mjs` で判定する |
 
 各スクリプトは作成したテスト用データを終了時に削除する。

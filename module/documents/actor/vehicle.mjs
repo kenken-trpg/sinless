@@ -120,8 +120,11 @@ export const VehicleActor = Base => class SinlessVehicleActor extends Base {
       });
     }
     const message = await rigger._runTest(defaults, extra);
-    // Ramming removes all inertia (p.144).
-    if (message && kind === "ram" && v.inertia) await this.update({ "system.inertia": 0 });
+    // Ramming removes all inertia (p.144); only the vehicle's owner or the GM can update it.
+    if (message && kind === "ram" && v.inertia) {
+      if (this.isOwner) await this.update({ "system.inertia": 0 });
+      else ui.notifications.warn(game.i18n.format("SINLESS.Rig.inertiaNotReset", { name: this.name }));
+    }
     return message;
   }
 
