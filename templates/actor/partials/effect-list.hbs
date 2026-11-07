@@ -17,7 +17,7 @@
       <span class="item-controls">
         {{#if sustained}}<a data-action="resistSustained" data-tooltip="{{localize "SINLESS.Sustained.resistHint"}}" aria-label="{{localize "SINLESS.Sustained.resistHint"}}"><i class="fa-solid fa-hand-sparkles"></i></a>{{/if}}
         {{#if @root.editable}}
-        <a data-action="effectToggle" class="{{#unless disabled}}active{{/unless}}" data-tooltip="{{localize "SINLESS.Effect.toggle"}}" aria-label="{{localize "SINLESS.Effect.toggle"}}"><i class="fa-solid fa-power-off"></i></a>
+        <a data-action="effectToggle" class="{{#unless disabled}}active{{/unless}}" aria-pressed="{{#if disabled}}false{{else}}true{{/if}}" data-tooltip="{{localize "SINLESS.Effect.toggle"}}" aria-label="{{localize "SINLESS.Effect.toggle"}}"><i class="fa-solid fa-power-off"></i></a>
         {{/if}}
         <a data-action="effectEdit" data-tooltip="{{localize "SINLESS.Effect.edit"}}" aria-label="{{localize "SINLESS.Effect.edit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
         {{#if @root.editable}}<a data-action="effectDelete" data-tooltip="{{localize "SINLESS.Effect.delete"}}" aria-label="{{localize "SINLESS.Effect.delete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}

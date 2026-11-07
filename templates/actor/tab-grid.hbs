@@ -55,8 +55,8 @@
     </div>
     <div class="track track-cohesion">
       <span class="track-label">{{localize "SINLESS.Grid.cohesion"}}</span>
-      <div class="boxes">
-        {{#each grid.cohesionBoxes}}<a class="box{{#if filled}} filled{{/if}}{{#if mark}} mark{{/if}}" data-action="setCohesion" data-n="{{n}}">{{#if mark}}<span>-1</span>{{/if}}</a>{{/each}}
+      <div class="boxes" role="group" aria-label="{{localize "SINLESS.Grid.cohesion"}}">
+        {{#each grid.cohesionBoxes}}<a class="box{{#if filled}} filled{{/if}}{{#if mark}} mark{{/if}}" data-action="setCohesion" data-n="{{n}}" aria-label="{{localize "SINLESS.Condition.box" track=(localize "SINLESS.Grid.cohesion") n=n}}" aria-pressed="{{#if filled}}true{{else}}false{{/if}}">{{#if mark}}<span>-1</span>{{/if}}</a>{{/each}}
       </div>
     </div>
     {{#if grid.issues.length}}<ul class="issues">{{#each grid.issues}}<li>{{this}}</li>{{/each}}</ul>{{/if}}

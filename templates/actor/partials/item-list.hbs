@@ -28,17 +28,17 @@
         <a data-action="invokeSpirit" data-tooltip="{{localize "SINLESS.Magic.invokeHint"}}" aria-label="{{localize "SINLESS.Magic.invokeHint"}}"><i class="fa-solid fa-ghost"></i></a>
         {{/if}}{{/if}}
         {{#if (eq item.type "software")}}{{#unless item.system.base}}
-        <a data-action="itemToggle" data-field="loaded" class="{{#if item.system.loaded}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.loaded.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.loaded.label"}}"><i class="fa-solid fa-layer-group"></i></a>
-        <a data-action="itemToggle" data-field="running" class="{{#if item.system.running}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.running.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.running.label"}}"><i class="fa-solid fa-microchip"></i></a>
+        <a data-action="itemToggle" data-field="loaded" class="{{#if item.system.loaded}}active{{/if}}" aria-pressed="{{#if item.system.loaded}}true{{else}}false{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.loaded.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.loaded.label"}}"><i class="fa-solid fa-layer-group"></i></a>
+        <a data-action="itemToggle" data-field="running" class="{{#if item.system.running}}active{{/if}}" aria-pressed="{{#if item.system.running}}true{{else}}false{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.running.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.running.label"}}"><i class="fa-solid fa-microchip"></i></a>
         {{/unless}}{{/if}}
         {{#if (or (eq item.type "deck") (eq item.type "vcr"))}}
-        <a data-action="itemToggle" data-field="equipped" class="{{#if item.system.equipped}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.equipped.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.equipped.label"}}"><i class="fa-solid fa-plug"></i></a>
+        <a data-action="itemToggle" data-field="equipped" class="{{#if item.system.equipped}}active{{/if}}" aria-pressed="{{#if item.system.equipped}}true{{else}}false{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.equipped.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.equipped.label"}}"><i class="fa-solid fa-plug"></i></a>
         {{/if}}
         {{#if (eq item.type "armor")}}
-        <a data-action="itemToggle" data-field="equipped" class="{{#if item.system.equipped}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.equipped.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.equipped.label"}}"><i class="fa-solid fa-shirt"></i></a>
+        <a data-action="itemToggle" data-field="equipped" class="{{#if item.system.equipped}}active{{/if}}" aria-pressed="{{#if item.system.equipped}}true{{else}}false{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.equipped.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.equipped.label"}}"><i class="fa-solid fa-shirt"></i></a>
         {{/if}}
         {{#if (ne item.system.carried undefined)}}
-        <a data-action="itemToggle" data-field="carried" class="{{#if item.system.carried}}active{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.carried.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.carried.label"}}"><i class="fa-solid fa-suitcase"></i></a>
+        <a data-action="itemToggle" data-field="carried" class="{{#if item.system.carried}}active{{/if}}" aria-pressed="{{#if item.system.carried}}true{{else}}false{{/if}}" data-tooltip="{{localize "SINLESS.Item.FIELDS.carried.label"}}" aria-label="{{localize "SINLESS.Item.FIELDS.carried.label"}}"><i class="fa-solid fa-suitcase"></i></a>
         {{/if}}
         <a data-action="itemEdit" data-tooltip="{{localize "SINLESS.ItemEdit"}}" aria-label="{{localize "SINLESS.ItemEdit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
         {{#if @root.editable}}<a data-action="itemDelete" data-tooltip="{{localize "SINLESS.ItemDelete"}}" aria-label="{{localize "SINLESS.ItemDelete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}

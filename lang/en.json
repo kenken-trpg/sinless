@@ -216,6 +216,7 @@
     "Condition": {
       "physical": "Physical",
       "stun": "Stun",
+      "box": "{track} box {n}",
       "overflow": "Overflow",
       "penalty": "Penalty",
       "penaltyHint": "Wounds (−1 per 3 boxes on each track), encumbrance and situational penalty."
