@@ -5,6 +5,11 @@
     { "id": "getting-started", "title": "はじめに" },
     { "id": "tests", "title": "判定の流れ" },
     { "id": "chat-cards", "title": "チャットカードのボタン" },
+    { "id": "characters", "title": "キャラクターと成長" },
+    { "id": "magic", "title": "魔法" },
+    { "id": "grid", "title": "グリッド" },
+    { "id": "vehicles", "title": "乗り物とリギング" },
+    { "id": "brands", "title": "ブランド" },
     { "id": "gm-tools", "title": "アゴナーク用のツール" }
   ]
 }

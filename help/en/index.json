@@ -5,6 +5,11 @@
     { "id": "getting-started", "title": "Getting started" },
     { "id": "tests", "title": "Rolling a test" },
     { "id": "chat-cards", "title": "Chat card buttons" },
+    { "id": "characters", "title": "Characters and advancement" },
+    { "id": "magic", "title": "Magic" },
+    { "id": "grid", "title": "The Grid" },
+    { "id": "vehicles", "title": "Vehicles and rigging" },
+    { "id": "brands", "title": "Brands" },
     { "id": "gm-tools", "title": "Tools for the Agonarch" }
   ]
 }
