@@ -1,8 +1,8 @@
 <div class="track track-{{track}}">
   <span class="track-label">{{localize label}}</span>
-  <div class="boxes">
+  <div class="boxes" role="group" aria-label="{{localize label}}">
     {{#each boxes}}
-    <a class="box{{#if filled}} filled{{/if}}{{#if mark}} mark{{/if}}" data-action="setCondition" data-track="{{../track}}" data-n="{{n}}">{{#if mark}}<span>-1</span>{{/if}}</a>
+    <a class="box{{#if filled}} filled{{/if}}{{#if mark}} mark{{/if}}" data-action="setCondition" data-track="{{../track}}" data-n="{{n}}" aria-label="{{localize "SINLESS.Condition.box" track=(localize ../label) n=n}}" aria-pressed="{{#if filled}}true{{else}}false{{/if}}">{{#if mark}}<span>-1</span>{{/if}}</a>
     {{/each}}
   </div>
 </div>

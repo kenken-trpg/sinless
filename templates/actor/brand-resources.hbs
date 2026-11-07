@@ -25,7 +25,7 @@
             <a data-action="adjustItem" data-field="influence" data-delta="-1" data-tooltip="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Resource.FIELDS.influence.label")}}" aria-label="{{localize "SINLESS.Decrease" name=(localize "SINLESS.Resource.FIELDS.influence.label")}}"><i class="fa-solid fa-minus"></i></a>{{item.system.influence}}<a data-action="adjustItem" data-field="influence" data-delta="1" data-tooltip="{{localize "SINLESS.Increase" name=(localize "SINLESS.Resource.FIELDS.influence.label")}}" aria-label="{{localize "SINLESS.Increase" name=(localize "SINLESS.Resource.FIELDS.influence.label")}}"><i class="fa-solid fa-plus"></i></a></span>
         </span>
         <span class="item-controls">
-          <a data-action="itemToggle" data-field="controlled" class="{{#if item.system.controlled}}active{{/if}}" data-tooltip="{{localize "SINLESS.Resource.FIELDS.controlled.label"}}" aria-label="{{localize "SINLESS.Resource.FIELDS.controlled.label"}}"><i class="fa-solid fa-flag"></i></a>
+          <a data-action="itemToggle" data-field="controlled" class="{{#if item.system.controlled}}active{{/if}}" aria-pressed="{{#if item.system.controlled}}true{{else}}false{{/if}}" data-tooltip="{{localize "SINLESS.Resource.FIELDS.controlled.label"}}" aria-label="{{localize "SINLESS.Resource.FIELDS.controlled.label"}}"><i class="fa-solid fa-flag"></i></a>
           <a data-action="itemEdit" data-tooltip="{{localize "SINLESS.ItemEdit"}}" aria-label="{{localize "SINLESS.ItemEdit"}}"><i class="fa-solid fa-pen-to-square"></i></a>
           {{#if @root.editable}}<a data-action="itemDelete" data-tooltip="{{localize "SINLESS.ItemDelete"}}" aria-label="{{localize "SINLESS.ItemDelete"}}"><i class="fa-solid fa-trash"></i></a>{{/if}}
         </span>

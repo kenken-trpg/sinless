@@ -3,6 +3,7 @@ import { registerSettings } from "./module/settings.mjs";
 import { registerOperation, OperationApp } from "./module/apps/operation.mjs";
 import { registerChase, ChaseApp } from "./module/apps/chase.mjs";
 import { registerHelp, HelpApp } from "./module/apps/help.mjs";
+import { registerKeyboard } from "./module/apps/keyboard.mjs";
 import { CharacterData, NpcData } from "./module/data/actor.mjs";
 import { BrandData, ResourceData } from "./module/data/brand.mjs";
 import {
@@ -74,6 +75,7 @@ Hooks.once("init", () => {
   registerOperation();
   registerChase();
   registerHelp();
+  registerKeyboard();
   registerHandlebarsHelpers();
 
   foundry.applications.handlebars.loadTemplates([

@@ -216,6 +216,7 @@
     "Condition": {
       "physical": "肉体",
       "stun": "朦朧",
+      "box": "{track} {n} 個目",
       "overflow": "超過",
       "penalty": "ペナルティ",
       "penaltyHint": "負傷（各トラック3マスごとに−1）、過重、状況ペナルティの合計です。"

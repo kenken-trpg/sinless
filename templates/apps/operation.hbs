@@ -8,7 +8,7 @@
     <h3>{{localize "SINLESS.Operation.heat"}}</h3>
     <div class="stars">
       {{#each stars}}
-      <a class="star{{#if on}} on{{/if}}" data-action="heat" data-heat="{{n}}" data-tooltip="{{localize (concat "SINLESS.Heat." n)}}" aria-label="{{localize (concat "SINLESS.Heat." n)}}"><i class="fa-{{#if on}}solid{{else}}regular{{/if}} fa-star"></i></a>
+      <a class="star{{#if on}} on{{/if}}" aria-pressed="{{#if on}}true{{else}}false{{/if}}" data-action="heat" data-heat="{{n}}" data-tooltip="{{localize (concat "SINLESS.Heat." n)}}" aria-label="{{localize (concat "SINLESS.Heat." n)}}"><i class="fa-{{#if on}}solid{{else}}regular{{/if}} fa-star"></i></a>
       {{/each}}
       <button type="button" data-action="discovered" data-tooltip="{{localize "SINLESS.Operation.discoveredHint"}}"><i class="fa-solid fa-eye"></i> {{localize "SINLESS.Operation.discovered"}}</button>
     </div>

@@ -20,9 +20,10 @@ const SCRIPTS = {
   samples: { script: `${dir}/sample-actors/initial-workflow.mjs`, args: [], about: "import the sample actors (JSON and the compendium pack) and run the main tests" },
   permissions: { script: "docs/verification/2026-11-07/permissions.mjs", args: [], about: "a player acting on documents someone else owns" },
   "help-window": { script: "docs/verification/2026-11-07/help.mjs", args: [], about: "help window, languages, journal import and update" },
-  "sheet-actions": { script: "docs/verification/2026-11-07/sheet-actions.mjs", args: [], about: "every kind of actor sheet button: rolls, boxes, item rows, confirmations" }
+  "sheet-actions": { script: "docs/verification/2026-11-07/sheet-actions.mjs", args: [], about: "every kind of actor sheet button: rolls, boxes, item rows, confirmations" },
+  keyboard: { script: "docs/verification/2026-11-07/keyboard.mjs", args: [], about: "sheet controls by keyboard: focus, Enter / Space, focus kept after re-render" }
 };
-const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "batch", "sweep-ja", "sweep-en"];
+const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "batch", "sweep-ja", "sweep-en"];
 
 function parse(argv) {
   const opts = { names: [], out: null, world: "sinless-test", relaunch: false, launch: true };
