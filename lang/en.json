@@ -1633,6 +1633,16 @@
       "clear": "Unlink the actor",
       "dropHint": "Drop an NPC actor here (the spirit's stat block).",
       "npcOnly": "Only NPC actors can be linked as spirits."
+    },
+    "Help": {
+      "title": "Sinless Help",
+      "language": "Help language",
+      "import": "Import as journal entry",
+      "reimport": "Update the journal entry",
+      "importHint": "Create a journal entry with these pages in the language shown, readable by every player.",
+      "imported": "Help imported as the journal entry {name}.",
+      "updated": "Help pages in {name} updated.",
+      "replaceConfirm": "Replace the help pages in {name} with this version? Changes made to those pages are lost; pages you added are kept."
     }
   }
 }

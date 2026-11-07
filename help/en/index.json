@@ -1,0 +1,10 @@
+{
+  "language": "English",
+  "title": "Sinless Help",
+  "pages": [
+    { "id": "getting-started", "title": "Getting started" },
+    { "id": "tests", "title": "Rolling a test" },
+    { "id": "chat-cards", "title": "Chat card buttons" },
+    { "id": "gm-tools", "title": "Tools for the Agonarch" }
+  ]
+}

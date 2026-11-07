@@ -1633,6 +1633,16 @@
       "clear": "アクターとのリンクを外す",
       "dropHint": "ここに NPC アクター（精霊のデータ）をドロップ。",
       "npcOnly": "精霊としてリンクできるのは NPC アクターだけです。"
+    },
+    "Help": {
+      "title": "Sinless ヘルプ",
+      "language": "ヘルプの言語",
+      "import": "Journal として取り込む",
+      "reimport": "Journal を更新",
+      "importHint": "表示中の言語のページで、プレイヤー全員が読める Journal を作ります。",
+      "imported": "ヘルプを Journal「{name}」として取り込みました。",
+      "updated": "「{name}」のヘルプのページを更新しました。",
+      "replaceConfirm": "「{name}」のヘルプのページをこの版に置き換えますか？ そのページへの変更は失われます。自分で足したページは残ります。"
     }
   }
 }

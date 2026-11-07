@@ -148,6 +148,10 @@ this system contains no rules text.
 - Brand actor for sector play: five statistics, brand traits, market cap / upkeep / bank,
   sector heat effects, sector action tests (with heat and Competence), end-of-turn banking,
   resources with damage / influence tracks, members and asset tests rolled by the best member.
+- In-game help (the question mark in the token controls) in English and Japanese: getting
+  started, the test dialog, what each chat card button does and who sees it, and the
+  Agonarch's tools. The Agonarch can import it as a journal entry for every player, and
+  importing again updates the help pages while keeping pages they added.
 - Localization from day one: English and Japanese.
 
 ## Public server demo data
@@ -199,7 +203,8 @@ API (`tools/foundry-release.mjs`). Without the secret, that step is skipped.
 
 Never hard-code display strings. Add the key to `lang/en.json` and `lang/ja.json`
 (`npm run check:i18n` fails if a locale is missing a key or placeholders differ).
-To add a language, drop `lang/<code>.json` and register it in `system.json`.
+To add a language, drop `lang/<code>.json` and register it in `system.json`; for the help,
+add `help/<code>/` with the same pages and list the code in `HELP_LANGUAGES` (`module/apps/help.mjs`).
 The Japanese terms are provisional; update `lang/ja.json` as the glossary is settled.
 
 ### Layout
@@ -212,3 +217,4 @@ The Japanese terms are provisional; update `lang/ja.json` as the glossary is set
 | `module/documents/` | Actor (shared test plumbing in `actor.mjs`, one mixin per rules area in `actor/`) and Combatant (initiative) |
 | `module/sheets/`, `templates/` | ApplicationV2 sheets and Handlebars templates |
 | `module/dice/` | Rolling and chat cards |
+| `help/<lang>/` | In-game help pages (`index.json` lists them), shown in the help window and imported as a journal entry |
