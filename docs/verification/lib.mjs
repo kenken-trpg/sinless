@@ -55,3 +55,29 @@ export async function launchWorld(world = "sinless-test") {
   }
   throw new Error(`launchWorld ${world}: world did not become active`);
 }
+
+/** Shut down the active world and launch it again, so Foundry rereads the system manifest. */
+export async function relaunchWorld(world = "sinless-test") {
+  const status = await fetch(`${FOUNDRY_URL}/api/status`).then(r => r.json());
+  if (status.active) {
+    const { browser, page } = await joinGM();
+    await page.evaluate(() => game.shutDown()).catch(() => {});
+    await browser.close();
+    for (let i = 0; i < 60; i++) {
+      const s = await fetch(`${FOUNDRY_URL}/api/status`).then(r => r.json()).catch(() => ({}));
+      if (s.active === false) break;
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+  return launchWorld(world);
+}
+
+/** Versions as the browser sees them (the server's /api/status can report a stale system version). */
+export async function loadedVersions() {
+  const { browser, page } = await joinGM();
+  try {
+    return await page.evaluate(() => ({ foundry: game.version, system: game.system.version, world: game.world.id, lang: game.i18n.lang }));
+  } finally {
+    await browser.close();
+  }
+}

@@ -126,7 +126,11 @@ npm run check:i18n   # 言語ファイルのキー・プレースホルダ整合
 npm run lint:syntax  # 全モジュールと JSON の構文チェック
 npm run check        # 上の 3 つをまとめて実行
 npm run build        # dist/sinless.zip を作成
+npm run verify -- list  # 起動中の Foundry に対する画面検証(CI には含まない)
 ```
+
+画面検証には Playwright と起動中の Foundry が必要です。
+[docs/verification/README.md](docs/verification/README.md) を参照してください。
 
 `main` への push と PR では、GitHub Actions がこれらのチェックとビルドを実行します（`.github/workflows/ci.yml`）。
 

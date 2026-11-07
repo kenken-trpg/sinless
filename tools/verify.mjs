@@ -1,0 +1,95 @@
+// Run the Foundry browser verification scripts (docs/verification) against a running Foundry.
+// usage: npm run verify -- <name...|all|list> [--out DIR] [--world ID] [--relaunch] [--no-launch]
+// Needs Playwright: set SINLESS_PLAYWRIGHT to playwright/index.mjs (see docs/verification/README.md).
+import { spawn } from "node:child_process";
+import { mkdirSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
+const dir = "docs/verification/2026-11-06";
+
+/** name → script and arguments; "{out}" is the run's output folder. */
+const SCRIPTS = {
+  "sweep-ja": { script: `${dir}/current/sweep-fixed.mjs`, args: ["{out}", "ja"], about: "every sheet, tab and editable field (Japanese)" },
+  "sweep-en": { script: `${dir}/current/sweep-fixed-en.mjs`, args: ["{out}", "en"], about: "every sheet, tab and editable field (English, flags Japanese text)" },
+  player: { script: `${dir}/current/extra.mjs`, args: [], about: "player view in a second browser, combat flow" },
+  batch: { script: `${dir}/current/batch.mjs`, args: [], about: "the nine feature scripts in original/ with fixtures" },
+  magic: { script: `${dir}/current/magic-review.mjs`, args: [], about: "sustained spells, wards, spirits, resource saving" },
+  samples: { script: `${dir}/sample-actors/initial-workflow.mjs`, args: [], about: "import the bundled sample actors and run the main tests" }
+};
+const ALL = ["samples", "magic", "player", "batch", "sweep-ja", "sweep-en"];
+
+function parse(argv) {
+  const opts = { names: [], out: null, world: "sinless-test", relaunch: false, launch: true };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === "--out") opts.out = argv[++i];
+    else if (a === "--world") opts.world = argv[++i];
+    else if (a === "--relaunch") opts.relaunch = true;
+    else if (a === "--no-launch") opts.launch = false;
+    else if (a.startsWith("--")) throw new Error(`Unknown option ${a}`);
+    else opts.names.push(a);
+  }
+  if (opts.out === undefined || opts.world === undefined) throw new Error("--out and --world need a value");
+  return opts;
+}
+
+function usage() {
+  console.log("usage: npm run verify -- <name...|all|list> [--out DIR] [--world ID] [--relaunch] [--no-launch]\n");
+  for (const [name, s] of Object.entries(SCRIPTS)) console.log(`  ${name.padEnd(9)} ${s.about}`);
+  console.log(`  ${"all".padEnd(9)} ${ALL.join(", ")}`);
+  console.log("\n  --out DIR    output folder (default: <tmp>/sinless-verify/<timestamp>); each script writes to DIR/<name>");
+  console.log("  --world ID   world to launch when none is active (default sinless-test)");
+  console.log("  --relaunch   restart the world first so Foundry rereads system.json");
+  console.log("  --no-launch  do not launch a world; fail if none is active");
+}
+
+function run(name, out) {
+  const { script, args } = SCRIPTS[name];
+  mkdirSync(out, { recursive: true });
+  const env = { ...process.env, SINLESS_VERIFY_OUT: out, SINLESS_REVIEW_OUT: out };
+  const started = Date.now();
+  return new Promise(res => {
+    const child = spawn(process.execPath, [join(root, script), ...args.map(a => a.replace("{out}", out))], { cwd: root, env, stdio: "inherit" });
+    child.on("exit", (code, signal) => res({ name, code: code ?? 1, signal, seconds: Math.round((Date.now() - started) / 1000), out }));
+  });
+}
+
+async function main() {
+  let opts;
+  try { opts = parse(process.argv.slice(2)); } catch (e) { console.error(e.message); usage(); return 2; }
+  if (!opts.names.length || opts.names.includes("list") || opts.names.includes("help")) { usage(); return opts.names.length ? 0 : 2; }
+  const names = opts.names.flatMap(n => (n === "all" ? ALL : [n]));
+  const unknown = names.filter(n => !SCRIPTS[n]);
+  if (unknown.length) { console.error(`Unknown script: ${unknown.join(", ")}`); usage(); return 2; }
+
+  const lib = await import(new URL("../docs/verification/lib.mjs", import.meta.url));
+  const status = await fetch(`${lib.FOUNDRY_URL}/api/status`).then(r => r.json()).catch(() => null);
+  if (!status) { console.error(`Foundry is not reachable at ${lib.FOUNDRY_URL}`); return 1; }
+  if (opts.relaunch) console.log("Relaunched", await lib.relaunchWorld(opts.world));
+  else if (!status.active) {
+    if (!opts.launch) { console.error("No world is active (--no-launch)"); return 1; }
+    console.log("Launched", await lib.launchWorld(opts.world));
+  }
+  const manifest = JSON.parse(readFileSync(join(root, "system.json"), "utf8")).version;
+  const loaded = await lib.loadedVersions();
+  console.log(`Foundry ${loaded.foundry}, world ${loaded.world}, system ${loaded.system} (system.json ${manifest})`);
+  if (loaded.system !== manifest) console.warn(`WARNING: the world has system ${loaded.system} loaded, not ${manifest}. Use --relaunch to reload it.`);
+
+  // A long sweep outlasts the idle-sleep timer; sleep drops the browser's socket and every sheet times out.
+  if (process.platform === "darwin") spawn("caffeinate", ["-i", "-w", String(process.pid)], { stdio: "ignore" }).on("error", () => {}).unref();
+
+  const base = resolve(opts.out ?? join(tmpdir(), "sinless-verify", new Date().toISOString().replace(/[:.]/g, "-")));
+  const results = [];
+  for (const name of names) {
+    console.log(`\n=== ${name} → ${base}/${name}`);
+    results.push(await run(name, join(base, name)));
+  }
+  console.log("\n=== summary");
+  for (const r of results) console.log(`  ${r.code === 0 ? "PASS" : "FAIL"}  ${r.name.padEnd(9)} ${String(r.seconds).padStart(4)} s  ${r.out}`);
+  return results.every(r => r.code === 0) ? 0 : 1;
+}
+
+process.exitCode = await main();
