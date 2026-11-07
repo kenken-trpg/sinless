@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync,readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
-import {joinGM} from '../original/lib.mjs';
+import {joinGM} from '../../lib.mjs';
 const root=fileURLToPath(new URL('../../../../',import.meta.url)).replace(/\/$/,''),out=process.env.SINLESS_REVIEW_OUT??'/private/tmp/sinless-sample-review';mkdirSync(out,{recursive:true});
 const results=[];const pass=(name,data)=>{results.push({name,data});console.log('PASS',name,JSON.stringify(data??{}));};
 console.log('Joining test world');const {browser,page,logs}=await joinGM();page.setDefaultTimeout(20000);

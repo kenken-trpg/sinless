@@ -1,7 +1,7 @@
 import {writeFileSync} from "node:fs";
 // Sweep: every actor / item sheet, every tab, every editable input, in one language.
 // usage: node sweep.mjs <outdir> <lang>
-import { joinGM } from "/private/tmp/claude-501/-Users-mantanikenichi-mydevelop/169d1560-1874-49ac-a866-603a5aec9198/scratchpad/pw/lib.mjs";
+import { joinGM } from "../../lib.mjs";
 const out = process.argv[2];
 const lang = process.argv[3] ?? "ja";
 const { browser, page, logs } = await joinGM({});

@@ -1,15 +1,15 @@
 import {readFileSync,writeFileSync,mkdirSync,appendFileSync} from "node:fs";
-import {pathToFileURL} from "node:url";
+import {pathToFileURL,fileURLToPath} from "node:url";
 import assert from "node:assert/strict";
-import {joinGM} from "/private/tmp/claude-501/-Users-mantanikenichi-mydevelop/169d1560-1874-49ac-a866-603a5aec9198/scratchpad/pw/lib.mjs";
-const source="/private/tmp/claude-501/-Users-mantanikenichi-mydevelop/169d1560-1874-49ac-a866-603a5aec9198/scratchpad/pw",out="/private/tmp/sinless-verification";
+import {joinGM} from "../../lib.mjs";
+const source=fileURLToPath(new URL("../original",import.meta.url)),lib=fileURLToPath(new URL("../../lib.mjs",import.meta.url)),out=process.env.SINLESS_VERIFY_OUT??"/private/tmp/sinless-verification";
 mkdirSync(out,{recursive:true});
 const mode=process.argv[2]??"diagnose",arg=process.argv[3]??"ja";
 const logfile=out+"/"+mode+"-"+arg+".log";writeFileSync(logfile,"");
 const log=console.log.bind(console);
 console.log=(...args)=>{const line=args.map(x=>typeof x==="string"?x:JSON.stringify(x)).join(" ");appendFileSync(logfile,line+"\n");log(line);};
-if(mode==="batch"){ await import("file:///private/tmp/sinless-verification/batch.mjs"); } else if(mode==="extra"){ await import("file:///private/tmp/sinless-verification/extra.mjs"); } else if(mode==="sweep"){
- let code=readFileSync(source+"/sweep.mjs","utf8").replace('"./lib.mjs"',JSON.stringify(source+"/lib.mjs"));
+if(mode==="batch"){ await import("./batch.mjs"); } else if(mode==="extra"){ await import("./extra.mjs"); } else if(mode==="sweep"){
+ let code=readFileSync(source+"/sweep.mjs","utf8").replace('"./lib.mjs"',JSON.stringify(lib));
  code=code.replace("await page.evaluate(async () => {\n  for (const a","const fixtures = await page.evaluate(async () => {\n  for (const a");
  code=code.replace(/  await Item.createDocuments[^\n]+\n\}\);/,'  const worlds = await Item.createDocuments(itemTypes.map(t => ({ name: "SWEEP W "+t, type: t })));\n  const actors = game.actors.filter(a => a.name.startsWith("SWEEP"));\n  return {characterUuid:ch.uuid,actorIds:actors.map(a=>a.id),itemIds:worlds.map(i=>i.id),targets:[...actors.map(a=>a.uuid),...ch.items.map(i=>i.uuid),...worlds.map(i=>i.uuid)]};\n});');
  const start=code.indexOf("const targets = await page.evaluate"),end=code.indexOf("const results = [];",start);
@@ -26,7 +26,7 @@ if(mode==="batch"){ await import("file:///private/tmp/sinless-verification/batch
  code=code.replace('page.setDefaultTimeout(60000);', 'page.setDefaultTimeout(60000); page.on("console",m=>{if(m.text().startsWith("VERIFY-PROGRESS"))console.log(m.text());});');
  const path=out+"/sweep-fixed-"+arg+".mjs";writeFileSync(path,code);process.argv=[process.argv[0],path,out,arg];await import(pathToFileURL(path));
 } else if(mode==="legacy"){
- let code=readFileSync(source+"/"+arg+".mjs","utf8").replace('"./lib.mjs"',JSON.stringify(source+"/lib.mjs"));
+ let code=readFileSync(source+"/"+arg+".mjs","utf8").replace('"./lib.mjs"',JSON.stringify(lib));
  code=code.replace('await page.evaluate(() => game.actors.getName("SMOKE D Ben").rollSkill("firearms"));','await page.evaluate(() => { game.actors.getName("SMOKE D Ben").rollSkill("firearms"); });');
  code=code.replace('const ben = fn => page.evaluate(fn);','const ben = (fn, arg) => page.evaluate(fn, arg);');
  const path=out+"/"+arg+"-fixed.mjs";writeFileSync(path,code);process.argv=[process.argv[0],path,out];await import(pathToFileURL(path));console.log("COMPLETED",arg);

@@ -1,4 +1,4 @@
-import { joinGM } from "/private/tmp/claude-501/-Users-mantanikenichi-mydevelop/169d1560-1874-49ac-a866-603a5aec9198/scratchpad/pw/lib.mjs";
+import { joinGM } from "../../lib.mjs";
 const out = process.argv[2];
 const { browser, page, logs } = await joinGM({});
 page.setDefaultTimeout(8000);

@@ -1,0 +1,414 @@
+[
+  {
+    "name": "SWEEP Char",
+    "type": "character",
+    "tabs": {
+      "main": 657,
+      "gear": 122,
+      "magic": 99,
+      "social": 173,
+      "grid": 358,
+      "effects": 27,
+      "bio": 17
+    },
+    "bad": [],
+    "inputs": 130,
+    "ok": 130,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP Npc",
+    "type": "npc",
+    "tabs": {
+      "main": 353,
+      "gear": 210,
+      "grid": 278,
+      "effects": 28,
+      "bio": 2
+    },
+    "bad": [],
+    "inputs": 107,
+    "ok": 107,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP Entity",
+    "type": "npc",
+    "tabs": {
+      "main": 344,
+      "gear": 73,
+      "grid": 202,
+      "effects": 28,
+      "bio": 2
+    },
+    "bad": [],
+    "inputs": 106,
+    "ok": 106,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP Spirit",
+    "type": "npc",
+    "tabs": {
+      "main": 353,
+      "gear": 73,
+      "grid": 146,
+      "effects": 28,
+      "bio": 2
+    },
+    "bad": [],
+    "inputs": 107,
+    "ok": 107,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP Vehicle",
+    "type": "vehicle",
+    "tabs": {
+      "main": 160,
+      "effects": 28,
+      "bio": 2
+    },
+    "bad": [],
+    "inputs": 13,
+    "ok": 13,
+    "mismatch": [],
+    "skipped": 1,
+    "errors": []
+  },
+  {
+    "name": "SWEEP Brand",
+    "type": "brand",
+    "tabs": {
+      "main": 855,
+      "resources": 43,
+      "members": 62
+    },
+    "bad": [],
+    "inputs": 13,
+    "ok": 13,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP weapon",
+    "type": "weapon",
+    "tabs": {
+      "-": 835
+    },
+    "bad": [],
+    "inputs": 27,
+    "ok": 27,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP gear",
+    "type": "gear",
+    "tabs": {
+      "-": 130
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP armor",
+    "type": "armor",
+    "tabs": {
+      "-": 142
+    },
+    "bad": [],
+    "inputs": 13,
+    "ok": 13,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP implant",
+    "type": "implant",
+    "tabs": {
+      "-": 156
+    },
+    "bad": [],
+    "inputs": 8,
+    "ok": 8,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP knowledge",
+    "type": "knowledge",
+    "tabs": {
+      "-": 62
+    },
+    "bad": [],
+    "inputs": 3,
+    "ok": 3,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP ritual",
+    "type": "ritual",
+    "tabs": {
+      "-": 122
+    },
+    "bad": [],
+    "inputs": 5,
+    "ok": 5,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP power",
+    "type": "power",
+    "tabs": {
+      "-": 346
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 6,
+    "errors": []
+  },
+  {
+    "name": "SWEEP asset",
+    "type": "asset",
+    "tabs": {
+      "-": 127
+    },
+    "bad": [],
+    "inputs": 8,
+    "ok": 8,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP resource",
+    "type": "resource",
+    "tabs": {
+      "-": 212
+    },
+    "bad": [],
+    "inputs": 17,
+    "ok": 17,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP software",
+    "type": "software",
+    "tabs": {
+      "-": 673
+    },
+    "bad": [],
+    "inputs": 18,
+    "ok": 18,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP deck",
+    "type": "deck",
+    "tabs": {
+      "-": 343
+    },
+    "bad": [],
+    "inputs": 17,
+    "ok": 17,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP vcr",
+    "type": "vcr",
+    "tabs": {
+      "-": 332
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W gear",
+    "type": "gear",
+    "tabs": {
+      "-": 132
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W power",
+    "type": "power",
+    "tabs": {
+      "-": 348
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 6,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W armor",
+    "type": "armor",
+    "tabs": {
+      "-": 144
+    },
+    "bad": [],
+    "inputs": 13,
+    "ok": 13,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W knowledge",
+    "type": "knowledge",
+    "tabs": {
+      "-": 64
+    },
+    "bad": [],
+    "inputs": 3,
+    "ok": 3,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W asset",
+    "type": "asset",
+    "tabs": {
+      "-": 129
+    },
+    "bad": [],
+    "inputs": 8,
+    "ok": 8,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W implant",
+    "type": "implant",
+    "tabs": {
+      "-": 158
+    },
+    "bad": [],
+    "inputs": 8,
+    "ok": 8,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W resource",
+    "type": "resource",
+    "tabs": {
+      "-": 214
+    },
+    "bad": [],
+    "inputs": 17,
+    "ok": 17,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W software",
+    "type": "software",
+    "tabs": {
+      "-": 675
+    },
+    "bad": [],
+    "inputs": 18,
+    "ok": 18,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W deck",
+    "type": "deck",
+    "tabs": {
+      "-": 345
+    },
+    "bad": [],
+    "inputs": 17,
+    "ok": 17,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W ritual",
+    "type": "ritual",
+    "tabs": {
+      "-": 124
+    },
+    "bad": [],
+    "inputs": 5,
+    "ok": 5,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W vcr",
+    "type": "vcr",
+    "tabs": {
+      "-": 334
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "SWEEP W weapon",
+    "type": "weapon",
+    "tabs": {
+      "-": 837
+    },
+    "bad": [],
+    "inputs": 27,
+    "ok": 27,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  }
+]

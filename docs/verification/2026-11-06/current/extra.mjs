@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {writeFileSync} from "node:fs";
-import {joinGM} from "/private/tmp/claude-501/-Users-mantanikenichi-mydevelop/169d1560-1874-49ac-a866-603a5aec9198/scratchpad/pw/lib.mjs";
-const out="/private/tmp/sinless-verification";
+import {joinGM} from "../../lib.mjs";
+const out=process.env.SINLESS_VERIFY_OUT??"/private/tmp/sinless-verification";
 const {browser,page,logs}=await joinGM();
 page.setDefaultTimeout(20000);
 let fixture,player;
