@@ -1,0 +1,2282 @@
+{
+  "results": [
+    {
+      "name": "environment",
+      "data": {
+        "foundry": "14.365",
+        "cachedSystem": "0.13.2",
+        "world": "sinless-test",
+        "currentAPI": "function"
+      }
+    },
+    {
+      "name": "import 01-combat-character.json",
+      "data": {
+        "file": "01-combat-character.json",
+        "id": "TD1WiESF9rZfhhpV",
+        "type": "character",
+        "items": 4,
+        "invalid": false,
+        "validation": {
+          "fields": null,
+          "joint": null
+        },
+        "system": {
+          "attributes": {
+            "str": {
+              "value": 6,
+              "max": 20
+            },
+            "bod": {
+              "value": 6,
+              "max": 20
+            },
+            "rea": {
+              "value": 6,
+              "max": 20
+            },
+            "int": {
+              "value": 6,
+              "max": 20
+            },
+            "wil": {
+              "value": 6,
+              "max": 20
+            },
+            "cha": {
+              "value": 6,
+              "max": 20
+            }
+          },
+          "heritage": "human",
+          "talent": "hedge",
+          "charismaPool": "resolve",
+          "creation": {
+            "active": false,
+            "priorities": {
+              "heritage": "",
+              "magic": "",
+              "attributes": "",
+              "skills": "",
+              "resources": ""
+            },
+            "attributeAdjust": 0
+          },
+          "skills": {
+            "firearms": {
+              "rank": 4,
+              "spec": ""
+            },
+            "meleeWeapons": {
+              "rank": 3,
+              "spec": ""
+            },
+            "observation": {
+              "rank": 3,
+              "spec": ""
+            },
+            "athletics": {
+              "rank": 3,
+              "spec": ""
+            },
+            "drive": {
+              "rank": 3,
+              "spec": ""
+            },
+            "gunnery": {
+              "rank": 3,
+              "spec": ""
+            },
+            "negotiation": {
+              "rank": 2,
+              "spec": ""
+            },
+            "unarmedCombat": {
+              "rank": 0,
+              "spec": ""
+            },
+            "martialArts": {
+              "rank": 0,
+              "spec": ""
+            },
+            "cyberCombat": {
+              "rank": 0,
+              "spec": ""
+            },
+            "throwingWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "heavyWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "energyWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "archery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "articulatedManeuvers": {
+              "rank": 0,
+              "spec": ""
+            },
+            "shadow": {
+              "rank": 0,
+              "spec": ""
+            },
+            "fly": {
+              "rank": 0,
+              "spec": ""
+            },
+            "biotech": {
+              "rank": 0,
+              "spec": ""
+            },
+            "reconnaissance": {
+              "rank": 0,
+              "spec": ""
+            },
+            "locksmithing": {
+              "rank": 0,
+              "spec": ""
+            },
+            "hacking": {
+              "rank": 0,
+              "spec": ""
+            },
+            "electronicWarfare": {
+              "rank": 0,
+              "spec": ""
+            },
+            "programming": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engMechanical": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engIndustrial": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engAeronautics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engArmory": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engElectronics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engNautical": {
+              "rank": 0,
+              "spec": ""
+            },
+            "artificing": {
+              "rank": 0,
+              "spec": ""
+            },
+            "channeling": {
+              "rank": 0,
+              "spec": ""
+            },
+            "sorcery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "astralSenses": {
+              "rank": 0,
+              "spec": ""
+            },
+            "survival": {
+              "rank": 0,
+              "spec": ""
+            },
+            "conjuring": {
+              "rank": 0,
+              "spec": ""
+            },
+            "leadership": {
+              "rank": 0,
+              "spec": ""
+            },
+            "subterfuge": {
+              "rank": 0,
+              "spec": ""
+            },
+            "coercion": {
+              "rank": 0,
+              "spec": ""
+            },
+            "fascination": {
+              "rank": 0,
+              "spec": ""
+            }
+          },
+          "zuzu": 10000,
+          "kismet": {
+            "earned": 10,
+            "unspent": 10,
+            "spent": 0,
+            "poolBonus": 0,
+            "boons": 0,
+            "resilience": {
+              "brawn": 0,
+              "finesse": 0,
+              "focus": 0,
+              "resolve": 0
+            },
+            "history": []
+          },
+          "notes": "<p>公開サーバー動作確認用。作成予算に準拠した完成キャラクターではありません。/ Test fixture; not a rules-legal starting character.</p>",
+          "etiquettes": {
+            "street": {
+              "rank": 3
+            },
+            "corporate": {
+              "rank": 0
+            },
+            "civic": {
+              "rank": 0
+            },
+            "aristocratic": {
+              "rank": 0
+            },
+            "military": {
+              "rank": 0
+            },
+            "criminal": {
+              "rank": 0
+            },
+            "wasteland": {
+              "rank": 0
+            }
+          },
+          "pools": {
+            "brawn": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "finesse": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "focus": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "resolve": {
+              "spent": 0,
+              "bonus": 0
+            }
+          },
+          "condition": {
+            "physical": {
+              "value": 0,
+              "bonus": 0
+            },
+            "stun": {
+              "value": 0,
+              "bonus": 0
+            },
+            "overflow": 0,
+            "bleedOut": null
+          },
+          "armorBonus": {
+            "ballistic": 0,
+            "impact": 0
+          },
+          "combat": {
+            "recoil": 0,
+            "recoilPrimed": false,
+            "recoilBonus": 0
+          },
+          "leyLine": {
+            "kind": "none",
+            "force": 0
+          },
+          "grid": {
+            "mcpSpent": 0,
+            "influence": 0
+          },
+          "penalty": 0,
+          "lifestyle": "low",
+          "lifestyleMonths": 1,
+          "ghost": 0,
+          "brand": "",
+          "zoetic": {
+            "bonus": 0
+          },
+          "initiativeBonus": 0,
+          "movement": 0,
+          "rig": {
+            "vcrSpent": 0
+          },
+          "biography": ""
+        },
+        "derived": {
+          "pools": {
+            "brawn": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "finesse": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "focus": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "resolve": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 13,
+              "value": 13
+            }
+          },
+          "zoetic": {
+            "bonus": 0,
+            "base": 6,
+            "raw": 5,
+            "implantLoss": 1,
+            "gearLoss": 1,
+            "value": 4
+          }
+        }
+      }
+    },
+    {
+      "name": "import 02-magic-character.json",
+      "data": {
+        "file": "02-magic-character.json",
+        "id": "rLex28Lii5jlauqP",
+        "type": "character",
+        "items": 4,
+        "invalid": false,
+        "validation": {
+          "fields": null,
+          "joint": null
+        },
+        "system": {
+          "attributes": {
+            "str": {
+              "value": 6,
+              "max": 20
+            },
+            "bod": {
+              "value": 6,
+              "max": 20
+            },
+            "rea": {
+              "value": 6,
+              "max": 20
+            },
+            "int": {
+              "value": 6,
+              "max": 20
+            },
+            "wil": {
+              "value": 6,
+              "max": 20
+            },
+            "cha": {
+              "value": 6,
+              "max": 20
+            }
+          },
+          "heritage": "human",
+          "talent": "mage",
+          "charismaPool": "resolve",
+          "creation": {
+            "active": false,
+            "priorities": {
+              "heritage": "",
+              "magic": "",
+              "attributes": "",
+              "skills": "",
+              "resources": ""
+            },
+            "attributeAdjust": 0
+          },
+          "skills": {
+            "sorcery": {
+              "rank": 4,
+              "spec": ""
+            },
+            "channeling": {
+              "rank": 4,
+              "spec": ""
+            },
+            "conjuring": {
+              "rank": 3,
+              "spec": ""
+            },
+            "astralSenses": {
+              "rank": 3,
+              "spec": ""
+            },
+            "meleeWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "unarmedCombat": {
+              "rank": 0,
+              "spec": ""
+            },
+            "martialArts": {
+              "rank": 0,
+              "spec": ""
+            },
+            "cyberCombat": {
+              "rank": 0,
+              "spec": ""
+            },
+            "throwingWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "athletics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "firearms": {
+              "rank": 0,
+              "spec": ""
+            },
+            "gunnery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "heavyWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "energyWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "archery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "articulatedManeuvers": {
+              "rank": 0,
+              "spec": ""
+            },
+            "shadow": {
+              "rank": 0,
+              "spec": ""
+            },
+            "drive": {
+              "rank": 0,
+              "spec": ""
+            },
+            "fly": {
+              "rank": 0,
+              "spec": ""
+            },
+            "observation": {
+              "rank": 0,
+              "spec": ""
+            },
+            "biotech": {
+              "rank": 0,
+              "spec": ""
+            },
+            "reconnaissance": {
+              "rank": 0,
+              "spec": ""
+            },
+            "locksmithing": {
+              "rank": 0,
+              "spec": ""
+            },
+            "hacking": {
+              "rank": 0,
+              "spec": ""
+            },
+            "electronicWarfare": {
+              "rank": 0,
+              "spec": ""
+            },
+            "programming": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engMechanical": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engIndustrial": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engAeronautics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engArmory": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engElectronics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engNautical": {
+              "rank": 0,
+              "spec": ""
+            },
+            "artificing": {
+              "rank": 0,
+              "spec": ""
+            },
+            "negotiation": {
+              "rank": 0,
+              "spec": ""
+            },
+            "survival": {
+              "rank": 0,
+              "spec": ""
+            },
+            "leadership": {
+              "rank": 0,
+              "spec": ""
+            },
+            "subterfuge": {
+              "rank": 0,
+              "spec": ""
+            },
+            "coercion": {
+              "rank": 0,
+              "spec": ""
+            },
+            "fascination": {
+              "rank": 0,
+              "spec": ""
+            }
+          },
+          "zuzu": 10000,
+          "kismet": {
+            "earned": 10,
+            "unspent": 10,
+            "spent": 0,
+            "poolBonus": 0,
+            "boons": 0,
+            "resilience": {
+              "brawn": 0,
+              "finesse": 0,
+              "focus": 0,
+              "resolve": 0
+            },
+            "history": []
+          },
+          "notes": "<p>公開サーバー動作確認用。作成予算に準拠した完成キャラクターではありません。/ Test fixture; not a rules-legal starting character.</p>",
+          "etiquettes": {
+            "corporate": {
+              "rank": 0
+            },
+            "street": {
+              "rank": 0
+            },
+            "civic": {
+              "rank": 0
+            },
+            "aristocratic": {
+              "rank": 0
+            },
+            "military": {
+              "rank": 0
+            },
+            "criminal": {
+              "rank": 0
+            },
+            "wasteland": {
+              "rank": 0
+            }
+          },
+          "pools": {
+            "brawn": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "finesse": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "focus": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "resolve": {
+              "spent": 0,
+              "bonus": 0
+            }
+          },
+          "condition": {
+            "physical": {
+              "value": 0,
+              "bonus": 0
+            },
+            "stun": {
+              "value": 0,
+              "bonus": 0
+            },
+            "overflow": 0,
+            "bleedOut": null
+          },
+          "armorBonus": {
+            "ballistic": 0,
+            "impact": 0
+          },
+          "combat": {
+            "recoil": 0,
+            "recoilPrimed": false,
+            "recoilBonus": 0
+          },
+          "leyLine": {
+            "kind": "none",
+            "force": 0
+          },
+          "grid": {
+            "mcpSpent": 0,
+            "influence": 0
+          },
+          "penalty": 0,
+          "lifestyle": "low",
+          "lifestyleMonths": 1,
+          "ghost": 0,
+          "brand": "",
+          "zoetic": {
+            "bonus": 0
+          },
+          "initiativeBonus": 0,
+          "movement": 0,
+          "rig": {
+            "vcrSpent": 0
+          },
+          "biography": ""
+        },
+        "derived": {
+          "pools": {
+            "brawn": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "finesse": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "focus": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "resolve": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 13,
+              "value": 13
+            }
+          },
+          "zoetic": {
+            "bonus": 0,
+            "base": 6,
+            "raw": 6,
+            "implantLoss": 0,
+            "gearLoss": 0,
+            "value": 6
+          }
+        }
+      }
+    },
+    {
+      "name": "import 03-decker-character.json",
+      "data": {
+        "file": "03-decker-character.json",
+        "id": "iS5mxPUL5m0b5Cth",
+        "type": "character",
+        "items": 6,
+        "invalid": false,
+        "validation": {
+          "fields": null,
+          "joint": null
+        },
+        "system": {
+          "attributes": {
+            "str": {
+              "value": 6,
+              "max": 20
+            },
+            "bod": {
+              "value": 6,
+              "max": 20
+            },
+            "rea": {
+              "value": 6,
+              "max": 20
+            },
+            "int": {
+              "value": 6,
+              "max": 20
+            },
+            "wil": {
+              "value": 6,
+              "max": 20
+            },
+            "cha": {
+              "value": 6,
+              "max": 20
+            }
+          },
+          "heritage": "human",
+          "talent": "hedge",
+          "charismaPool": "resolve",
+          "creation": {
+            "active": false,
+            "priorities": {
+              "heritage": "",
+              "magic": "",
+              "attributes": "",
+              "skills": "",
+              "resources": ""
+            },
+            "attributeAdjust": 0
+          },
+          "skills": {
+            "hacking": {
+              "rank": 4,
+              "spec": ""
+            },
+            "electronicWarfare": {
+              "rank": 4,
+              "spec": ""
+            },
+            "programming": {
+              "rank": 3,
+              "spec": ""
+            },
+            "observation": {
+              "rank": 3,
+              "spec": ""
+            },
+            "meleeWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "unarmedCombat": {
+              "rank": 0,
+              "spec": ""
+            },
+            "martialArts": {
+              "rank": 0,
+              "spec": ""
+            },
+            "cyberCombat": {
+              "rank": 0,
+              "spec": ""
+            },
+            "throwingWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "athletics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "firearms": {
+              "rank": 0,
+              "spec": ""
+            },
+            "gunnery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "heavyWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "energyWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "archery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "articulatedManeuvers": {
+              "rank": 0,
+              "spec": ""
+            },
+            "shadow": {
+              "rank": 0,
+              "spec": ""
+            },
+            "drive": {
+              "rank": 0,
+              "spec": ""
+            },
+            "fly": {
+              "rank": 0,
+              "spec": ""
+            },
+            "biotech": {
+              "rank": 0,
+              "spec": ""
+            },
+            "reconnaissance": {
+              "rank": 0,
+              "spec": ""
+            },
+            "locksmithing": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engMechanical": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engIndustrial": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engAeronautics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engArmory": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engElectronics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engNautical": {
+              "rank": 0,
+              "spec": ""
+            },
+            "artificing": {
+              "rank": 0,
+              "spec": ""
+            },
+            "negotiation": {
+              "rank": 0,
+              "spec": ""
+            },
+            "channeling": {
+              "rank": 0,
+              "spec": ""
+            },
+            "sorcery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "astralSenses": {
+              "rank": 0,
+              "spec": ""
+            },
+            "survival": {
+              "rank": 0,
+              "spec": ""
+            },
+            "conjuring": {
+              "rank": 0,
+              "spec": ""
+            },
+            "leadership": {
+              "rank": 0,
+              "spec": ""
+            },
+            "subterfuge": {
+              "rank": 0,
+              "spec": ""
+            },
+            "coercion": {
+              "rank": 0,
+              "spec": ""
+            },
+            "fascination": {
+              "rank": 0,
+              "spec": ""
+            }
+          },
+          "zuzu": 10000,
+          "kismet": {
+            "earned": 10,
+            "unspent": 10,
+            "spent": 0,
+            "poolBonus": 0,
+            "boons": 0,
+            "resilience": {
+              "brawn": 0,
+              "finesse": 0,
+              "focus": 0,
+              "resolve": 0
+            },
+            "history": []
+          },
+          "notes": "<p>公開サーバー動作確認用。作成予算に準拠した完成キャラクターではありません。/ Test fixture; not a rules-legal starting character.</p>",
+          "etiquettes": {
+            "corporate": {
+              "rank": 0
+            },
+            "street": {
+              "rank": 0
+            },
+            "civic": {
+              "rank": 0
+            },
+            "aristocratic": {
+              "rank": 0
+            },
+            "military": {
+              "rank": 0
+            },
+            "criminal": {
+              "rank": 0
+            },
+            "wasteland": {
+              "rank": 0
+            }
+          },
+          "pools": {
+            "brawn": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "finesse": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "focus": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "resolve": {
+              "spent": 0,
+              "bonus": 0
+            }
+          },
+          "condition": {
+            "physical": {
+              "value": 0,
+              "bonus": 0
+            },
+            "stun": {
+              "value": 0,
+              "bonus": 0
+            },
+            "overflow": 0,
+            "bleedOut": null
+          },
+          "armorBonus": {
+            "ballistic": 0,
+            "impact": 0
+          },
+          "combat": {
+            "recoil": 0,
+            "recoilPrimed": false,
+            "recoilBonus": 0
+          },
+          "leyLine": {
+            "kind": "none",
+            "force": 0
+          },
+          "grid": {
+            "mcpSpent": 0,
+            "influence": 0
+          },
+          "penalty": 0,
+          "lifestyle": "low",
+          "lifestyleMonths": 1,
+          "ghost": 0,
+          "brand": "",
+          "zoetic": {
+            "bonus": 0
+          },
+          "initiativeBonus": 0,
+          "movement": 0,
+          "rig": {
+            "vcrSpent": 0
+          },
+          "biography": ""
+        },
+        "derived": {
+          "pools": {
+            "brawn": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "finesse": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "focus": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 10,
+              "value": 10
+            },
+            "resolve": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 13,
+              "value": 13
+            }
+          },
+          "zoetic": {
+            "bonus": 0,
+            "base": 6,
+            "raw": 6,
+            "implantLoss": 0,
+            "gearLoss": 1,
+            "value": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "import 04-training-npc.json",
+      "data": {
+        "file": "04-training-npc.json",
+        "id": "LGovxK9xNxkjMwVu",
+        "type": "npc",
+        "items": 2,
+        "invalid": false,
+        "validation": {
+          "fields": null,
+          "joint": null
+        },
+        "system": {
+          "poolMax": {
+            "brawn": 8,
+            "finesse": 8,
+            "focus": 8,
+            "resolve": 8
+          },
+          "conditionMax": {
+            "physical": 10,
+            "stun": 10
+          },
+          "strength": 6,
+          "initiative": 10,
+          "agonarch": true,
+          "defenses": {
+            "dodge": 4,
+            "soak": 4,
+            "resist": 4
+          },
+          "notes": "<p>固定防御ダイスを使う訓練用NPC。/ Training NPC with fixed defense dice.</p>",
+          "skills": {
+            "meleeWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "unarmedCombat": {
+              "rank": 0,
+              "spec": ""
+            },
+            "martialArts": {
+              "rank": 0,
+              "spec": ""
+            },
+            "cyberCombat": {
+              "rank": 0,
+              "spec": ""
+            },
+            "throwingWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "athletics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "firearms": {
+              "rank": 0,
+              "spec": ""
+            },
+            "gunnery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "heavyWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "energyWeapons": {
+              "rank": 0,
+              "spec": ""
+            },
+            "archery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "articulatedManeuvers": {
+              "rank": 0,
+              "spec": ""
+            },
+            "shadow": {
+              "rank": 0,
+              "spec": ""
+            },
+            "drive": {
+              "rank": 0,
+              "spec": ""
+            },
+            "fly": {
+              "rank": 0,
+              "spec": ""
+            },
+            "observation": {
+              "rank": 0,
+              "spec": ""
+            },
+            "biotech": {
+              "rank": 0,
+              "spec": ""
+            },
+            "reconnaissance": {
+              "rank": 0,
+              "spec": ""
+            },
+            "locksmithing": {
+              "rank": 0,
+              "spec": ""
+            },
+            "hacking": {
+              "rank": 0,
+              "spec": ""
+            },
+            "electronicWarfare": {
+              "rank": 0,
+              "spec": ""
+            },
+            "programming": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engMechanical": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engIndustrial": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engAeronautics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engArmory": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engElectronics": {
+              "rank": 0,
+              "spec": ""
+            },
+            "engNautical": {
+              "rank": 0,
+              "spec": ""
+            },
+            "artificing": {
+              "rank": 0,
+              "spec": ""
+            },
+            "negotiation": {
+              "rank": 0,
+              "spec": ""
+            },
+            "channeling": {
+              "rank": 0,
+              "spec": ""
+            },
+            "sorcery": {
+              "rank": 0,
+              "spec": ""
+            },
+            "astralSenses": {
+              "rank": 0,
+              "spec": ""
+            },
+            "survival": {
+              "rank": 0,
+              "spec": ""
+            },
+            "conjuring": {
+              "rank": 0,
+              "spec": ""
+            },
+            "leadership": {
+              "rank": 0,
+              "spec": ""
+            },
+            "subterfuge": {
+              "rank": 0,
+              "spec": ""
+            },
+            "coercion": {
+              "rank": 0,
+              "spec": ""
+            },
+            "fascination": {
+              "rank": 0,
+              "spec": ""
+            }
+          },
+          "etiquettes": {
+            "corporate": {
+              "rank": 0
+            },
+            "street": {
+              "rank": 0
+            },
+            "civic": {
+              "rank": 0
+            },
+            "aristocratic": {
+              "rank": 0
+            },
+            "military": {
+              "rank": 0
+            },
+            "criminal": {
+              "rank": 0
+            },
+            "wasteland": {
+              "rank": 0
+            }
+          },
+          "pools": {
+            "brawn": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "finesse": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "focus": {
+              "spent": 0,
+              "bonus": 0
+            },
+            "resolve": {
+              "spent": 0,
+              "bonus": 0
+            }
+          },
+          "condition": {
+            "physical": {
+              "value": 0,
+              "bonus": 0
+            },
+            "stun": {
+              "value": 0,
+              "bonus": 0
+            },
+            "overflow": 0,
+            "bleedOut": null
+          },
+          "armorBonus": {
+            "ballistic": 0,
+            "impact": 0
+          },
+          "combat": {
+            "recoil": 0,
+            "recoilPrimed": false,
+            "recoilBonus": 0
+          },
+          "leyLine": {
+            "kind": "none",
+            "force": 0
+          },
+          "grid": {
+            "mcpSpent": 0,
+            "influence": 0
+          },
+          "penalty": 0,
+          "spiritForce": 0,
+          "network": {
+            "entity": false,
+            "hardening": 0,
+            "alertAura": 0,
+            "shrinkDice": 0,
+            "shrinkMeters": 2
+          }
+        },
+        "derived": {
+          "pools": {
+            "brawn": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 8,
+              "value": 8
+            },
+            "finesse": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 8,
+              "value": 8
+            },
+            "focus": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 8,
+              "value": 8
+            },
+            "resolve": {
+              "spent": 0,
+              "bonus": 0,
+              "max": 8,
+              "value": 8
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "import 05-test-vehicle.json",
+      "data": {
+        "file": "05-test-vehicle.json",
+        "id": "g41mjXkxm4409lzZ",
+        "type": "vehicle",
+        "items": 1,
+        "invalid": false,
+        "validation": {
+          "fields": null,
+          "joint": null
+        },
+        "system": {
+          "kind": "vehicle",
+          "frame": "none",
+          "mobility": "ground",
+          "body": 8,
+          "weaponWeight": 2,
+          "movement": 12,
+          "handling": 2,
+          "hardening": 3,
+          "armorBonus": {
+            "ballistic": 3,
+            "impact": 2
+          },
+          "controlMode": "vcr",
+          "controller": "",
+          "notes": "<p>体験01のキャラクターをシートへドロップしてリガーに設定してください。/ Drop Combat character onto this sheet to assign a rigger.</p>",
+          "cargo": 0,
+          "inertia": 0,
+          "cost": 0,
+          "battleRam": false,
+          "condition": {
+            "physical": {
+              "value": 0
+            },
+            "stun": {
+              "value": 0
+            },
+            "overflow": 0
+          },
+          "penalty": 0
+        },
+        "derived": {}
+      }
+    },
+    {
+      "name": "import 06-test-brand.json",
+      "data": {
+        "file": "06-test-brand.json",
+        "id": "9Z0hZg1BnwNhj3iv",
+        "type": "brand",
+        "items": 2,
+        "invalid": false,
+        "validation": {
+          "fields": null,
+          "joint": null
+        },
+        "system": {
+          "kind": "体験用 / Demo",
+          "base": {
+            "muscle": 3,
+            "magic": 3,
+            "media": 3,
+            "espionage": 3,
+            "grid": 3
+          },
+          "bank": 10000,
+          "traits": [],
+          "members": [],
+          "sector": {
+            "name": "テスト地区 / Test sector",
+            "heat": 0,
+            "crackdownMonths": 0
+          },
+          "notes": "<p>メンバータブに体験キャラクターをドロップしてください。/ Drop sample characters into the Members tab.</p>",
+          "marketAdjust": 0,
+          "actionsUsed": 0,
+          "sectorTurn": 1,
+          "followers": 0
+        },
+        "derived": {
+          "finance": {
+            "marketCap": 1000,
+            "resourceUpkeep": 100,
+            "assetUpkeep": 0,
+            "upkeep": 100,
+            "net": 900,
+            "assetCapacityExceeded": false
+          }
+        }
+      }
+    },
+    {
+      "name": "actor links and derived data",
+      "data": {
+        "scene": "EAtTdR3rymKfKOBX",
+        "controller": "TD1WiESF9rZfhhpV",
+        "members": [
+          "TD1WiESF9rZfhhpV",
+          "rLex28Lii5jlauqP",
+          "iS5mxPUL5m0b5Cth"
+        ],
+        "zoetic": 6,
+        "mcp": 6
+      }
+    },
+    {
+      "name": "combat started"
+    },
+    {
+      "name": "combat weapon card",
+      "data": {
+        "id": "WZ8s0DKooydvnB0N",
+        "flags": {
+          "test": {
+            "label": "テスト銃 / Test gun",
+            "pool": "finesse",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 6,
+              "poolDice": 6,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 6,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "銃器"
+            ],
+            "extra": {
+              "weapon": true,
+              "damage": 3,
+              "damageText": "3",
+              "damageFormula": "",
+              "damageNote": "",
+              "penetration": 2,
+              "armorType": "ballistic",
+              "energy": false,
+              "stun": false,
+              "blast": false,
+              "digital": null,
+              "ignoreHardening": 0,
+              "targets": [
+                {
+                  "uuid": "Scene.EAtTdR3rymKfKOBX.Token.7LeCKjauO1Nj0ict",
+                  "name": "体験04：訓練相手 / Training opponent"
+                }
+              ],
+              "recoil": {
+                "tokens": 0,
+                "capacity": 1,
+                "gained": 0,
+                "jammed": false
+              }
+            },
+            "initial": [
+              5,
+              5,
+              4,
+              6,
+              2,
+              2
+            ],
+            "final": [
+              5,
+              5,
+              4,
+              6,
+              2,
+              2
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.TD1WiESF9rZfhhpV"
+        }
+      }
+    },
+    {
+      "name": "NPC fixed soak",
+      "data": {
+        "id": "XJH6uyAW10iS4Lmc",
+        "flags": {
+          "test": {
+            "label": "ソーク",
+            "pool": null,
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 4,
+              "poolDice": 4,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 4,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": false
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "固定ダイス（プール消費なし）"
+            ],
+            "extra": {},
+            "initial": [
+              1,
+              2,
+              6,
+              4
+            ],
+            "final": [
+              1,
+              2,
+              6,
+              4
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.LGovxK9xNxkjMwVu"
+        }
+      }
+    },
+    {
+      "name": "NPC physical damage applied"
+    },
+    {
+      "name": "attack spell and drain card",
+      "data": {
+        "id": "v5pFCgPTVGaQKt1P",
+        "flags": {
+          "test": {
+            "label": "テスト攻撃呪文 / Test bolt",
+            "pool": "resolve",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 5,
+              "poolDice": 5,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 5,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "魔術"
+            ],
+            "extra": {
+              "spell": {
+                "force": 3,
+                "drain": 3,
+                "lethal": false,
+                "fetish": 1,
+                "label": "テスト攻撃呪文 / Test bolt",
+                "continuous": false,
+                "resistPool": "resolve",
+                "duration": "instant",
+                "img": "icons/svg/item-bag.svg",
+                "targets": []
+              },
+              "effect": "",
+              "weapon": true,
+              "magic": true,
+              "damage": 4,
+              "damageText": "1+Force",
+              "damageFormula": "",
+              "damageNote": "",
+              "penetration": 0,
+              "armorType": "ballistic",
+              "energy": false,
+              "stun": false,
+              "blast": false,
+              "resistPool": "resolve",
+              "targets": [
+                {
+                  "uuid": "Scene.EAtTdR3rymKfKOBX.Token.7LeCKjauO1Nj0ict",
+                  "name": "体験04：訓練相手 / Training opponent"
+                }
+              ]
+            },
+            "initial": [
+              1,
+              2,
+              1,
+              5,
+              2
+            ],
+            "final": [
+              1,
+              2,
+              1,
+              5,
+              2
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.rLex28Lii5jlauqP"
+        }
+      }
+    },
+    {
+      "name": "continuous spell card",
+      "data": {
+        "id": "S7ZA5MwwjcO935dO",
+        "flags": {
+          "test": {
+            "label": "テスト持続呪文 / Test sustained spell",
+            "pool": "resolve",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 4,
+              "poolDice": 4,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 4,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "魔術"
+            ],
+            "extra": {
+              "spell": {
+                "force": 3,
+                "drain": 3,
+                "lethal": false,
+                "fetish": 0,
+                "label": "テスト持続呪文 / Test sustained spell",
+                "continuous": true,
+                "resistPool": "resolve",
+                "duration": "continuous",
+                "img": "icons/svg/item-bag.svg",
+                "targets": [
+                  {
+                    "uuid": "Scene.EAtTdR3rymKfKOBX.Token.7LeCKjauO1Nj0ict",
+                    "name": "体験04：訓練相手 / Training opponent"
+                  }
+                ]
+              },
+              "effect": ""
+            },
+            "initial": [
+              5,
+              5,
+              3,
+              5
+            ],
+            "final": [
+              5,
+              5,
+              3,
+              5
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.rLex28Lii5jlauqP"
+        }
+      }
+    },
+    {
+      "name": "summoning roll",
+      "data": {
+        "id": "hhwxDDiw5rp3tis4",
+        "flags": {
+          "test": {
+            "label": "テスト召喚 / Test summoning",
+            "pool": "resolve",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 3,
+              "poolDice": 3,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 3,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "召喚"
+            ],
+            "extra": {
+              "summon": {
+                "force": 2,
+                "bag": 1,
+                "spiritActor": "",
+                "name": "テスト召喚 / Test summoning"
+              }
+            },
+            "initial": [
+              6,
+              6,
+              2
+            ],
+            "final": [
+              6,
+              6,
+              2
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.rLex28Lii5jlauqP"
+        }
+      }
+    },
+    {
+      "name": "ritual roll",
+      "data": {
+        "id": "fQ02bWgUJtMj06da",
+        "flags": {
+          "test": {
+            "label": "テスト儀式 / Test ritual",
+            "pool": "resolve",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 3,
+              "poolDice": 1,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 1,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [],
+            "extra": {
+              "spell": {
+                "drain": 3,
+                "lethal": false,
+                "fetish": 0,
+                "label": "テスト儀式 / Test ritual"
+              }
+            },
+            "initial": [
+              1
+            ],
+            "final": [
+              1
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": true,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.rLex28Lii5jlauqP"
+        }
+      }
+    },
+    {
+      "name": "digital attack 0",
+      "data": {
+        "id": "JAsKPUXerE2LRW99",
+        "flags": {
+          "test": {
+            "label": "テスト攻撃 / Test derez",
+            "pool": "focus",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 7,
+              "poolDice": 7,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 7,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "コンピューター：ハッキング",
+              "テストデッキ / Test deck"
+            ],
+            "extra": {
+              "software": true,
+              "alert": 0,
+              "alertPerSuccess": 0,
+              "alertNote": "",
+              "shadow": 2,
+              "sensor": 0,
+              "effect": "",
+              "weapon": true,
+              "digital": "derez",
+              "rating": 3,
+              "damage": 0,
+              "penetration": 0,
+              "armorType": "ballistic",
+              "targets": [
+                {
+                  "uuid": "Scene.EAtTdR3rymKfKOBX.Token.7LeCKjauO1Nj0ict",
+                  "name": "体験04：訓練相手 / Training opponent"
+                }
+              ]
+            },
+            "initial": [
+              1,
+              3,
+              1,
+              3,
+              6,
+              5,
+              3
+            ],
+            "final": [
+              1,
+              3,
+              1,
+              3,
+              6,
+              5,
+              3
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 6,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.iS5mxPUL5m0b5Cth"
+        }
+      }
+    },
+    {
+      "name": "digital attack 1",
+      "data": {
+        "id": "buNkrhV0zgNxynWn",
+        "flags": {
+          "test": {
+            "label": "テスト攻撃 / Test acid",
+            "pool": "focus",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 7,
+              "poolDice": 7,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 7,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "コンピューター：ハッキング",
+              "テストデッキ / Test deck"
+            ],
+            "extra": {
+              "software": true,
+              "alert": 0,
+              "alertPerSuccess": 0,
+              "alertNote": "",
+              "shadow": 2,
+              "sensor": 0,
+              "effect": "",
+              "weapon": true,
+              "digital": "acid",
+              "rating": 3,
+              "damage": 0,
+              "penetration": 0,
+              "armorType": "ballistic",
+              "targets": [
+                {
+                  "uuid": "Scene.EAtTdR3rymKfKOBX.Token.7LeCKjauO1Nj0ict",
+                  "name": "体験04：訓練相手 / Training opponent"
+                }
+              ]
+            },
+            "initial": [
+              4,
+              1,
+              2,
+              4,
+              6,
+              6,
+              2
+            ],
+            "final": [
+              4,
+              1,
+              2,
+              4,
+              6,
+              6,
+              2
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.iS5mxPUL5m0b5Cth"
+        }
+      }
+    },
+    {
+      "name": "digital attack 2",
+      "data": {
+        "id": "dFD9taWRSkjAH5Vw",
+        "flags": {
+          "test": {
+            "label": "テスト攻撃 / Test strike",
+            "pool": "focus",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 7,
+              "poolDice": 2,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 2,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "コンピューター：ハッキング",
+              "テストデッキ / Test deck"
+            ],
+            "extra": {
+              "software": true,
+              "alert": 0,
+              "alertPerSuccess": 0,
+              "alertNote": "",
+              "shadow": 2,
+              "sensor": 0,
+              "effect": "",
+              "weapon": true,
+              "digital": "strike",
+              "rating": 3,
+              "damage": 6,
+              "penetration": 0,
+              "armorType": "ballistic",
+              "targets": [
+                {
+                  "uuid": "Scene.EAtTdR3rymKfKOBX.Token.7LeCKjauO1Nj0ict",
+                  "name": "体験04：訓練相手 / Training opponent"
+                }
+              ],
+              "damageText": "1d6",
+              "damageFormula": "6",
+              "stun": true,
+              "ignoreArmor": true
+            },
+            "initial": [
+              4,
+              1
+            ],
+            "final": [
+              4,
+              1
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.iS5mxPUL5m0b5Cth"
+        }
+      }
+    },
+    {
+      "name": "vehicle maneuver",
+      "data": {
+        "id": "zW9yygdrN9glM0so",
+        "flags": {
+          "test": {
+            "label": "機動: 体験05：乗り物 / Vehicle",
+            "pool": "focus",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 3,
+              "poolDice": 3,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 3,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "運転",
+              "体験05：乗り物 / Vehicle",
+              "VCR"
+            ],
+            "extra": {
+              "vehicleUuid": "Actor.g41mjXkxm4409lzZ"
+            },
+            "initial": [
+              2,
+              1,
+              6
+            ],
+            "final": [
+              2,
+              1,
+              6
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.TD1WiESF9rZfhhpV"
+        }
+      }
+    },
+    {
+      "name": "mounted weapon",
+      "data": {
+        "id": "3IlM3hytjVsMICnK",
+        "flags": {
+          "test": {
+            "label": "テスト搭載銃 / Test mounted gun (体験05：乗り物 / Vehicle)",
+            "pool": "finesse",
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 3,
+              "poolDice": 3,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 3,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": true
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "砲術",
+              "体験05：乗り物 / Vehicle",
+              "VCR"
+            ],
+            "extra": {
+              "weapon": true,
+              "damage": 3,
+              "damageText": "3",
+              "damageFormula": "",
+              "damageNote": "",
+              "penetration": 2,
+              "armorType": "ballistic",
+              "energy": false,
+              "stun": false,
+              "blast": false,
+              "digital": null,
+              "ignoreHardening": 0,
+              "targets": [
+                {
+                  "uuid": "Scene.EAtTdR3rymKfKOBX.Token.7LeCKjauO1Nj0ict",
+                  "name": "体験04：訓練相手 / Training opponent"
+                }
+              ]
+            },
+            "initial": [
+              4,
+              3,
+              6
+            ],
+            "final": [
+              4,
+              3,
+              6
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.TD1WiESF9rZfhhpV"
+        }
+      }
+    },
+    {
+      "name": "brand sector action",
+      "data": {
+        "id": "2cVvnWIKOR9fpALI",
+        "flags": {
+          "test": {
+            "label": "メディア・キャンペーン",
+            "pool": null,
+            "target": 4,
+            "untrained": false,
+            "plan": {
+              "limit": 3,
+              "poolDice": 3,
+              "bonusDice": 0,
+              "kismetDice": 0,
+              "total": 3,
+              "impossible": false,
+              "untrained": false,
+              "usesPool": false
+            },
+            "reroll": 0,
+            "threshold": null,
+            "notes": [
+              "メディア"
+            ],
+            "extra": {
+              "effect": "成功1につき、セクター内のリソース1つに影響力1。",
+              "heatRaised": null
+            },
+            "initial": [
+              4,
+              6,
+              3
+            ],
+            "final": [
+              4,
+              6,
+              3
+            ],
+            "rerolledIndices": [],
+            "rerollCancelled": false,
+            "abf": false,
+            "kismetAdded": [],
+            "autoSuccesses": 0,
+            "mcpUsed": 0,
+            "vcrUsed": 0
+          },
+          "actorUuid": "Actor.9Z0hZg1BnwNhj3iv"
+        }
+      }
+    },
+    {
+      "name": "round pool recovery",
+      "data": {
+        "round": 2,
+        "spent": 0,
+        "waitedMs": 373
+      }
+    },
+    {
+      "name": "cleanup",
+      "data": {
+        "actorsRemaining": [],
+        "scenesRemaining": [],
+        "combatsRemaining": []
+      }
+    }
+  ],
+  "logs": [
+    "warning: Your web browser does not have hardware acceleration enabled. This will severely impair the performance of Foundry Virtual Tabletop and cause graphical errors and anomalies. Be sure to enable hardware acceleration in your browser settings. ",
+    "warning: [.WebGL-0x12c0045be00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x12c0045be00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x12c0045be00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x12c0045be00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+  ]
+}
