@@ -1,0 +1,105 @@
+[
+  {
+    "name": "player own sheet editable",
+    "data": {
+      "isOwner": true,
+      "isGM": false,
+      "editable": true
+    }
+  },
+  {
+    "name": "player skill roll creates chat card",
+    "data": {
+      "limit": 6,
+      "poolDice": 6,
+      "bonusDice": 0,
+      "kismetDice": 0,
+      "total": 6,
+      "impossible": false,
+      "untrained": false,
+      "usesPool": false
+    }
+  },
+  {
+    "name": "player attacks GM NPC and cannot apply its defense",
+    "data": {
+      "id": "kb3aidZS7d9YfV8T",
+      "targets": [
+        {
+          "uuid": "Scene.aXpNS5nfb4RYoQE0.Token.SixHT3Yu6yajQeD6",
+          "name": "VERIFY GM Enemy"
+        }
+      ]
+    }
+  },
+  {
+    "name": "GM resolves player attack",
+    "data": {
+      "physical": {
+        "value": 6,
+        "bonus": 0,
+        "max": 6
+      },
+      "stun": {
+        "value": 0,
+        "bonus": 0,
+        "max": 6
+      },
+      "overflow": 12,
+      "bleedOut": null,
+      "penalty": 2
+    }
+  },
+  {
+    "name": "unowned sheet read only and localized permission warning",
+    "data": {
+      "editable": false,
+      "before": 12,
+      "after": 12,
+      "notification": "そのアクターの所有者ではありません。"
+    }
+  },
+  {
+    "name": "initiative PC rolled and NPC static",
+    "data": {
+      "id": "neQVbaxfPUJISInK",
+      "pc": 20.12,
+      "npc": 12,
+      "npcExpected": 12,
+      "focus": 21,
+      "rea": 12
+    }
+  },
+  {
+    "name": "turn prompts overload and sustained resistance to owners",
+    "data": {
+      "content": "<div class=\"sinless-card sinless-overload-card\">\n  <header class=\"card-header\">\n    <h3>VERIFY Player Character：限界判定</h3>\n  </header>\n  <p class=\"effect warn\">トラックが満杯：ターンごとに単純アクション 1 回のみ。エクスプロイト・アクションとリフレックス・アクションは使えない（p.97）。</p>\n  <button type=\"button\" data-sinless-action=\"overload\" data-track=\"physical\"><i class=\"fa-solid fa-heart-pulse\"></i> 限界判定（肉体） (1 成功が必要)</button>\n  <p class=\"effect\">呪文の影響下で行動するか、複雑アクションで抵抗する（p.167）。</p>\n  <button type=\"button\" data-sinless-action=\"resist-sustained\" data-effect-uuid=\"Actor.ny511NClh0NvLknD.ActiveEffect.dag1J4gpN1MKeCM7\"><i class=\"fa-solid fa-hand-sparkles\"></i> VERIFY Sustained に抵抗（2 / 8）</button>\n</div>",
+      "whisper": [
+        "UfqUc7uyKzhu7IcT",
+        "orMspubCNDLfefDM"
+      ]
+    }
+  },
+  {
+    "name": "advancing a turn preserves spent pool dice",
+    "data": {
+      "spent": 3
+    }
+  },
+  {
+    "name": "new round refreshes pools and MCP",
+    "data": {
+      "finesse": {
+        "spent": 0,
+        "bonus": 0,
+        "max": 21,
+        "value": 21
+      },
+      "mcp": 0
+    }
+  },
+  {
+    "name": "ending combat clears recoil",
+    "data": {}
+  }
+]

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import {writeFileSync} from "node:fs";
-import {joinGM} from "../../lib.mjs";
+import {joinGM,FOUNDRY_URL} from "../../lib.mjs";
 const out=process.env.SINLESS_VERIFY_OUT??"/private/tmp/sinless-verification";
 const {browser,page,logs}=await joinGM();
 page.setDefaultTimeout(20000);
-let fixture,player;
+let fixture,player,playerContext;const playerConsole=[];
 const results=[];
 const pass=(name,data)=>{results.push({name,data});console.log("PASS",name,data);};
 try{
@@ -20,20 +20,21 @@ try{
   const td1=await pc.getTokenDocument({x:300,y:300}),td2=await npc.getTokenDocument({x:700,y:300,actorLink:true});
   const tokens=await scene.createEmbeddedDocuments("Token",[td1.toObject(),td2.toObject()]);
   await scene.activate();
-  return {userId:u.id,userName:u.name,pcId:pc.id,npcId:npc.id,sceneId:scene.id,tokenIds:tokens.map(t=>t.id),activeSceneId:active,messageIds:game.messages.contents.map(m=>m.id)};
+  return {userId:u.id,userName:u.name,pcId:pc.id,npcId:npc.id,sceneId:scene.id,tokenIds:[pc.id,npc.id].map(id=>tokens.find(t=>t.actorId===id).id),activeSceneId:active,messageIds:game.messages.contents.map(m=>m.id)};
  });
  console.log("fixtures",fixture);
  await page.waitForFunction(id=>canvas.scene?.id===id,fixture.sceneId);
- player=await browser.newPage({viewport:{width:1600,height:1100}});
- const playerLogs=[];player.on("pageerror",e=>playerLogs.push(e.message));
- await player.goto("http://localhost:30000/join");await player.selectOption("select[name=userid]",fixture.userId);await player.click("button[name=join]");
+ // A separate context: Foundry keys the session on a cookie, so sharing the GM context collides.
+ playerContext=await browser.newContext({viewport:{width:1600,height:1100}});player=await playerContext.newPage();
+ const playerLogs=[];player.on("pageerror",e=>playerLogs.push(e.message));player.on("console",m=>{if(["error","warning"].includes(m.type()))playerConsole.push(m.type()+": "+m.text().slice(0,300));});
+ await player.goto(FOUNDRY_URL+"/join");await player.selectOption("select[name=userid]",fixture.userId);await player.click("button[name=join]");
  await player.waitForFunction(()=>window.game?.ready,null,{timeout:90000});
  await player.waitForFunction(id=>canvas.scene?.id===id,fixture.sceneId);
  await player.evaluate(()=>document.querySelectorAll(".tour,.tour-overlay,#notifications li").forEach(e=>e.remove()));
  const owned=await player.evaluate(async f=>{const pc=game.actors.get(f.pcId);await pc.sheet.render(true);return {isOwner:pc.isOwner,isGM:game.user.isGM,editable:pc.sheet.isEditable};},fixture);
  assert.deepEqual(owned,{isOwner:true,isGM:false,editable:true});pass("player own sheet editable",owned);
  await player.evaluate(id=>{game.actors.get(id).rollSkill("firearms");},fixture.pcId);
- await player.waitForSelector(".sinless-test-dialog");await player.click(".sinless-test-dialog button[data-action=roll]");
+ await player.waitForSelector(".sinless-test-dialog");await player.click(".sinless-test-dialog button[data-action=roll]",{noWaitAfter:true});
  await player.waitForFunction(id=>game.messages.contents.some(m=>m.flags.sinless?.actorUuid==="Actor."+id),fixture.pcId);
  pass("player skill roll creates chat card",await player.evaluate(()=>game.messages.contents.at(-1).flags.sinless.test.plan));
  await player.evaluate(async f=>{
@@ -43,7 +44,7 @@ try{
  },fixture);
  await player.waitForSelector(".sinless-test-dialog");
  await player.fill(".sinless-test-dialog input[name=bonus]","20");await player.dispatchEvent(".sinless-test-dialog input[name=bonus]","input");
- await player.click(".sinless-test-dialog button[data-action=roll]");
+ await player.click(".sinless-test-dialog button[data-action=roll]",{noWaitAfter:true});
  await player.waitForFunction(f=>game.messages.contents.some(m=>m.flags.sinless?.test?.extra?.targets?.some(t=>t.uuid.includes(f.tokenIds[1]))),fixture);
  const attack=await player.evaluate(f=>{
   const m=game.messages.contents.filter(m=>m.flags.sinless?.test?.extra?.targets?.some(t=>t.uuid.includes(f.tokenIds[1]))).at(-1);
@@ -52,23 +53,24 @@ try{
  },fixture);
  assert.equal(attack.defend,false);assert.ok(attack.target.length);pass("player attacks GM NPC and cannot apply its defense",{id:attack.id,targets:attack.target});
  await page.waitForFunction(id=>!!document.querySelector('[data-message-id="'+id+'"] [data-sinless-action=defend]'),attack.id);
- await page.click('[data-message-id="'+attack.id+'"] [data-sinless-action=defend]');
+ await page.click('[data-message-id="'+attack.id+'"] [data-sinless-action=defend]',{noWaitAfter:true});
  await page.waitForSelector(".sinless-damage-dialog");
- await page.click(".sinless-damage-dialog button[data-action=apply]");
+ await page.click(".sinless-damage-dialog button[data-action=apply]",{noWaitAfter:true});
  await page.waitForFunction(id=>game.actors.get(id).system.condition.physical.value>0||game.actors.get(id).system.condition.stun.value>0,fixture.npcId);
  pass("GM resolves player attack",await page.evaluate(id=>game.actors.get(id).system.condition.toObject?.()??game.actors.get(id).system.condition,fixture.npcId));
  const perm=await player.evaluate(async f=>{
   const npc=game.actors.get(f.npcId);await npc.sheet.render(true);await new Promise(r=>setTimeout(r,400));
   const before=npc.system.grid.influence;
   const {applySustained}=await import("/systems/sinless/module/apps/spell-effects.mjs");
-  const spell={continuous:true,resistPool:"resolve",label:"VERIFY Forbidden"};
-  const msg={getFlag:()=>({extra:{spell}})};
+  // applySustained checks the cast targets before ownership, so the fake card must target the NPC.
+  const spell={continuous:true,resistPool:"resolve",label:"VERIFY Forbidden",targets:[{uuid:npc.uuid,name:npc.name}]};
+  const msg={uuid:"ChatMessage.verifyFake",getFlag:(scope,key)=>key==="test"?{extra:{spell}}:undefined};
   await applySustained(msg,npc.uuid);
   return {editable:npc.sheet.isEditable,before,after:npc.system.grid.influence,notification:document.querySelector("#notifications")?.innerText??""};
  },fixture);
- assert.equal(perm.editable,false);assert.equal(perm.before,perm.after);assert.ok(/権限|permission|control|操作/i.test(perm.notification));pass("unowned sheet read only and localized permission warning",perm);
+ assert.equal(perm.editable,false);assert.equal(perm.before,perm.after);assert.ok(/所有者|do not own|権限|permission/i.test(perm.notification));pass("unowned sheet read only and localized permission warning",perm);
  await player.screenshot({path:out+"/player-permission.png"});
- assert.deepEqual(playerLogs,[]);await player.close();player=null;
+ assert.deepEqual(playerLogs,[]);await playerContext.close();player=null;playerContext=null;
  await page.evaluate(async()=>{for(const a of foundry.applications.instances.values()){if(a.element?.classList.contains("sinless"))await a.close();}});
  // Combat uses the same two isolated actors.
  const combat=await page.evaluate(async f=>{
@@ -105,10 +107,19 @@ try{
  pass("new round refreshes pools and MCP",await page.evaluate(id=>({finesse:game.actors.get(id).system.pools.finesse,mcp:game.actors.get(id).system.grid.mcpSpent}),fixture.pcId));
  await page.evaluate(async ({f,cid})=>{await game.actors.get(f.pcId).update({"system.combat.recoil":1,"system.combat.recoilPrimed":true});await game.combats.get(cid).delete();},{f:fixture,cid:combat.id});
  await page.waitForFunction(id=>game.actors.get(id).system.combat.recoil===0&&!game.actors.get(id).system.combat.recoilPrimed,fixture.pcId);pass("ending combat clears recoil",{});
- const errors=logs.filter(l=>/^(error:|pageerror:)/.test(l)&&!/favicon|404|WebGL|hardware|GPU/.test(l));assert.deepEqual(errors,[]);
+ const errors=logs.filter(l=>/^(error:|pageerror:)/.test(l)&&!/favicon|404|WebGL|hardware|GPU|AudioContext/.test(l));assert.deepEqual(errors,[]);
  console.log("COMPLETED player and combat",results.length);
+}catch(e){
+ // Record what the player saw before cleanup removes it.
+ if(player){
+  const state=await player.evaluate(()=>({targets:[...game.user.targets].map(t=>t.id),dialogs:[...document.querySelectorAll(".sinless-test-dialog")].length,notifications:document.querySelector("#notifications")?.innerText??"",last:game.messages.contents.slice(-2).map(m=>({id:m.id,flags:m.flags.sinless}))})).catch(err=>({error:err.message}));
+  console.log("PLAYER STATE",JSON.stringify(state));
+  console.log("PLAYER CONSOLE",JSON.stringify(playerConsole.filter(l=>!/WebGL|hardware|GPU/.test(l))));
+  await player.screenshot({path:out+"/player-failure.png"}).catch(()=>{});
+ }
+ throw e;
 }finally{
- if(player)await player.close();
+ if(playerContext)await playerContext.close();
  if(fixture)await page.evaluate(async f=>{
   for(const c of game.combats.filter(c=>c.scene?.id===f.sceneId))await c.delete();
   if(f.activeSceneId)await game.scenes.get(f.activeSceneId)?.activate();
