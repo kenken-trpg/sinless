@@ -200,6 +200,7 @@ API (`tools/foundry-release.mjs`). Without the secret, that step is skipped.
 Never hard-code display strings. Add the key to `lang/en.json` and `lang/ja.json`
 (`npm run check:i18n` fails if a locale is missing a key or placeholders differ).
 To add a language, drop `lang/<code>.json` and register it in `system.json`.
+The Japanese terms are provisional; update `lang/ja.json` as the glossary is settled.
 
 ### Layout
 
