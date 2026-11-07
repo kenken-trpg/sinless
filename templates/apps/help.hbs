@@ -1,0 +1,19 @@
+<div class="sinless-help-body">
+  <nav class="help-nav">
+    <select name="lang" aria-label="{{localize "SINLESS.Help.language"}}">
+      {{#each languages}}<option value="{{code}}"{{#if selected}} selected{{/if}}>{{name}}</option>{{/each}}
+    </select>
+    <ul>
+      {{#each pages}}
+      <li><a data-action="page" data-page="{{id}}"{{#if active}} class="active"{{/if}}>{{title}}</a></li>
+      {{/each}}
+    </ul>
+    {{#if isGM}}
+    <button type="button" data-action="importJournal" data-tooltip="{{localize "SINLESS.Help.importHint"}}">
+      <i class="fa-solid fa-book-open"></i> {{#if imported}}{{localize "SINLESS.Help.reimport"}}{{else}}{{localize "SINLESS.Help.import"}}{{/if}}
+    </button>
+    {{/if}}
+  </nav>
+  {{!-- Help pages are the system's own files in help/<lang>/. --}}
+  <article class="help-content">{{{page.content}}}</article>
+</div>

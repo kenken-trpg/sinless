@@ -1,0 +1,10 @@
+{
+  "language": "日本語",
+  "title": "Sinless ヘルプ",
+  "pages": [
+    { "id": "getting-started", "title": "はじめに" },
+    { "id": "tests", "title": "判定の流れ" },
+    { "id": "chat-cards", "title": "チャットカードのボタン" },
+    { "id": "gm-tools", "title": "アゴナーク用のツール" }
+  ]
+}

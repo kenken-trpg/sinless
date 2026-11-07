@@ -18,9 +18,10 @@ const SCRIPTS = {
   batch: { script: `${dir}/current/batch.mjs`, args: [], about: "the nine feature scripts in original/ with fixtures" },
   magic: { script: `${dir}/current/magic-review.mjs`, args: [], about: "sustained spells, wards, spirits, resource saving" },
   samples: { script: `${dir}/sample-actors/initial-workflow.mjs`, args: [], about: "import the bundled sample actors and run the main tests" },
-  permissions: { script: "docs/verification/2026-11-07/permissions.mjs", args: [], about: "a player acting on documents someone else owns" }
+  permissions: { script: "docs/verification/2026-11-07/permissions.mjs", args: [], about: "a player acting on documents someone else owns" },
+  "help-window": { script: "docs/verification/2026-11-07/help.mjs", args: [], about: "help window, languages, journal import and update" }
 };
-const ALL = ["samples", "magic", "player", "permissions", "batch", "sweep-ja", "sweep-en"];
+const ALL = ["samples", "magic", "player", "permissions", "help-window", "batch", "sweep-ja", "sweep-en"];
 
 function parse(argv) {
   const opts = { names: [], out: null, world: "sinless-test", relaunch: false, launch: true };
@@ -39,8 +40,8 @@ function parse(argv) {
 
 function usage() {
   console.log("usage: npm run verify -- <name...|all|list> [--out DIR] [--world ID] [--relaunch] [--no-launch]\n");
-  for (const [name, s] of Object.entries(SCRIPTS)) console.log(`  ${name.padEnd(11)} ${s.about}`);
-  console.log(`  ${"all".padEnd(11)} ${ALL.join(", ")}`);
+  for (const [name, s] of Object.entries(SCRIPTS)) console.log(`  ${name.padEnd(12)} ${s.about}`);
+  console.log(`  ${"all".padEnd(12)} ${ALL.join(", ")}`);
   console.log("\n  --out DIR    output folder (default: <tmp>/sinless-verify/<timestamp>); each script writes to DIR/<name>");
   console.log("  --world ID   world to launch when none is active (default sinless-test)");
   console.log("  --relaunch   restart the world first so Foundry rereads system.json");
@@ -89,7 +90,7 @@ async function main() {
     results.push(await run(name, join(base, name)));
   }
   console.log("\n=== summary");
-  for (const r of results) console.log(`  ${r.code === 0 ? "PASS" : "FAIL"}  ${r.name.padEnd(11)} ${String(r.seconds).padStart(4)} s  ${r.out}`);
+  for (const r of results) console.log(`  ${r.code === 0 ? "PASS" : "FAIL"}  ${r.name.padEnd(12)} ${String(r.seconds).padStart(4)} s  ${r.out}`);
   return results.every(r => r.code === 0) ? 0 : 1;
 }
 

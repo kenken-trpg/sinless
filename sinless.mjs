@@ -2,6 +2,7 @@ import { SYSTEM_ID, SINLESS } from "./module/config.mjs";
 import { registerSettings } from "./module/settings.mjs";
 import { registerOperation, OperationApp } from "./module/apps/operation.mjs";
 import { registerChase, ChaseApp } from "./module/apps/chase.mjs";
+import { registerHelp, HelpApp } from "./module/apps/help.mjs";
 import { CharacterData, NpcData } from "./module/data/actor.mjs";
 import { BrandData, ResourceData } from "./module/data/brand.mjs";
 import {
@@ -23,7 +24,7 @@ Hooks.once("init", () => {
   console.log(`${SYSTEM_ID} | Initializing Sinless`);
 
   CONFIG.SINLESS = SINLESS;
-  game.sinless = { rules, config: SINLESS, operation: OperationApp, chase: ChaseApp };
+  game.sinless = { rules, config: SINLESS, operation: OperationApp, chase: ChaseApp, help: HelpApp };
 
   CONFIG.Actor.documentClass = SinlessActor;
   CONFIG.ActiveEffect.documentClass = SinlessActiveEffect;
@@ -72,6 +73,7 @@ Hooks.once("init", () => {
   registerCombatHooks();
   registerOperation();
   registerChase();
+  registerHelp();
   registerHandlebarsHelpers();
 
   foundry.applications.handlebars.loadTemplates([

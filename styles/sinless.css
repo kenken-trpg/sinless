@@ -366,3 +366,18 @@
 .sinless.sheet .ley-line input { width: 3.5rem; }
 .sinless.sheet .spirit-actor .form-fields { display: flex; align-items: center; gap: 0.5rem; }
 .sinless.sheet .spirit-actor .hint { opacity: 0.7; font-size: 0.85rem; }
+
+/* Help window */
+.sinless-help .window-content { padding: 0; }
+.sinless-help .sinless-help-body { display: grid; grid-template-columns: 200px 1fr; height: 100%; min-height: 0; }
+.sinless-help .help-nav { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.5rem; border-right: 1px solid var(--sl-border, #888); }
+.sinless-help .help-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.sinless-help .help-nav a { display: block; padding: 0.3rem 0.4rem; border-radius: 3px; cursor: pointer; }
+.sinless-help .help-nav a.active { font-weight: bold; background: rgba(128, 128, 128, 0.2); }
+.sinless-help .help-nav button { margin-top: auto; height: auto; min-height: 2rem; padding: 0.3rem 0.4rem; line-height: 1.3; white-space: normal; word-break: keep-all; }
+.sinless-help .help-content { overflow-y: auto; padding: 0.5rem 1rem 1rem; line-height: 1.45; }
+.sinless-help .help-content h2 { margin-top: 0.25rem; }
+.sinless-help .help-content table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; }
+.sinless-help .help-content th, .sinless-help .help-content td { border: 1px solid var(--sl-border, #888); padding: 0.25rem 0.4rem; text-align: left; vertical-align: top; }
+.sinless-help .help-content th:first-child { width: 30%; }
+.sinless-help .help-content th:nth-child(2):not(:last-child) { width: 22%; }
