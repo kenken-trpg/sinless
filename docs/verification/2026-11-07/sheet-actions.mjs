@@ -99,6 +99,7 @@ try {
 
   // Item rows: edit opens the item sheet, toggle flips the field, delete asks first.
   await opens("item edit", f.ch, `${row(f.gun)} [data-action=itemEdit]`, "sheet:weapon", "gear");
+  await opens("gear row opens its sheet", f.ch, `${row(f.gear)} [data-action=rollItem]`, "sheet:gear", "gear");
   const gearUuid = `${f.ch}.Item.${f.gear}`;
   const toggle = await page.evaluate(({ uuid, id }) => fromUuid(uuid).then(a => a.sheet.element.querySelector(`[data-item-id="${id}"] [data-action=itemToggle]`)?.dataset.field), { uuid: f.ch, id: f.gear });
   const before = await get(gearUuid, `system.${toggle}`);

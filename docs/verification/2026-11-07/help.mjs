@@ -3,9 +3,12 @@
 // Both open the window with the token-controls button: the GM with the canvas, the player
 // without it (Foundry ignores tool clicks then, so the button handles the click itself).
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { joinGM, FOUNDRY_URL } from "../lib.mjs";
 const outDir = process.env.SINLESS_VERIFY_OUT ?? "/private/tmp/sinless-verification";
+// The pages each language ships, from help/<lang>/index.json.
+const titles = lang => JSON.parse(readFileSync(new URL(`../../../help/${lang}/index.json`, import.meta.url), "utf8")).pages.map(p => p.title);
+const jaTitles = titles("ja");
 const { browser, page, logs } = await joinGM();
 page.setDefaultTimeout(20000);
 const out = {};
@@ -37,7 +40,7 @@ try {
   await page.waitForSelector("#sinless-help .help-content h2");
   let s = await helpState(page);
   const clientLang = await page.evaluate(() => game.i18n.lang);
-  assert.equal(s.pages.length, 4);
+  assert.deepEqual(s.pages, titles(s.lang));
   assert.equal(s.active, "getting-started");
   assert.equal(s.lang, ["en", "ja"].includes(clientLang) ? clientLang : "en");
   pass("gm opens help", { clientLang, ...s });
@@ -66,7 +69,7 @@ try {
     return { id: j.id, name: j.name, pages: j.pages.contents.sort((a, b) => a.sort - b.sort).map(p => p.name), defaultOwnership: j.ownership.default, format: j.pages.contents[0].text.format };
   });
   assert.equal(imported.name, "Sinless ヘルプ");
-  assert.deepEqual(imported.pages, ["はじめに", "判定の流れ", "チャットカードのボタン", "アゴナーク用のツール"]);
+  assert.deepEqual(imported.pages, jaTitles);
   assert.equal(imported.defaultOwnership, 2);
   f.journals = [imported.id];
   pass("import ja", imported);
@@ -89,9 +92,9 @@ try {
     const j = game.journal.get(id);
     return { pages: j.pages.contents.map(p => p.name).sort(), helpPages: j.pages.filter(p => p.getFlag("sinless", "helpPage")).length, count: game.journal.filter(e => e.getFlag("sinless", "help") === "ja").length };
   }, imported.id);
-  assert.equal(updated.helpPages, 4);
+  assert.equal(updated.helpPages, jaTitles.length);
   assert.ok(updated.pages.includes("VERIFY GM notes"), "the GM's page is kept");
-  assert.equal(updated.pages.length, 5);
+  assert.equal(updated.pages.length, jaTitles.length + 1);
   assert.equal(updated.count, 1, "still one journal entry");
   pass("update keeps GM page", updated);
 
@@ -117,7 +120,7 @@ try {
   assert.equal(ptool, true);
   assert.equal(ps.active, "tests");
   assert.equal(ps.importButton, null);
-  assert.deepEqual(readable, { visible: true, canRead: true, pages: 5 });
+  assert.deepEqual(readable, { visible: true, canRead: true, pages: jaTitles.length + 1 });
   assert.deepEqual(playerErrors, []);
   pass("player without canvas opens help and reads journal", { tool: ptool, ...ps, journal: readable });
 

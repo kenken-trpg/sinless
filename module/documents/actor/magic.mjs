@@ -19,7 +19,8 @@ export const MagicActor = Base => class SinlessMagicActor extends Base {
   async usePower(item) {
     switch (item.system.category) {
       case "spirit": return this.summonSpirit(item);
-      case "amplification": return item.toMessage?.() ?? null;
+      // Amplifications have no test: their zoetic cost is always applied (open the item).
+      case "amplification": return item.sheet.render(true);
       default: return this.castSpell(item);
     }
   }

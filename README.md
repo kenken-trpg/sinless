@@ -149,8 +149,8 @@ this system contains no rules text.
   sector heat effects, sector action tests (with heat and Competence), end-of-turn banking,
   resources with damage / influence tracks, members and asset tests rolled by the best member.
 - In-game help (the question mark in the token controls) in English and Japanese: getting
-  started, the test dialog, what each chat card button does and who sees it, and the
-  Agonarch's tools. The Agonarch can import it as a journal entry for every player, and
+  started, the test dialog, what each chat card button does and who sees it, characters and
+  Kismet advancement, magic, the Grid, vehicles and rigging, brands, and the Agonarch's tools. The Agonarch can import it as a journal entry for every player, and
   importing again updates the help pages while keeping pages they added.
 - Localization from day one: English and Japanese.
 

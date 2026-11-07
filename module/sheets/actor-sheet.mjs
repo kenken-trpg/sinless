@@ -230,9 +230,8 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       case "power": return this.actor.usePower(item);
       case "asset": return this.actor.rollAsset(item);
       case "software": return this.actor.rollSoftware(item);
-      case "deck": return item.sheet.render(true);
-      case "resource": return item.sheet.render(true);
-      default: return item.toMessage?.();
+      // Items without a test (gear, armor, implants, knowledge…) open their sheet.
+      default: return item.sheet.render(true);
     }
   }
 
