@@ -1,0 +1,414 @@
+[
+  {
+    "name": "VERIFY-en Char",
+    "type": "character",
+    "tabs": {
+      "main": 1276,
+      "gear": 184,
+      "magic": 150,
+      "social": 297,
+      "grid": 495,
+      "effects": 42,
+      "bio": 39
+    },
+    "bad": [],
+    "inputs": 130,
+    "ok": 130,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en Npc",
+    "type": "npc",
+    "tabs": {
+      "main": 774,
+      "gear": 313,
+      "grid": 406,
+      "effects": 41,
+      "bio": 5
+    },
+    "bad": [],
+    "inputs": 107,
+    "ok": 107,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en Entity",
+    "type": "npc",
+    "tabs": {
+      "main": 763,
+      "gear": 120,
+      "grid": 340,
+      "effects": 41,
+      "bio": 5
+    },
+    "bad": [],
+    "inputs": 106,
+    "ok": 106,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en Spirit",
+    "type": "npc",
+    "tabs": {
+      "main": 774,
+      "gear": 120,
+      "grid": 229,
+      "effects": 41,
+      "bio": 5
+    },
+    "bad": [],
+    "inputs": 107,
+    "ok": 107,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en Vehicle",
+    "type": "vehicle",
+    "tabs": {
+      "main": 270,
+      "effects": 41,
+      "bio": 5
+    },
+    "bad": [],
+    "inputs": 13,
+    "ok": 13,
+    "mismatch": [],
+    "skipped": 1,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en Brand",
+    "type": "brand",
+    "tabs": {
+      "main": 1556,
+      "resources": 86,
+      "members": 88
+    },
+    "bad": [],
+    "inputs": 13,
+    "ok": 13,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en weapon",
+    "type": "weapon",
+    "tabs": {
+      "-": 1809
+    },
+    "bad": [],
+    "inputs": 27,
+    "ok": 27,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en gear",
+    "type": "gear",
+    "tabs": {
+      "-": 227
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en armor",
+    "type": "armor",
+    "tabs": {
+      "-": 263
+    },
+    "bad": [],
+    "inputs": 13,
+    "ok": 13,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en implant",
+    "type": "implant",
+    "tabs": {
+      "-": 215
+    },
+    "bad": [],
+    "inputs": 8,
+    "ok": 8,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en power",
+    "type": "power",
+    "tabs": {
+      "-": 600
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 6,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en asset",
+    "type": "asset",
+    "tabs": {
+      "-": 226
+    },
+    "bad": [],
+    "inputs": 8,
+    "ok": 8,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en knowledge",
+    "type": "knowledge",
+    "tabs": {
+      "-": 106
+    },
+    "bad": [],
+    "inputs": 3,
+    "ok": 3,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en software",
+    "type": "software",
+    "tabs": {
+      "-": 1325
+    },
+    "bad": [],
+    "inputs": 18,
+    "ok": 18,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en deck",
+    "type": "deck",
+    "tabs": {
+      "-": 581
+    },
+    "bad": [],
+    "inputs": 17,
+    "ok": 17,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en resource",
+    "type": "resource",
+    "tabs": {
+      "-": 331
+    },
+    "bad": [],
+    "inputs": 17,
+    "ok": 17,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en vcr",
+    "type": "vcr",
+    "tabs": {
+      "-": 532
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en ritual",
+    "type": "ritual",
+    "tabs": {
+      "-": 195
+    },
+    "bad": [],
+    "inputs": 5,
+    "ok": 5,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W weapon",
+    "type": "weapon",
+    "tabs": {
+      "-": 1811
+    },
+    "bad": [],
+    "inputs": 27,
+    "ok": 27,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W implant",
+    "type": "implant",
+    "tabs": {
+      "-": 217
+    },
+    "bad": [],
+    "inputs": 8,
+    "ok": 8,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W power",
+    "type": "power",
+    "tabs": {
+      "-": 602
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 6,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W ritual",
+    "type": "ritual",
+    "tabs": {
+      "-": 197
+    },
+    "bad": [],
+    "inputs": 5,
+    "ok": 5,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W knowledge",
+    "type": "knowledge",
+    "tabs": {
+      "-": 108
+    },
+    "bad": [],
+    "inputs": 3,
+    "ok": 3,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W asset",
+    "type": "asset",
+    "tabs": {
+      "-": 228
+    },
+    "bad": [],
+    "inputs": 8,
+    "ok": 8,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W resource",
+    "type": "resource",
+    "tabs": {
+      "-": 333
+    },
+    "bad": [],
+    "inputs": 17,
+    "ok": 17,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W deck",
+    "type": "deck",
+    "tabs": {
+      "-": 583
+    },
+    "bad": [],
+    "inputs": 17,
+    "ok": 17,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W software",
+    "type": "software",
+    "tabs": {
+      "-": 1327
+    },
+    "bad": [],
+    "inputs": 18,
+    "ok": 18,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W vcr",
+    "type": "vcr",
+    "tabs": {
+      "-": 534
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W gear",
+    "type": "gear",
+    "tabs": {
+      "-": 229
+    },
+    "bad": [],
+    "inputs": 11,
+    "ok": 11,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  },
+  {
+    "name": "VERIFY-en W armor",
+    "type": "armor",
+    "tabs": {
+      "-": 265
+    },
+    "bad": [],
+    "inputs": 13,
+    "ok": 13,
+    "mismatch": [],
+    "skipped": 0,
+    "errors": []
+  }
+]

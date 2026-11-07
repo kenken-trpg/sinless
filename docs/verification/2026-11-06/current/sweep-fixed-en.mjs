@@ -48,6 +48,9 @@ const sweep = (uuid) => page.evaluate(async uuid => {
     const t = sheet.element.innerText;
     const m = t.match(/SINLESS\.[\w.]+|\bundefined\b|\bNaN\b|\[object Object\]|\bnull\b|Infinity/g);
     if (m) res.bad.push(`${where}: ${[...new Set(m)].join(", ")}`);
+    // English UI: Japanese text leaking from the ja locale or hard-coded strings.
+    const cjk = t.match(/[\u3040-\u30ff\u3400-\u9fff\uff01-\uff60]+/g);
+    if (cjk) res.bad.push(`${where} ja-text: ${[...new Set(cjk)].slice(0, 10).join(", ")}`);
     // unlocalized attributes (placeholders, titles, tooltips)
     for (const el of sheet.element.querySelectorAll("[placeholder],[title],[data-tooltip]")) {
       for (const a of ["placeholder", "title", "data-tooltip"]) {
@@ -114,7 +117,9 @@ try {
 for (const uuid of targets) {
   const n0 = logs.length;
   let r;
-  try { r = await sweep(uuid); } catch (e) { r = { uuid, crash: e.message.slice(0, 300) }; }
+  // Bound each sheet so one hang does not stall the whole sweep.
+  try { r = await Promise.race([sweep(uuid), new Promise((_, reject) => setTimeout(() => reject(new Error("sheet timeout 180s")), 180000))]); }
+  catch (e) { r = { uuid, crash: e.message.slice(0, 300) }; await page.screenshot({ path: `${out}/crash-${results.length}.png` }).catch(() => {}); }
   r.errors = logs.slice(n0).filter(l => !/favicon|404|WebGL|hardware|GPU/.test(l));
   results.push(r);
   const flag = (r.crash || r.bad?.length || r.mismatch?.length || r.errors.length) ? "!!" : "ok";
