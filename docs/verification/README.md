@@ -50,7 +50,7 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 | `2026-11-06/current/sweep-fixed.mjs <outdir> ja` | `sweep-ja` | 全アクター・アイテムのシート、全タブ、編集可能な全入力欄の総当たり |
 | `2026-11-06/current/sweep-fixed.mjs <outdir> en` | `sweep-en` | 同じ総当たりを英語で。日本語の文字が残っていれば問題として数える |
 | `2026-11-06/current/magic-review.mjs` | `magic` | 魔法拡張(持続呪文、結界、精霊)とリソース保存 |
-| `2026-11-06/sample-actors/initial-workflow.mjs` | `samples` | 同梱サンプルアクターの読み込みと主要な判定 |
+| `2026-11-06/sample-actors/initial-workflow.mjs` | `samples` | 同梱サンプルアクターの読み込み(JSON とコンペンディウム「サンプルアクター」の両方。パックの中身が `samples/actors` と一致すること)と主要な判定 |
 | `2026-11-06/current/extra.mjs` | `player` | プレイヤー視点(別ブラウザー)と戦闘の進行 |
 | `2026-11-07/help.mjs` | `help-window` | ヘルプ画面(ページと言語の切り替え)、GM による Journal への取り込みと更新(GM が足したページは残る)、プレイヤーからの閲覧 |
 | `2026-11-07/permissions.mjs` | `permissions` | 他人が所有する文書に触れるプレイヤー操作(ホットシートのフィードバック、体当たり、ブランドのメンバー)が、権限エラーなしで終わること |

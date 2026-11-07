@@ -6,6 +6,7 @@ import { mkdirSync, rmSync, readFileSync, writeFileSync, cpSync } from "node:fs"
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
+import { buildPacks } from "./packs.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -19,6 +20,7 @@ const manifestText = `${JSON.stringify(manifest, null, 2)}\n`;
 
 const include = ["sinless.mjs", "module", "templates", "styles", "lang", "help", "samples", "LICENSE", "README.md", "README.ja.md"];
 for (const path of include) cpSync(join(root, path), join(stage, path), { recursive: true });
+await buildPacks(join(stage, "packs"));
 writeFileSync(join(stage, "system.json"), manifestText);
 writeFileSync(join(dist, "system.json"), manifestText);
 

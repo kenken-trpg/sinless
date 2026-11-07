@@ -156,21 +156,24 @@ this system contains no rules text.
 
 ## Public server demo data
 
-The release ZIP includes actor JSON files for combat, magic, decking, a training NPC, a vehicle, and a brand, with embedded equipment. Follow the [sample list and import walkthrough](samples/README.md) to import them into fresh actors as GM and grant players ownership. These are fictional test fixtures.
+The system ships a **Sample actors** compendium with combat, magic and decking characters, a training NPC, a vehicle and a brand, with their equipment. As GM, open it in the Compendium tab and drag the actors into the world (or right-click the pack and choose Import All), then grant players ownership. The same actors are also in the release ZIP as JSON under `samples/actors/`. See the [sample list and walkthrough](samples/README.md). These are fictional test fixtures.
 
 ## Development
 
-No build step is required — Foundry loads the ES modules directly.
+Foundry loads the ES modules directly. Only the compendium packs are built: they are
+written from their JSON sources into the git-ignored `packs/` folder.
 
 ```sh
 # link into your Foundry data folder
 ln -s "$PWD" "<FoundryData>/Data/systems/sinless"
+npm ci               # dev dependencies (the Foundry CLI that writes packs)
+npm run build:packs  # packs/samples from samples/actors (shut the world down first)
 
 npm test             # rule unit tests + i18n check
 npm run check:i18n   # locale parity, placeholders, missing keys
 npm run lint:syntax  # parse-check every module and JSON file
 npm run check        # all three
-npm run build        # dist/sinless.zip
+npm run build        # dist/sinless.zip, packs included
 npm run verify -- list  # browser checks against a running Foundry (not in CI)
 ```
 

@@ -123,6 +123,16 @@
   },
   "primaryTokenAttribute": "condition.physical",
   "secondaryTokenAttribute": "condition.stun",
+  "packs": [
+    {
+      "name": "samples",
+      "label": "SINLESS.Pack.samples",
+      "path": "packs/samples",
+      "type": "Actor",
+      "system": "sinless",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" }
+    }
+  ],
   "socket": false,
   "url": "https://github.com/kenken-trpg/sinless",
   "bugs": "https://github.com/kenken-trpg/sinless/issues",
