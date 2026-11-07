@@ -1,11 +1,15 @@
 import {readFileSync,writeFileSync} from "node:fs";
 import {pathToFileURL,fileURLToPath} from "node:url";
 import {joinGM} from "../../lib.mjs";
+import {createFixtures,removeFixtures} from "./fixtures.mjs";
 const source=fileURLToPath(new URL("../original",import.meta.url)),lib=fileURLToPath(new URL("../../lib.mjs",import.meta.url)),out=process.env.SINLESS_VERIFY_OUT??"/private/tmp/sinless-verification";
 const session=await joinGM();
 globalThis.__sinlessVerificationSession={...session,browser:{close:async()=>{}}};
 const shared=out+"/shared-lib.mjs";writeFileSync(shared,"export async function joinGM(){return globalThis.__sinlessVerificationSession;}\n");
 const results=[];
+const fixtures=await createFixtures(session.page);
+console.log("FIXTURES",JSON.stringify(fixtures.summary));
+let cleanup;
 try{
  for(const name of ["shoot","cond","adv","op","life","chase","digital","magic","magic9"]){
   await session.page.evaluate(async()=>{for(const app of Array.from(foundry.applications.instances.values()))if(app.element?.classList.contains("sinless"))await app.close();document.querySelectorAll(".tour,.tour-overlay,#notifications li").forEach(e=>e.remove());});
@@ -20,5 +24,10 @@ try{
   try {await import(pathToFileURL(path));const errors=session.logs.filter(l=>/^(error:|pageerror:)/.test(l)&&!/favicon|404|WebGL|hardware|GPU/.test(l));results.push({name,completed:true,errors});console.log("COMPLETED",name,"errors",errors.length);}
   catch(e){await session.page.screenshot({path:out+"/failed-"+name+".png"}).catch(()=>{});writeFileSync(out+"/failed-"+name+".html",await session.page.content());results.push({name,completed:false,error:e.stack});console.log("FAILED",name,e.stack);}
  }
-}finally{await session.browser.close();writeFileSync(out+"/regression.json",JSON.stringify(results,null,2));}
+}finally{
+ cleanup=await removeFixtures(session.page,fixtures.snapshot).catch(e=>({error:e.message}));
+ console.log("CLEANUP",JSON.stringify(cleanup));
+ await session.browser.close();
+ writeFileSync(out+"/regression.json",JSON.stringify({system:fixtures.summary.system,fixtures:fixtures.summary,results,cleanup},null,2));
+}
 if(results.some(r=>!r.completed||r.errors?.length))process.exitCode=1;
