@@ -211,10 +211,11 @@ The Japanese terms are provisional; update `lang/ja.json` as the glossary is set
 
 | Path | Purpose |
 | --- | --- |
-| `module/helpers/rules.mjs` | Pure rule logic (no Foundry globals), unit-tested |
+| `module/helpers/` | Pure rule logic (no Foundry globals), one file per rules area (`rules.mjs` for tests and pools, `combat.mjs`, `damage.mjs`, `magic.mjs`, `grid.mjs`, …), unit-tested in `test/` |
 | `module/config.mjs` | Skills, pools, etiquettes etc. as i18n keys |
 | `module/data/` | TypeDataModels for actors and items |
 | `module/documents/` | Actor (shared test plumbing in `actor.mjs`, one mixin per rules area in `actor/`) and Combatant (initiative) |
 | `module/sheets/`, `templates/` | ApplicationV2 sheets and Handlebars templates |
 | `module/dice/` | Rolling and chat cards |
+| `module/apps/` | Dialogs (test, damage, digital, drain, Kismet advancement, continuous spells) and windows (operation, car chase, help) |
 | `help/<lang>/` | In-game help pages (`index.json` lists them), shown in the help window and imported as a journal entry |

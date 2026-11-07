@@ -170,10 +170,11 @@ foundryvtt.com にパッケージが登録されたら、その *Package Release
 
 | パス | 役割 |
 | --- | --- |
-| `module/helpers/rules.mjs` | ルールの純粋な計算（Foundry のグローバルを使わない）。単体テストあり |
+| `module/helpers/` | ルールの純粋な計算（Foundry のグローバルを使わない）。ルールの分野ごとに 1 ファイル（判定とプールの `rules.mjs`、`combat.mjs`、`damage.mjs`、`magic.mjs`、`grid.mjs` など）。`test/` に単体テストあり |
 | `module/config.mjs` | 技能、プール、エチケットなどの定義（表示名は i18n キー） |
 | `module/data/` | アクターとアイテムの TypeDataModel |
 | `module/documents/` | アクター（共通の判定処理は `actor.mjs`、ルールの分野ごとの mixin は `actor/`）とコンバタント（イニシアチブ） |
 | `module/sheets/`、`templates/` | ApplicationV2 のシートと Handlebars テンプレート |
 | `module/dice/` | ロールとチャットカード |
+| `module/apps/` | ダイアログ（判定、ダメージ、デジタル、ドレイン、キスメットでの成長、持続する呪文）と画面（オペレーション、カーチェイス、ヘルプ） |
 | `help/<言語>/` | ゲーム内ヘルプのページ（`index.json` が一覧）。ヘルプ画面に表示し、Journal として取り込む |
