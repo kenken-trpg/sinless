@@ -1,5 +1,7 @@
 // The help window and its journal import: pages and languages, the GM's import and update
 // (keeping pages the GM added), and a player who reads the help and the journal entry.
+// Both open the window with the token-controls button: the GM with the canvas, the player
+// without it (Foundry ignores tool clicks then, so the button handles the click itself).
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { joinGM, FOUNDRY_URL } from "../lib.mjs";
@@ -27,10 +29,11 @@ try {
   });
   assert.deepEqual(f.journalsBefore, [], "no help journal before the test");
 
-  // GM: the tool is in the token controls and opens the window in the client language.
-  const tool = await page.evaluate(() => !!ui.controls.controls.tokens?.tools?.sinlessHelp);
+  // GM: the button in the token controls opens the window in the client language.
+  const tool = await page.evaluate(() => !!ui.controls.controls.tokens?.tools?.sinlessHelp && canvas.ready);
   assert.equal(tool, true);
-  await page.evaluate(() => game.sinless.help.open());
+  await page.click('#scene-controls button.layer[data-control="tokens"]');
+  await page.click('#scene-controls button.tool[data-tool="sinlessHelp"]');
   await page.waitForSelector("#sinless-help .help-content h2");
   let s = await helpState(page);
   const clientLang = await page.evaluate(() => game.i18n.lang);
@@ -94,6 +97,7 @@ try {
 
   // Player: the tool and the window, no import button, and the journal entry is readable.
   ctx = await browser.newContext({ viewport: { width: 1600, height: 1100 } });
+  await ctx.addInitScript(() => localStorage.setItem("core.noCanvas", "true"));
   const p = await ctx.newPage();
   const playerErrors = [];
   p.on("pageerror", e => playerErrors.push(e.message));
@@ -102,9 +106,12 @@ try {
   await p.click("button[name=join]");
   await p.waitForFunction(() => window.game?.ready, null, { timeout: 90000 });
   await p.waitForTimeout(1000);
-  const ptool = await p.evaluate(() => !!ui.controls.controls.tokens?.tools?.sinlessHelp);
-  await p.evaluate(() => game.sinless.help.open("tests"));
+  const ptool = await p.evaluate(() => !!ui.controls.controls.tokens?.tools?.sinlessHelp && !canvas.ready);
+  await p.click('#scene-controls button.layer[data-control="tokens"]');
+  await p.click('#scene-controls button.tool[data-tool="sinlessHelp"]');
   await p.waitForSelector("#sinless-help .help-content h2");
+  await p.click("#sinless-help .help-nav a[data-page=tests]");
+  await p.waitForFunction(() => document.querySelector("#sinless-help .help-nav a.active")?.dataset.page === "tests");
   const ps = await helpState(p);
   const readable = await p.evaluate(id => { const j = game.journal.get(id); return { visible: !!j, canRead: j?.testUserPermission(game.user, "OBSERVER") ?? false, pages: j?.pages.size ?? 0 }; }, imported.id);
   assert.equal(ptool, true);
@@ -112,7 +119,7 @@ try {
   assert.equal(ps.importButton, null);
   assert.deepEqual(readable, { visible: true, canRead: true, pages: 5 });
   assert.deepEqual(playerErrors, []);
-  pass("player reads help and journal", { tool: ptool, ...ps, journal: readable });
+  pass("player without canvas opens help and reads journal", { tool: ptool, ...ps, journal: readable });
 
   const errors = logs.filter(l => l.startsWith("pageerror") || /sinless/i.test(l) && l.startsWith("error"));
   assert.deepEqual(errors, []);

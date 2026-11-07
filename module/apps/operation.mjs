@@ -1,4 +1,5 @@
 import { SYSTEM_ID, SINLESS } from "../config.mjs";
+import { addControlButton } from "./control-button.mjs";
 import { getSetting, onOperationChange } from "../settings.mjs";
 import {
   heatAfterAlert, heatWhenDiscovered, crossedResponses, activeResponses,
@@ -294,18 +295,5 @@ export function registerOperation() {
     if (what === "alert") await alertChanged(Number(value) || 0);
     if (what === "heat") await heatChanged(Number(value) || 0);
   });
-  Hooks.on("getSceneControlButtons", controls => {
-    if (!game.user.isGM) return;
-    const tokens = controls.tokens ?? controls.token;
-    if (!tokens?.tools) return;
-    tokens.tools.sinlessOperation = {
-      name: "sinlessOperation",
-      title: "SINLESS.Operation.title",
-      icon: "fa-solid fa-user-secret",
-      order: Object.keys(tokens.tools).length,
-      button: true,
-      visible: true,
-      onChange: () => OperationApp.open()
-    };
-  });
+  addControlButton("sinlessOperation", { title: "SINLESS.Operation.title", icon: "fa-solid fa-user-secret", gmOnly: true, open: () => OperationApp.open() });
 }
