@@ -1,42 +1,70 @@
-import {writeFileSync} from "node:fs";
+import { writeFileSync } from "node:fs";
 // Sweep: every actor / item sheet, every tab, every editable input, in one language.
-// usage: node sweep.mjs <outdir> <lang>
+// usage: node sweep-fixed.mjs <outdir> <lang>
+// The English sweep also flags Japanese text left in the sheets.
+// Sheets are spread over SINLESS_SWEEP_WORKERS sessions (default 3). Each change waits for
+// the server and the sheet's re-render, so separate sessions run side by side.
+// The sessions run without the game canvas, which the sheets do not need.
+// An actor and its own items stay in one session, so their renders never overlap.
+// Foundry allows one session per user, so the extra sessions join as temporary GM users.
 import { joinGM } from "../../lib.mjs";
 const out = process.argv[2];
 const lang = process.argv[3] ?? "ja";
-const { browser, page, logs } = await joinGM({});
-page.setDefaultTimeout(60000);
-if ((await page.evaluate(() => game.i18n.lang)) !== lang) {
-  await page.evaluate(l => localStorage.setItem("core.language", JSON.stringify(l)), lang);
-  await page.reload();
-  await page.waitForFunction(() => window.game?.ready, null, { timeout: 90000 });
-  await page.waitForTimeout(2000);
-}
-await page.evaluate(() => document.querySelectorAll(".tour, .tour-overlay, #notifications li").forEach(e => e.remove()));
-console.log("lang", await page.evaluate(() => game.i18n.lang));
+const workers = Math.max(1, Number(process.env.SINLESS_SWEEP_WORKERS) || 3);
+const prefix = `SWEEP-${lang}`;
 
-// ---- setup
-const fixtures = await page.evaluate(async () => {
-  for (const a of game.actors.filter(a => a.name.startsWith("SWEEP"))) await a.delete();
-  for (const i of game.items.filter(i => i.name.startsWith("SWEEP"))) await i.delete();
+/** A GM session in the sweep language. */
+async function session(browser, user) {
+  const s = await joinGM({ browser, user, noCanvas: true });
+  s.page.setDefaultTimeout(60000);
+  s.page.on("console", m => { if (m.text().startsWith("VERIFY-PROGRESS")) console.log(m.text()); });
+  if ((await s.page.evaluate(() => game.i18n.lang)) !== lang) {
+    await s.page.evaluate(l => localStorage.setItem("core.language", JSON.stringify(l)), lang);
+    await s.page.reload();
+    await s.page.waitForFunction(() => window.game?.ready, null, { timeout: 90000 });
+    await s.page.waitForTimeout(2000);
+  }
+  await s.page.evaluate(() => document.querySelectorAll(".tour, .tour-overlay, #notifications li").forEach(e => e.remove()));
+  return s;
+}
+
+const main = await session();
+const { browser, page } = main;
+console.log("lang", await page.evaluate(() => game.i18n.lang), "workers", workers);
+
+// ---- setup: groups of sheets that must not run at the same time
+const fixtures = await page.evaluate(async prefix => {
+  for (const a of game.actors.filter(a => a.name.startsWith(prefix))) await a.delete();
+  for (const i of game.items.filter(i => i.name.startsWith(prefix))) await i.delete();
+  for (const u of game.users.filter(u => u.name.startsWith(prefix))) await u.delete();
   const itemTypes = Object.keys(CONFIG.Item.dataModels);
-  const items = itemTypes.map(t => ({ name: `SWEEP ${t}`, type: t }));
-  const ch = await Actor.create({ name: "SWEEP Char", type: "character" });
+  const items = itemTypes.map(t => ({ name: `${prefix} ${t}`, type: t }));
+  const ch = await Actor.create({ name: `${prefix} Char`, type: "character" });
   await ch.createEmbeddedDocuments("Item", items);
-  await ch.createEmbeddedDocuments("ActiveEffect", [{ name: "SWEEP FX", system: {} }]);
-  const npc = await Actor.create({ name: "SWEEP Npc", type: "npc" });
+  await ch.createEmbeddedDocuments("ActiveEffect", [{ name: `${prefix} FX`, system: {} }]);
+  const npc = await Actor.create({ name: `${prefix} Npc`, type: "npc" });
   await npc.createEmbeddedDocuments("Item", items);
-  await Actor.create({ name: "SWEEP Entity", type: "npc", system: { network: { entity: true, hardening: 2 } } });
-  await Actor.create({ name: "SWEEP Spirit", type: "npc", system: { spiritForce: 3 } });
-  await Actor.create({ name: "SWEEP Vehicle", type: "vehicle" });
-  await Actor.create({ name: "SWEEP Brand", type: "brand", system: { members: [ch.id] } });
-  const worlds = await Item.createDocuments(itemTypes.map(t => ({ name: "SWEEP W "+t, type: t })));
-  const actors = game.actors.filter(a => a.name.startsWith("SWEEP"));
-  return {characterUuid:ch.uuid,actorIds:actors.map(a=>a.id),itemIds:worlds.map(i=>i.id),targets:[...actors.map(a=>a.uuid),...ch.items.map(i=>i.uuid),...worlds.map(i=>i.uuid)]};
-});
+  const entity = await Actor.create({ name: `${prefix} Entity`, type: "npc", system: { network: { entity: true, hardening: 2 } } });
+  const spirit = await Actor.create({ name: `${prefix} Spirit`, type: "npc", system: { spiritForce: 3 } });
+  const vehicle = await Actor.create({ name: `${prefix} Vehicle`, type: "vehicle" });
+  const brand = await Actor.create({ name: `${prefix} Brand`, type: "brand", system: { members: [ch.id] } });
+  const worlds = await Item.createDocuments(itemTypes.map(t => ({ name: `${prefix} W ${t}`, type: t })));
+  const actors = [ch, npc, entity, spirit, vehicle, brand];
+  return {
+    characterUuid: ch.uuid,
+    actorIds: actors.map(a => a.id),
+    itemIds: worlds.map(i => i.id),
+    groups: [
+      [ch.uuid, ...ch.items.map(i => i.uuid)],
+      [npc.uuid, ...npc.items.map(i => i.uuid)],
+      [entity.uuid], [spirit.uuid], [vehicle.uuid], [brand.uuid],
+      ...worlds.map(i => [i.uuid])
+    ]
+  };
+}, prefix);
 
 // ---- in-page sweep of one document's sheet
-const sweep = (uuid) => page.evaluate(async uuid => {
+const sweep = (page, uuid, checkJapanese) => page.evaluate(async ({ uuid, checkJapanese }) => {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   const doc = await fromUuid(uuid);
   const sheet = doc.sheet;
@@ -48,6 +76,11 @@ const sweep = (uuid) => page.evaluate(async uuid => {
     const t = sheet.element.innerText;
     const m = t.match(/SINLESS\.[\w.]+|\bundefined\b|\bNaN\b|\[object Object\]|\bnull\b|Infinity/g);
     if (m) res.bad.push(`${where}: ${[...new Set(m)].join(", ")}`);
+    // English UI: Japanese text leaking from the ja locale or hard-coded strings.
+    if (checkJapanese) {
+      const cjk = t.match(/[぀-ヿ㐀-鿿！-｠]+/g);
+      if (cjk) res.bad.push(`${where} ja-text: ${[...new Set(cjk)].slice(0, 10).join(", ")}`);
+    }
     // unlocalized attributes (placeholders, titles, tooltips)
     for (const el of sheet.element.querySelectorAll("[placeholder],[title],[data-tooltip]")) {
       for (const a of ["placeholder", "title", "data-tooltip"]) {
@@ -71,7 +104,7 @@ const sweep = (uuid) => page.evaluate(async uuid => {
     if (!el || el.disabled || el.readOnly) { res.skipped++; continue; }
     const before = foundry.utils.getProperty(doc, name);
     if (before === undefined && !foundry.utils.hasProperty(doc._source, name)) { res.skipped++; continue; }
-    res.inputs++;
+    res.inputs++; if (res.inputs % 20 === 0) console.info("VERIFY-PROGRESS " + res.name + " " + res.inputs);
     let want;
     if (el.type === "checkbox") { el.checked = !el.checked; want = el.checked; }
     else if (el.tagName === "SELECT") {
@@ -92,8 +125,8 @@ const sweep = (uuid) => page.evaluate(async uuid => {
     }
     el.dispatchEvent(new Event("change", { bubbles: true }));
     let after;
-    for (let i = 0; i < 30; i++) {
-      await sleep(100);
+    for (let i = 0; i < 120; i++) {
+      await sleep(25);
       after = foundry.utils.getProperty(doc, name);
       if (after === want || (typeof want === "number" && Number(after) === want) || (Array.isArray(after) && after.includes?.(want))) break;
     }
@@ -106,32 +139,58 @@ const sweep = (uuid) => page.evaluate(async uuid => {
   res.bad = [...new Set(res.bad)];
   await sheet.close();
   return res;
-}, uuid);
+}, { uuid, checkJapanese });
 
-const targets = fixtures.targets;
+const order = fixtures.groups.flat();
 const results = [];
-try {
-for (const uuid of targets) {
-  const n0 = logs.length;
-  let r;
-  // Bound each sheet so one hang does not stall the whole sweep.
-  try { r = await Promise.race([sweep(uuid), new Promise((_, reject) => setTimeout(() => reject(new Error("sheet timeout 180s")), 180000))]); }
-  catch (e) { r = { uuid, crash: e.message.slice(0, 300) }; await page.screenshot({ path: `${out}/crash-${results.length}.png` }).catch(() => {}); }
-  r.errors = logs.slice(n0).filter(l => !/favicon|404|WebGL|hardware|GPU/.test(l));
-  results.push(r);
+const extra = [];
+const report = r => {
   const flag = (r.crash || r.bad?.length || r.mismatch?.length || r.errors.length) ? "!!" : "ok";
   console.log(flag, r.type, r.name, `inputs ${r.ok}/${r.inputs} skipped ${r.skipped}`, JSON.stringify(r.tabs ?? {}));
   for (const k of ["crash", "bad", "mismatch", "errors"]) if (r[k]?.length) console.log("   ", k, JSON.stringify(r[k], null, 1));
-}
-// screenshot of a re-opened, fuzzed character sheet
-await page.evaluate(async uuid => { const a = await fromUuid(uuid); await a.sheet.render(true); },fixtures.characterUuid);
-await page.waitForTimeout(1500);
-await page.screenshot({ path: `${out}/sweep-${lang}.png` });
+};
+const started = Date.now();
+try {
+  const count = Math.min(workers, fixtures.groups.length) - 1;
+  fixtures.userIds = await page.evaluate(async ({ prefix, count }) => {
+    const users = await User.createDocuments(Array.from({ length: count }, (_, i) => ({ name: `${prefix} GM ${i + 2}`, role: CONST.USER_ROLES.GAMEMASTER })));
+    return users.map(u => u.id);
+  }, { prefix, count });
+  for (let i = 0; i < count; i++) extra.push(await session(browser, `${prefix} GM ${i + 2}`));
+  const sessions = [main, ...extra];
+  // Biggest groups first, each session taking the next group when it is free.
+  const queue = [...fixtures.groups];
+  await Promise.all(sessions.map(async ({ page: p, logs: l }, w) => {
+    for (let group; (group = queue.shift());) {
+      for (const uuid of group) {
+        const n0 = l.length;
+        let r;
+        // Bound each sheet so one hang does not stall the whole sweep.
+        let timer;
+        try { r = await Promise.race([sweep(p, uuid, lang === "en"), new Promise((_, reject) => { timer = setTimeout(() => reject(new Error("sheet timeout 300s")), 300000); })]); }
+        catch (e) { r = { uuid, crash: e.message.slice(0, 300) }; await p.screenshot({ path: `${out}/crash-${order.indexOf(uuid)}.png` }).catch(() => {}); }
+        finally { clearTimeout(timer); }
+        r.errors = l.slice(n0).filter(x => !/favicon|404|WebGL|hardware|GPU/.test(x));
+        r.worker = w;
+        results[order.indexOf(uuid)] = r;
+        report(r);
+      }
+    }
+  }));
+  console.log("sweep", Math.round((Date.now() - started) / 1000), "s with", sessions.length, "sessions");
+  // screenshot of a re-opened, fuzzed character sheet
+  await page.evaluate(async uuid => { const a = await fromUuid(uuid); await a.sheet.render(true); }, fixtures.characterUuid);
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: `${out}/sweep-${lang}.png` });
 } finally {
-await page.evaluate(async f=>{for(const id of f.actorIds) await game.actors.get(id)?.delete();for(const id of f.itemIds) await game.items.get(id)?.delete();},fixtures);
+  await page.evaluate(async f => {
+    for (const id of f.actorIds) await game.actors.get(id)?.delete();
+    for (const id of f.itemIds) await game.items.get(id)?.delete();
+    for (const id of f.userIds ?? []) await game.users.get(id)?.delete();
+  }, fixtures);
 }
-if (lang !== "ja") await page.evaluate(() => localStorage.setItem("core.language", JSON.stringify("ja")));
-console.log("total", results.length, "problems", results.filter(r => r.crash || r.bad?.length || r.mismatch?.length || r.errors.length).length);
-writeFileSync(out + "/report-"+lang+".json",JSON.stringify(results,null,2));
+const problems = results.filter(r => r.crash || r.bad?.length || r.mismatch?.length || r.errors.length);
+console.log("total", results.length, "problems", problems.length);
+writeFileSync(`${out}/report-${lang}.json`, JSON.stringify(results, null, 2));
 await browser.close();
-if(results.some(r=>r.crash||r.bad?.length||r.mismatch?.length||r.errors.length)) process.exitCode=1;
+if (problems.length || results.filter(Boolean).length !== order.length) process.exitCode = 1;

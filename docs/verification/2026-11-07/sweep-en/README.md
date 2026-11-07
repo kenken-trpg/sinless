@@ -2,7 +2,7 @@
 
 記録日: 2026-11-07。Foundry 14.365、ワールド sinless-test、system 0.13.2、言語 en。
 
-- 実行: `node docs/verification/2026-11-06/current/sweep-fixed-en.mjs <outdir> en`
+- 実行: `node docs/verification/2026-11-06/current/sweep-fixed-en.mjs <outdir> en`(同日、`sweep-fixed.mjs <outdir> en` に統合)
 - 結果: [report-en.json](report-en.json)
 - 日本語版と同じく、シートごとに 180 秒の制限を付けた。
 - 英語版では、表示テキストに日本語(ひらがな・カタカナ・漢字・全角記号)が混ざっていないかも検査する。
