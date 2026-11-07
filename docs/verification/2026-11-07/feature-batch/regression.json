@@ -1,0 +1,73 @@
+{
+  "system": "0.13.3",
+  "fixtures": {
+    "system": "0.13.3",
+    "canvas": "SMOKE Scene",
+    "tokens": [
+      "SMOKE D Ben",
+      "SMOKE D Guard"
+    ],
+    "vehicles": [
+      "SMOKE V Van",
+      "SMOKE V Roto"
+    ],
+    "members": 1,
+    "rookieCreation": false
+  },
+  "results": [
+    {
+      "name": "shoot",
+      "completed": true,
+      "errors": []
+    },
+    {
+      "name": "cond",
+      "completed": true,
+      "errors": []
+    },
+    {
+      "name": "adv",
+      "completed": true,
+      "errors": []
+    },
+    {
+      "name": "op",
+      "completed": true,
+      "errors": []
+    },
+    {
+      "name": "life",
+      "completed": true,
+      "errors": []
+    },
+    {
+      "name": "chase",
+      "completed": true,
+      "errors": []
+    },
+    {
+      "name": "digital",
+      "completed": true,
+      "errors": []
+    },
+    {
+      "name": "magic",
+      "completed": true,
+      "errors": []
+    },
+    {
+      "name": "magic9",
+      "completed": true,
+      "errors": []
+    }
+  ],
+  "cleanup": {
+    "actors": 0,
+    "items": 0,
+    "scenes": [
+      "Foundry Virtual Tabletop"
+    ],
+    "combats": 0,
+    "messages": 0
+  }
+}

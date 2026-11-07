@@ -29,6 +29,8 @@ export SINLESS_FOUNDRY_URL=http://localhost:30000   # 省略時の既定値
 | `2026-11-06/current/magic-review.mjs` | 魔法拡張(持続呪文、結界、精霊)とリソース保存 |
 | `2026-11-06/current/sinless-verify.mjs <mode> <arg>` | `original/` の旧スクリプトを補正して実行(diagnose / sweep / legacy / batch / extra) |
 | `2026-11-06/sample-actors/initial-workflow.mjs` | 同梱サンプルアクターの読み込みと主要な判定 |
+| `2026-11-06/current/extra.mjs` | プレイヤー視点(別ブラウザー)と戦闘の進行 |
+| `2026-11-06/current/batch.mjs` | `original/` の機能別スクリプト 9 本を順に実行。前提データは `current/fixtures.mjs` が作る |
 
 各スクリプトは作成したテスト用データを終了時に削除する。
 `2026-11-06/original/` は当時のスナップショットで、機械固有のパスを含むためそのままでは動かない。
