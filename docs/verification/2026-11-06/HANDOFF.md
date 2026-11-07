@@ -22,6 +22,7 @@
 > - 以前のタイムアウトや失敗は、どれも検証スクリプト側の問題だった。原因はブラウザーのコンテキスト共有、トークンの順序、クリック後の待ち方。system の不具合ではない。
 > - スクリプトの実行方法と共通ヘルパーは [../README.md](../README.md) を参照。
 >   この文書の「保存したファイル」節に書いた機械固有のパスは、`current/` では `lib.mjs` へ置き換え済み。
+>   旧入口の `current/sinless-verify.mjs` は削除した。その出力(`current/*.log` など)は残している。
 
 ## 現在の結論
 
@@ -229,7 +230,7 @@ page.evaluate: Target page, context or browser has been closed
 
 - original/: 元の作業ディレクトリの .mjs と .log。以前の成功ログと途中終了ログを含む。
 - current/: 今回作成した検証スクリプト、ログ、スクリーンショット、空の player-combat.json。
-- current/sinless-verify.mjs: 今回の実行入口。
+- current/sinless-verify.mjs: 今回の実行入口(2026-11-07 に削除。`npm run verify` に置き換えた。出力したログは残している)。
 - current/batch.mjs: 未実行の機能テスト一括ランナー。
 - current/extra.mjs: 未完了のプレイヤー・戦闘テスト。
 - evidence/: Git の状態、差分、未追跡ソースのスナップショット、検証状況の機械可読記録。
