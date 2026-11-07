@@ -6,8 +6,10 @@ import {checkOutput} from "./batch-checks.mjs";
 import {format} from "node:util";
 const source=fileURLToPath(new URL("../original",import.meta.url)),lib=fileURLToPath(new URL("../../lib.mjs",import.meta.url)),out=process.env.SINLESS_VERIFY_OUT??"/private/tmp/sinless-verification";
 // The scripts in original/ wait fixed times, sized for the slow software canvas of the time.
-// Scale those waits; SINLESS_BATCH_WAIT=1 restores them.
-globalThis.__sinlessWaitScale=Number(process.env.SINLESS_BATCH_WAIT??0.2);
+// Scale those waits, but keep at least 500 ms (or the original wait, if shorter): a wait after
+// a dialog button also covers the dialog's closing animation. SINLESS_BATCH_WAIT=1 restores them.
+const waitScale=Number(process.env.SINLESS_BATCH_WAIT??0.2);
+globalThis.__sinlessWait=ms=>Math.max(ms*waitScale,Math.min(ms,500));
 const session=await joinGM();
 globalThis.__sinlessVerificationSession={...session,browser:{close:async()=>{}}};
 const shared=out+"/shared-lib.mjs";writeFileSync(shared,"export async function joinGM(){return globalThis.__sinlessVerificationSession;}\n");
@@ -22,7 +24,7 @@ try{
   let code=readFileSync(source+"/"+name+".mjs","utf8").replace('"./lib.mjs"',JSON.stringify(shared));
   code=code.replaceAll('page.setDefaultTimeout(8000)', 'page.setDefaultTimeout(30000)');
   code=code.replaceAll('timeout: 10000', 'timeout: 30000');
-  code=code.replaceAll('.waitForTimeout(', '.waitForTimeout(globalThis.__sinlessWaitScale*');
+  code=code.replace(/\.waitForTimeout\(([^()]*)\)/g, '.waitForTimeout(globalThis.__sinlessWait($1))');
   // magic: the defend dialog is still closing when the drain dialog opens; wait until it leaves.
   code=code.replace('await page.click(".sinless-damage-dialog button[data-action=cancel]");\n','await page.click(".sinless-damage-dialog button[data-action=cancel]");await page.waitForSelector(".sinless-damage-dialog",{state:"detached"});\n');
   code=code.replace('await page.evaluate(() => game.actors.getName("SMOKE D Ben").rollSkill("firearms"));','await page.evaluate(() => { game.actors.getName("SMOKE D Ben").rollSkill("firearms"); });');

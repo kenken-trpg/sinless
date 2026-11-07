@@ -29,7 +29,7 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
 - 出力は `--out`(既定 `<tmp>/sinless-verify/<日時>`)の下の `<名前>/`。最後に各スクリプトの成否と所要時間を表示し、1 本でも失敗すれば終了コード 1。
 - macOS では実行中だけ `caffeinate -i` でアイドルスリープを止める(スリープすると接続が切れ、シートがタイムアウトする)。
-- 全部で約 3 分(2026-11-07、macOS)。以前は約 45 分かかっていた。headless Chromium はゲームキャンバスの WebGL をソフトウェアで描き、そのあいだページが塞がるため、サーバーの応答を受け取るたびに約 300 ms 待っていた。いまは macOS では GPU(Metal)で描き、総当たりではキャンバスを切っている。
+- 全部で約 5 分(2026-11-07、macOS)。以前は約 45 分かかっていた。headless Chromium はゲームキャンバスの WebGL をソフトウェアで描き、そのあいだページが塞がるため、サーバーの応答を受け取るたびに約 300 ms 待っていた。いまは macOS では GPU(Metal)で描き、総当たりではキャンバスを切っている。
 - `npm run check` には含まれない。
 
 ## 共通ヘルパー [lib.mjs](lib.mjs)
@@ -65,7 +65,7 @@ Foundry は 1 ユーザーにつき 1 セッションしか認めないため、
 その後の起動で Foundry のログに `Deleted N orphaned embedded documents from the scenes database` と出るのは想定どおり。リンクしていないトークンの効果を外すと削除印が残り、Foundry はトークンやシーンを削除してもそれを消さず、起動時に掃除する。削除の順序では防げず、害はない(2026-11-07 確認)。
 `2026-11-06/original/` は当時のスナップショットで、機械固有のパスを含むためそのままでは動かない。
 `current/batch.mjs` は、読み込み時にそのパスを `lib.mjs` へ置き換えて実行する。
-あわせて、スクリプト中の固定の待ち時間(`waitForTimeout`)を `SINLESS_BATCH_WAIT` 倍(既定 0.2)に縮める。当時の待ち時間はソフトウェア描画の遅いキャンバスに合わせたもので、`1` にすると元に戻る。
+あわせて、スクリプト中の固定の待ち時間(`waitForTimeout`)を `SINLESS_BATCH_WAIT` 倍(既定 0.2)に縮める。ただし 500 ms(元の待ちがそれより短ければ元の値)は残す。ダイアログのボタンの直後の待ちは閉じるアニメーションも含むため、縮めすぎると読み取りが早すぎる。当時の待ち時間はソフトウェア描画の遅いキャンバスに合わせたもので、`1` にすると元に戻る。
 
 旧入口の `current/sinless-verify.mjs`(diagnose / sweep / legacy / batch / extra)は 2026-11-07 に削除した。
 batch と extra は `npm run verify` の `batch` と `player` で、legacy は `batch` で足りる。sweep が生成した `sweep-fixed.mjs` は、その後直接手を入れて使っている(英語版の `sweep-fixed-en.mjs` は 2026-11-07 に統合した)。
