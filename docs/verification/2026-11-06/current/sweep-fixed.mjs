@@ -1,7 +1,7 @@
 import {writeFileSync} from "node:fs";
 // Sweep: every actor / item sheet, every tab, every editable input, in one language.
 // usage: node sweep.mjs <outdir> <lang>
-import { joinGM } from "/private/tmp/claude-501/-Users-mantanikenichi-mydevelop/169d1560-1874-49ac-a866-603a5aec9198/scratchpad/pw/lib.mjs";
+import { joinGM } from "../../lib.mjs";
 const out = process.argv[2];
 const lang = process.argv[3] ?? "ja";
 const { browser, page, logs } = await joinGM({});
@@ -114,7 +114,9 @@ try {
 for (const uuid of targets) {
   const n0 = logs.length;
   let r;
-  try { r = await sweep(uuid); } catch (e) { r = { uuid, crash: e.message.slice(0, 300) }; }
+  // Bound each sheet so one hang does not stall the whole sweep.
+  try { r = await Promise.race([sweep(uuid), new Promise((_, reject) => setTimeout(() => reject(new Error("sheet timeout 180s")), 180000))]); }
+  catch (e) { r = { uuid, crash: e.message.slice(0, 300) }; await page.screenshot({ path: `${out}/crash-${results.length}.png` }).catch(() => {}); }
   r.errors = logs.slice(n0).filter(l => !/favicon|404|WebGL|hardware|GPU/.test(l));
   results.push(r);
   const flag = (r.crash || r.bad?.length || r.mismatch?.length || r.errors.length) ? "!!" : "ok";

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import {joinGM} from '../original/lib.mjs';
+import {joinGM} from '../../lib.mjs';
 const out='/private/tmp/sinless-magic-review';mkdirSync(out,{recursive:true});
 const checks=[];const pass=(name,data)=>{checks.push({name,data});console.log('PASS',name,JSON.stringify(data??{}));};
 console.log('Joining Foundry');

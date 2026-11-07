@@ -1,7 +1,7 @@
 import {readFileSync,writeFileSync} from "node:fs";
-import {pathToFileURL} from "node:url";
-import {joinGM} from "/private/tmp/claude-501/-Users-mantanikenichi-mydevelop/169d1560-1874-49ac-a866-603a5aec9198/scratchpad/pw/lib.mjs";
-const source="/private/tmp/claude-501/-Users-mantanikenichi-mydevelop/169d1560-1874-49ac-a866-603a5aec9198/scratchpad/pw",out="/private/tmp/sinless-verification";
+import {pathToFileURL,fileURLToPath} from "node:url";
+import {joinGM} from "../../lib.mjs";
+const source=fileURLToPath(new URL("../original",import.meta.url)),lib=fileURLToPath(new URL("../../lib.mjs",import.meta.url)),out=process.env.SINLESS_VERIFY_OUT??"/private/tmp/sinless-verification";
 const session=await joinGM();
 globalThis.__sinlessVerificationSession={...session,browser:{close:async()=>{}}};
 const shared=out+"/shared-lib.mjs";writeFileSync(shared,"export async function joinGM(){return globalThis.__sinlessVerificationSession;}\n");
