@@ -9,12 +9,15 @@
       <label>{{localize "SINLESS.Character.FIELDS.talent.label"}}
         <select name="system.talent">{{selectOptions talentChoices selected=system.talent localize=true}}</select>
       </label>
-      <label>{{localize "SINLESS.Character.FIELDS.lifestyle.label"}}
+      <label>
+        {{!-- Actions sit beside the caption so the select keeps room for its longest option. --}}
+        <span class="label-row">{{localize "SINLESS.Character.FIELDS.lifestyle.label"}}
+          <a class="lifestyle-action" data-action="payLifestyle" data-tooltip="{{localize "SINLESS.Lifestyle.payHint"}}"><i class="fa-solid fa-calendar-check"></i></a>
+          <a class="lifestyle-action" data-action="buyLifestyle" data-tooltip="{{localize "SINLESS.Lifestyle.buyHint"}}"><i class="fa-solid fa-cart-plus"></i></a>
+        </span>
         <span class="inline">
           <select name="system.lifestyle">{{selectOptions lifestyleChoices selected=system.lifestyle localize=true}}</select>
           <input type="number" name="system.lifestyleMonths" value="{{system.lifestyleMonths}}" min="0" data-tooltip="{{localize "SINLESS.Character.FIELDS.lifestyleMonths.label"}}">
-          <a class="lifestyle-action" data-action="payLifestyle" data-tooltip="{{localize "SINLESS.Lifestyle.payHint"}}"><i class="fa-solid fa-calendar-check"></i></a>
-          <a class="lifestyle-action" data-action="buyLifestyle" data-tooltip="{{localize "SINLESS.Lifestyle.buyHint"}}"><i class="fa-solid fa-cart-plus"></i></a>
         </span>
       </label>
       <label>{{localize "SINLESS.Character.FIELDS.brand.label"}}
