@@ -24,6 +24,8 @@
 .sinless.sheet .header-grid label.checkbox { flex-direction: row; align-items: center; gap: 0.25rem; }
 .sinless.sheet .header-grid .inline { display: flex; gap: 0.25rem; }
 .sinless.sheet .header-grid .inline input { width: 3.5rem; flex: 0 0 auto; }
+.sinless.sheet .header-grid .inline select { flex: 1 1 auto; min-width: 0; }
+.sinless.sheet .header-grid .label-row { display: flex; align-items: center; gap: 0.25rem; line-height: 1; }
 .sinless.sheet .header-stats { display: flex; flex-direction: column; gap: 0.25rem; flex: 0 0 auto; }
 .sinless.sheet .header-stats .stat { display: grid; grid-template-columns: auto auto auto; align-items: baseline; gap: 0.35rem; border: 1px solid var(--sl-border); border-radius: 4px; padding: 0.15rem 0.4rem; }
 .sinless.sheet .stat .label { font-size: 0.75rem; color: var(--sl-muted); }
@@ -309,8 +311,8 @@
 .sinless-operation-card ul { margin: 0.25rem 0; padding-left: 1.2rem; }
 
 /* Lifestyle upkeep (p.46) */
-.sinless.sheet .header-grid .inline .lifestyle-action { flex: 0 0 auto; padding: 0 2px; opacity: 0.8; }
-.sinless.sheet .header-grid .inline .lifestyle-action:hover { opacity: 1; }
+.sinless.sheet .header-grid .lifestyle-action { flex: 0 0 auto; padding: 0 2px; opacity: 0.8; }
+.sinless.sheet .header-grid .lifestyle-action:hover { opacity: 1; }
 .sinless-card.sector-turn .lifestyles { margin: 0.2rem 0; padding-left: 1.2rem; }
 .sinless-card.sector-turn .lifestyles .warn { color: var(--sl-fail, #b71c1c); }
 
