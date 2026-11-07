@@ -1,5 +1,5 @@
 import { SYSTEM_ID, SINLESS } from "../config.mjs";
-import { SinlessActorSheet } from "./actor-sheet.mjs";
+import { SinlessActorSheet, actorCall, confirmAction } from "./actor-sheet.mjs";
 
 const T = path => `systems/${SYSTEM_ID}/templates/${path}`;
 
@@ -9,8 +9,8 @@ export class BrandSheet extends SinlessActorSheet {
     classes: ["brand"],
     position: { width: 780, height: 820 },
     actions: {
-      rollBrandStat: BrandSheet.#onRollBrandStat,
-      rollBrandAction: BrandSheet.#onRollBrandAction,
+      rollBrandStat: actorCall("rollBrandStat", "stat"),
+      rollBrandAction: actorCall("rollBrandAction", "brandAction"),
       toggleTrait: BrandSheet.#onToggleTrait,
       endSectorTurn: BrandSheet.#onEndSectorTurn,
       adjustItem: BrandSheet.#onAdjustItem,
@@ -92,12 +92,6 @@ export class BrandSheet extends SinlessActorSheet {
     return context;
   }
 
-  async _preparePartContext(partId, context, options) {
-    context = await super._preparePartContext(partId, context, options);
-    if (partId in context.tabs) context.tab = context.tabs[partId];
-    return context;
-  }
-
   /** Dropping a character on the sheet adds it as a member. */
   async _onDropActor(event, actor) {
     if (!this.isEditable) return null;
@@ -105,14 +99,6 @@ export class BrandSheet extends SinlessActorSheet {
   }
 
   /* ------------------------------------------------------------------ */
-
-  static async #onRollBrandStat(event, target) {
-    return this.actor.rollBrandStat(target.dataset.stat);
-  }
-
-  static async #onRollBrandAction(event, target) {
-    return this.actor.rollBrandAction(target.dataset.brandAction);
-  }
 
   static async #onToggleTrait(event, target) {
     const key = target.dataset.trait;
@@ -128,16 +114,13 @@ export class BrandSheet extends SinlessActorSheet {
   }
 
   static async #onEndSectorTurn() {
-    const ok = await foundry.applications.api.DialogV2.confirm({
-      window: { title: "SINLESS.SectorTurn.end" },
-      content: `<p>${game.i18n.localize("SINLESS.SectorTurn.confirm")}</p>`
-    });
+    const ok = await confirmAction("SINLESS.SectorTurn.end", "SINLESS.SectorTurn.confirm");
     if (ok) return this.actor.endSectorTurn();
   }
 
   /** +/- buttons for resource damage and influence. */
   static async #onAdjustItem(event, target) {
-    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    const item = this._itemFrom(target);
     const field = target.dataset.field;
     if (!item || !field) return;
     const max = item.system.boxes;

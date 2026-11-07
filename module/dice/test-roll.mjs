@@ -100,6 +100,21 @@ function gridAlert(x, successes) {
   return softwareAlert(x, successes, x.shadow, x.sensor);
 }
 
+/** Ramming damage to the ramming vehicle (p.144). */
+function ramSelfDamage(ram, successes) {
+  return ramResult({ successes, body: 0, inertia: ram.inertia, targetBody: ram.targetBody, battleRam: ram.battleRam }).selfDamage;
+}
+
+/** A chase action succeeds with the needed successes (pp.231-232). */
+function chaseSucceeded(state, sum) {
+  return !state.abf && sum.successes >= state.extra.chase.needed;
+}
+
+/** Alert raised by a shadow test (p.236); an ABF counts as no success. */
+function shadowTestAlert(state, sum) {
+  return shadowAlert(state.abf ? 0 : sum.successes);
+}
+
 /** Defend with the dialog that fits the attack: digital or physical. */
 function defendDialog(message, actor) {
   const x = message.getFlag(SYSTEM_ID, "test")?.extra;
@@ -151,11 +166,11 @@ export async function renderCard(state) {
   }
   // Car chase action (pp.231-232): success against the needed successes.
   if (x.chase) {
-    const success = !state.abf && sum.successes >= x.chase.needed;
+    const success = chaseSucceeded(state, sum);
     context.chase = { success, applicable: (success || x.chase.action === "trap") && !x.chase.applied };
   }
-  // Shadow test: alert raised while sneaking (p.236); an ABF counts as no success.
-  if (x.shadow) context.shadowAlert = shadowAlert(state.abf ? 0 : sum.successes);
+  // Shadow test: alert raised while sneaking (p.236).
+  if (x.shadow) context.shadowAlert = shadowTestAlert(state, sum);
   // Magic: spirit summoning outcome (p.183); a linked spirit actor can be placed once.
   if (x.summon && !state.abf) {
     context.summon = summonResult(sum.successes, x.summon.force, x.summon.bag);
@@ -170,10 +185,7 @@ export async function renderCard(state) {
   }
   // Rigging: overdrive movement and ramming damage to the ramming vehicle.
   if (x.overdrive && !state.abf) context.overdrive = { gain: overdriveGain(sum.successes), inertia: x.overdrive.inertia };
-  if (x.ram && !state.abf) {
-    const r = ramResult({ successes: sum.successes, body: 0, inertia: x.ram.inertia, targetBody: x.ram.targetBody, battleRam: x.ram.battleRam });
-    context.ram = { selfDamage: r.selfDamage, applied: !!x.ram.applied };
-  }
+  if (x.ram && !state.abf) context.ram = { selfDamage: ramSelfDamage(x.ram, sum.successes), applied: !!x.ram.applied };
   // Decking: alert raised and NAN influence gained.
   if (x.nan && !state.abf) {
     const r = nanHackResult(x.nan, sum.successes, x.io);
@@ -189,6 +201,22 @@ export async function renderCard(state) {
     };
   }
   return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, context);
+}
+
+/** Store a changed card state and re-render the card. */
+export async function saveCard(message, state) {
+  return message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+}
+
+/**
+ * Apply a card result once: `change(state, extra)` gets a copy of the card state and returns
+ * true when it applied something; the card is then saved. Returns whether it was saved.
+ */
+async function changeCard(message, change) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
+  if (!state?.extra || !(await change(state, state.extra))) return false;
+  await saveCard(message, state);
+  return true;
 }
 
 /** Roll one post-test Kismet die (p.39) and update the chat card. */
@@ -217,236 +245,178 @@ export async function addKismetDie(message) {
 /** Chat card listeners (Foundry v13+ passes an HTMLElement). */
 export function onRenderChatMessage(message, html) {
   if (!html.querySelector) return;
-  const guard = (button, fn) => button.addEventListener("click", async event => {
-    event.preventDefault();
-    button.disabled = true;
-    try {
-      await fn();
-    } finally {
-      button.disabled = false;
+  const gm = game.user.isGM;
+  const owner = message.isOwner;
+  const spellEffects = () => import("../apps/spell-effects.mjs");
+  // Each button of an action gets the handler `handlerFor(button)` returns, or is removed when
+  // it returns nothing (the user may not use it). A button is disabled while its handler runs.
+  const bind = (action, handlerFor) => {
+    for (const button of html.querySelectorAll(`[data-sinless-action='${action}']`)) {
+      const handler = handlerFor(button);
+      if (!handler) {
+        button.remove();
+        continue;
+      }
+      button.addEventListener("click", async event => {
+        event.preventDefault();
+        button.disabled = true;
+        try {
+          await handler();
+        } finally {
+          button.disabled = false;
+        }
+      });
     }
-  });
+  };
+  const when = (allowed, handler) => (allowed ? handler : null);
 
-  const kismet = html.querySelector("[data-sinless-action='kismet']");
-  if (kismet) {
-    if (message.isOwner) guard(kismet, () => addKismetDie(message));
-    else kismet.remove();
-  }
-
+  bind("kismet", () => when(owner, () => addKismetDie(message)));
   // Defend buttons: only for users who control the target (or the GM).
-  for (const button of html.querySelectorAll("[data-sinless-action='defend']")) {
+  bind("defend", button => {
     const actor = fromUuidSync(button.dataset.targetUuid)?.actor;
-    if (!actor || !(game.user.isGM || actor.isOwner)) {
-      button.remove();
-      continue;
-    }
-    guard(button, () => defendDialog(message, actor));
-  }
+    return when(actor && (gm || actor.isOwner), () => defendDialog(message, actor));
+  });
+  bind("defend-selected", () => async () => {
+    const defenders = controlledDefenders();
+    if (!defenders.length) return ui.notifications.warn("SINLESS.Notify.noDefender", { localize: true });
+    for (const actor of defenders) await defendDialog(message, actor);
+  });
   // Continuous spells: the target's owner (or GM) resists and takes the effect.
-  for (const button of html.querySelectorAll("[data-sinless-action='apply-sustained']")) {
-    const actor = fromUuidSync(button.dataset.targetUuid)?.actor ?? fromUuidSync(button.dataset.targetUuid);
-    if (!actor || !(game.user.isGM || actor.isOwner)) {
-      button.remove();
-      continue;
-    }
-    guard(button, async () => (await import("../apps/spell-effects.mjs")).applySustained(message, button.dataset.targetUuid));
-  }
-  for (const button of html.querySelectorAll("[data-sinless-action='resist-sustained']")) {
+  bind("apply-sustained", button => {
+    const uuid = button.dataset.targetUuid;
+    const actor = fromUuidSync(uuid)?.actor ?? fromUuidSync(uuid);
+    return when(actor && (gm || actor.isOwner), async () => (await spellEffects()).applySustained(message, uuid));
+  });
+  bind("resist-sustained", button => {
     const effect = fromUuidSync(button.dataset.effectUuid);
-    const actor = effect?.parent;
-    if (!effect || !actor?.isOwner) {
-      button.remove();
-      continue;
-    }
-    guard(button, () => actor.resistSustainedSpell(effect));
-  }
-  const place = html.querySelector("[data-sinless-action='place-spirit']");
-  if (place) {
-    if (game.user.isGM) guard(place, async () => (await import("../apps/spell-effects.mjs")).placeSpirit(message));
-    else place.remove();
-  }
+    return when(effect?.parent?.isOwner, () => effect.parent.resistSustainedSpell(effect));
+  });
+  bind("place-spirit", () => when(gm, async () => (await spellEffects()).placeSpirit(message)));
   // RNID: the GM or the roller shrinks a targeted decker's influence once.
-  for (const button of html.querySelectorAll("[data-sinless-action='apply-shrink']")) {
-    if (!(game.user.isGM || message.isOwner)) {
-      button.remove();
-      continue;
-    }
-    guard(button, () => applyShrink(message, button.dataset.targetUuid));
-  }
+  bind("apply-shrink", button => when(gm || owner, () => applyShrink(message, button.dataset.targetUuid)));
   // Drain: the caster resists and applies it once, even if the spell failed (p.167).
-  const drain = html.querySelector("[data-sinless-action='resist-drain']");
-  if (drain) {
-    if (message.isOwner) guard(drain, () => resistDrain(message));
-    else drain.remove();
-  }
-
+  bind("resist-drain", () => when(owner, () => resistDrain(message)));
   // Ramming: the rigger applies the damage to their own vehicle once (the GM if the rigger does not own it).
-  const ramSelf = html.querySelector("[data-sinless-action='apply-ram-self']");
-  if (ramSelf) {
+  bind("apply-ram-self", () => {
     const uuid = message.getFlag(SYSTEM_ID, "test")?.extra?.vehicleUuid;
     const vehicle = uuid ? fromUuidSync(uuid) : null;
-    if (game.user.isGM || (message.isOwner && vehicle?.isOwner)) guard(ramSelf, () => applyRamSelf(message));
-    else ramSelf.remove();
-  }
-
+    return when(gm || (owner && vehicle?.isOwner), () => applyRamSelf(message));
+  });
   // Decking results: influence is applied by the roller, alert by the GM.
-  const influence = html.querySelector("[data-sinless-action='apply-influence']");
-  if (influence) {
-    if (message.isOwner) guard(influence, () => applyGridResult(message, "influence"));
-    else influence.remove();
-  }
-  const alert = html.querySelector("[data-sinless-action='apply-alert']");
-  if (alert) {
-    if (game.user.isGM) guard(alert, () => applyGridResult(message, "alert"));
-    else alert.remove();
-  }
-
+  bind("apply-influence", () => when(owner, () => applyGridResult(message, "influence")));
+  bind("apply-alert", () => when(gm, () => applyGridResult(message, "alert")));
   // Full tracks (p.97): the actor's owner rolls overload tests and applies the results.
-  for (const button of html.querySelectorAll("[data-sinless-action='overload']")) {
+  bind("overload", button => {
     const actor = fromUuidSync(message.getFlag(SYSTEM_ID, "actorUuid"));
-    if (!actor?.isOwner) {
-      button.remove();
-      continue;
-    }
-    guard(button, () => actor.rollOverload(button.dataset.track));
-  }
-  const chase = html.querySelector("[data-sinless-action='apply-chase']");
-  if (chase) {
-    if (game.user.isGM) guard(chase, () => applyChaseResult(message));
-    else chase.remove();
-  }
-  const shadow = html.querySelector("[data-sinless-action='apply-shadow-alert']");
-  if (shadow) {
-    if (game.user.isGM) guard(shadow, () => applyShadowAlert(message));
-    else shadow.remove();
-  }
+    return when(actor?.isOwner, () => actor.rollOverload(button.dataset.track));
+  });
   for (const action of ["apply-overload", "apply-organ"]) {
-    const button = html.querySelector(`[data-sinless-action='${action}']`);
-    if (!button) continue;
-    if (message.isOwner || game.user.isGM) guard(button, () => applyConditionResult(message, action));
-    else button.remove();
+    bind(action, () => when(owner || gm, () => applyConditionResult(message, action)));
   }
-
-  const selected = html.querySelector("[data-sinless-action='defend-selected']");
-  if (selected) {
-    guard(selected, async () => {
-      const defenders = controlledDefenders();
-      if (!defenders.length) {
-        ui.notifications.warn("SINLESS.Notify.noDefender", { localize: true });
-        return;
-      }
-      for (const actor of defenders) await defendDialog(message, actor);
-    });
-  }
+  bind("apply-chase", () => when(gm, () => applyChaseResult(message)));
+  bind("apply-shadow-alert", () => when(gm, () => applyShadowAlert(message)));
 }
 
 /** Apply the influence gain or alert increase shown on a decking card once. */
-async function applyGridResult(message, what) {
-  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
-  if (!state?.extra) return;
-  const sum = summarize(state);
-  const x = state.extra;
-  if (what === "influence" && x.nan && !x.influenceApplied) {
-    const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
-    const { gain } = nanHackResult(x.nan, sum.successes, x.io);
-    await actor?.addInfluence(gain);
-    x.influenceApplied = true;
-  } else if (what === "alert" && !x.alertApplied) {
-    const value = gridAlert(x, sum.successes);
-    x.alertNow = await adjustAlert(value);
-    x.alertApplied = true;
-  } else return;
-  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+function applyGridResult(message, what) {
+  return changeCard(message, async (state, x) => {
+    const sum = summarize(state);
+    if (what === "influence" && x.nan && !x.influenceApplied) {
+      const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
+      await actor?.addInfluence(nanHackResult(x.nan, sum.successes, x.io).gain);
+      x.influenceApplied = true;
+    } else if (what === "alert" && !x.alertApplied) {
+      x.alertNow = await adjustAlert(gridAlert(x, sum.successes));
+      x.alertApplied = true;
+    } else return false;
+    return true;
+  });
 }
 
 /** Shrink the influence of a targeted decker (RNID, p.205) and mark the target done. */
 async function applyShrink(message, uuid) {
-  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
-  const x = state?.extra;
-  if (!x?.shrink || (x.shrink.applied ?? []).includes(uuid)) return;
   const actor = fromUuidSync(uuid)?.actor ?? fromUuidSync(uuid);
-  if (!actor?.system.grid) return;
-  if (!actor.isOwner) {
-    ui.notifications.warn("SINLESS.Digital.noPermission", { localize: true });
-    return;
-  }
-  const r = shrinkInfluence(actor.system.grid.influence, summarize(state).successes, x.shrink.meters);
-  await actor.update({ "system.grid.influence": r.influence });
-  x.shrink.applied = [...(x.shrink.applied ?? []), uuid];
-  x.shrink.results = { ...(x.shrink.results ?? {}), [uuid.replaceAll(".", "_")]: r.influence };
-  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+  let r;
+  await changeCard(message, async (state, x) => {
+    if (!x.shrink || (x.shrink.applied ?? []).includes(uuid) || !actor?.system.grid) return false;
+    if (!actor.isOwner) {
+      ui.notifications.warn("SINLESS.Digital.noPermission", { localize: true });
+      return false;
+    }
+    r = shrinkInfluence(actor.system.grid.influence, summarize(state).successes, x.shrink.meters);
+    await actor.update({ "system.grid.influence": r.influence });
+    x.shrink.applied = [...(x.shrink.applied ?? []), uuid];
+    x.shrink.results = { ...(x.shrink.results ?? {}), [uuid.replaceAll(".", "_")]: r.influence };
+    return true;
+  });
+  if (!r) return;
   const text = game.i18n.format(r.influence > 0 ? "SINLESS.Digital.shrunk" : "SINLESS.Digital.shrunkOut", { name: actor.name, loss: r.loss, n: r.influence });
   return ChatMessage.create({ speaker: message.speaker, content: `<p class="sinless-note">${foundry.utils.escapeHTML(text)}</p>` });
 }
 
 /** Apply a chase action from a test card to the chase board once. */
-async function applyChaseResult(message) {
-  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
-  const x = state?.extra;
-  if (!x?.chase || x.chase.applied) return;
-  const sum = summarize(state);
-  const success = !state.abf && sum.successes >= x.chase.needed;
-  const applied = await applyChaseAction(x.chase.action, { success, targetUuid: x.chase.targetUuid });
-  if (!applied) return;
-  x.chase.applied = true;
-  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+function applyChaseResult(message) {
+  return changeCard(message, async (state, x) => {
+    if (!x.chase || x.chase.applied) return false;
+    const success = chaseSucceeded(state, summarize(state));
+    if (!(await applyChaseAction(x.chase.action, { success, targetUuid: x.chase.targetUuid }))) return false;
+    x.chase.applied = true;
+    return true;
+  });
 }
 
 /** Raise the alert level by a shadow test's result once (p.236). */
-async function applyShadowAlert(message) {
-  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
-  const x = state?.extra;
-  if (!x?.shadow || x.shadowApplied) return;
-  const sum = summarize(state);
-  x.alertNow = await adjustAlert(shadowAlert(state.abf ? 0 : sum.successes));
-  x.shadowApplied = true;
-  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+function applyShadowAlert(message) {
+  return changeCard(message, async (state, x) => {
+    if (!x.shadow || x.shadowApplied) return false;
+    x.alertNow = await adjustAlert(shadowTestAlert(state, summarize(state)));
+    x.shadowApplied = true;
+    return true;
+  });
 }
 
 /** Apply a failed overload test or organ damage once (p.97). */
-async function applyConditionResult(message, action) {
-  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
-  const x = state?.extra;
-  const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
-  if (!x || !actor) return;
-  if (action === "apply-overload" && x.overload && !x.overload.applied) {
-    await actor.applyOverloadFailure(x.overload.track, x.overload.rounds);
-    x.overload.applied = true;
-  } else if (action === "apply-organ" && x.injury?.attribute && !x.injury.applied) {
-    await actor.applyOrganDamage(x.injury.attribute);
-    x.injury.applied = true;
-  } else return;
-  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+function applyConditionResult(message, action) {
+  return changeCard(message, async (state, x) => {
+    const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
+    if (!actor) return false;
+    if (action === "apply-overload" && x.overload && !x.overload.applied) {
+      await actor.applyOverloadFailure(x.overload.track, x.overload.rounds);
+      x.overload.applied = true;
+    } else if (action === "apply-organ" && x.injury?.attribute && !x.injury.applied) {
+      await actor.applyOrganDamage(x.injury.attribute);
+      x.injury.applied = true;
+    } else return false;
+    return true;
+  });
 }
 
 /** Apply ramming damage to the ramming vehicle (p.144). */
-async function applyRamSelf(message) {
-  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
-  const x = state?.extra;
-  if (!x?.ram || x.ram.applied) return;
-  const vehicle = await fromUuid(x.vehicleUuid);
-  const sum = summarize(state);
-  const { selfDamage } = ramResult({ successes: sum.successes, body: 0, inertia: x.ram.inertia, targetBody: x.ram.targetBody, battleRam: x.ram.battleRam });
-  if (vehicle && selfDamage) {
-    await vehicle.applyDamage({
-      hit: true, raw: selfDamage, armorReduction: 0, afterArmor: selfDamage, final: selfDamage,
-      track: "physical", stripped: [], source: game.i18n.localize("SINLESS.Rig.action.ram")
-    });
-  }
-  x.ram.applied = true;
-  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+function applyRamSelf(message) {
+  return changeCard(message, async (state, x) => {
+    if (!x.ram || x.ram.applied) return false;
+    const vehicle = await fromUuid(x.vehicleUuid);
+    const selfDamage = ramSelfDamage(x.ram, summarize(state).successes);
+    if (vehicle && selfDamage) {
+      await vehicle.applyDamage({
+        hit: true, raw: selfDamage, armorReduction: 0, afterArmor: selfDamage, final: selfDamage,
+        track: "physical", stripped: [], source: game.i18n.localize("SINLESS.Rig.action.ram")
+      });
+    }
+    x.ram.applied = true;
+    return true;
+  });
 }
 
 /** Open the drain dialog for a spell card and mark the drain as taken. */
-async function resistDrain(message) {
-  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "test"));
-  const spell = state?.extra?.spell;
-  if (!spell || spell.applied) return;
-  const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
-  if (!actor) return;
-  const { drainDialog } = await import("../apps/drain-dialog.mjs");
-  const result = await drainDialog(actor, spell);
-  if (!result) return;
-  spell.applied = true;
-  await message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
+function resistDrain(message) {
+  return changeCard(message, async (state, x) => {
+    if (!x.spell || x.spell.applied) return false;
+    const actor = await fromUuid(message.getFlag(SYSTEM_ID, "actorUuid"));
+    if (!actor) return false;
+    const { drainDialog } = await import("../apps/drain-dialog.mjs");
+    if (!(await drainDialog(actor, x.spell))) return false;
+    x.spell.applied = true;
+    return true;
+  });
 }

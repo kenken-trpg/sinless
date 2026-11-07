@@ -17,6 +17,25 @@ const ITEM_GROUPS = {
   social: ["asset", "knowledge"]
 };
 
+/** A sheet action that calls an actor method, passing `target.dataset[key]` when a key is given. */
+export const actorCall = (method, key) => function(event, target) {
+  return key ? this.actor[method](target.dataset[key]) : this.actor[method]();
+};
+
+/** Boxes of a condition-style track; every third box carries a -1 mark. */
+export const trackBoxes = (value, max) => Array.from({ length: max }, (_, i) => ({
+  n: i + 1, filled: i < value, mark: (i + 1) % 3 === 0
+}));
+
+/** Clicking a track box fills up to it, or clears it if it is the last filled box. */
+const clickedBox = (current, n) => (current === n ? n - 1 : n);
+
+/** Ask the user to confirm; both arguments are localization keys. */
+export const confirmAction = (title, text) => foundry.applications.api.DialogV2.confirm({
+  window: { title },
+  content: `<p>${game.i18n.localize(text)}</p>`
+});
+
 /** Shared behavior for character and NPC sheets. */
 export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
@@ -25,28 +44,29 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
-      rollSkill: SinlessActorSheet.#onRollSkill,
-      rollDefense: SinlessActorSheet.#onRollDefense,
-      rollPool: SinlessActorSheet.#onRollPool,
-      rollEtiquette: SinlessActorSheet.#onRollEtiquette,
+      rollSkill: actorCall("rollSkill", "skill"),
+      rollDefense: actorCall("rollDefense", "defense"),
+      rollPool: actorCall("rollPool", "pool"),
+      rollEtiquette: actorCall("rollEtiquette", "etiquette"),
+      rollOverload: actorCall("rollOverload", "track"),
+      rollNanHack: actorCall("rollNanHack", "mode"),
+      refreshPools: actorCall("refreshPools"),
+      refreshKismet: actorCall("refreshKismet"),
+      stabilize: actorCall("stabilize"),
+      stabilizeDying: actorCall("stabilizeDying"),
+      rollPermanentInjury: actorCall("rollPermanentInjury"),
+      // RNID / enemy decker: shrink the targeted decker's influence (p.205).
+      rollShrink: actorCall("rollShrinkInfluence"),
       rollItem: SinlessActorSheet.#onRollItem,
-      refreshPools: SinlessActorSheet.#onRefreshPools,
-      stabilize: SinlessActorSheet.#onStabilize,
-      rollOverload: SinlessActorSheet.#onRollOverload,
-      stabilizeDying: SinlessActorSheet.#onStabilizeDying,
-      rollPermanentInjury: SinlessActorSheet.#onRollPermanentInjury,
-      refreshKismet: SinlessActorSheet.#onRefreshKismet,
       setCondition: SinlessActorSheet.#onSetCondition,
       itemCreate: SinlessActorSheet.#onItemCreate,
       itemEdit: SinlessActorSheet.#onItemEdit,
       itemDelete: SinlessActorSheet.#onItemDelete,
       itemToggle: SinlessActorSheet.#onItemToggle,
       invokeSpirit: SinlessActorSheet.#onInvokeSpirit,
-      rollNanHack: SinlessActorSheet.#onRollNanHack,
       adjustAlert: SinlessActorSheet.#onAdjustAlert,
       resetInfluence: SinlessActorSheet.#onResetInfluence,
       setCohesion: SinlessActorSheet.#onSetCohesion,
-      rollShrink: SinlessActorSheet.#onRollShrink,
       resistSustained: SinlessActorSheet.#onResistSustained,
       ...effectActions
     }
@@ -97,6 +117,10 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       none: "SINLESS.LeyLine.none", on: "SINLESS.LeyLine.on", adjacent: "SINLESS.LeyLine.adjacent", void: "SINLESS.LeyLine.void"
     };
     if (sys.grid) context.grid = this._gridContext();
+    if (sys.condition) {
+      context.physicalBoxes = trackBoxes(sys.condition.physical.value, sys.condition.physical.max);
+      context.stunBoxes = trackBoxes(sys.condition.stun.value, sys.condition.stun.max);
+    }
     if (!sys.pools) return context;
 
     context.pools = Object.entries(SINLESS.POOLS).map(([key, label]) => ({
@@ -124,11 +148,13 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       poolLabel: d.pool ? game.i18n.localize(SINLESS.POOLS[d.pool]) : ""
     }));
 
-    const boxes = (value, max) => Array.from({ length: max }, (_, i) => ({
-      n: i + 1, filled: i < value, mark: (i + 1) % 3 === 0
-    }));
-    context.physicalBoxes = boxes(sys.condition.physical.value, sys.condition.physical.max);
-    context.stunBoxes = boxes(sys.condition.stun.value, sys.condition.stun.max);
+    return context;
+  }
+
+  /** @override */
+  async _preparePartContext(partId, context, options) {
+    context = await super._preparePartContext(partId, context, options);
+    if (partId in context.tabs) context.tab = context.tabs[partId];
     return context;
   }
 
@@ -136,6 +162,11 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   async _onRender(context, options) {
     await super._onRender(context, options);
     lockOverriddenInputs(this);
+  }
+
+  /** The owned item of the row that holds `target`. */
+  _itemFrom(target) {
+    return this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
   }
 
   /** Deck, MCP dice, intrusion, alert and NAN influence for the Grid tab (ch.7). */
@@ -163,14 +194,8 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     ctx.running = status.running;
     ctx.coreLabel = SINLESS.DECK_CORES[d.core];
     ctx.issues = status.issues.map(i => game.i18n.format(`SINLESS.Grid.issue.${i.code}`, i.data ?? {}));
-    ctx.cohesionBoxes = Array.from({ length: d.mcp }, (_, i) => ({
-      n: i + 1, filled: i < d.cohesion, mark: (i + 1) % 3 === 0
-    }));
+    ctx.cohesionBoxes = trackBoxes(d.cohesion, d.mcp);
     return ctx;
-  }
-
-  static async #onRollNanHack(event, target) {
-    return this.actor.rollNanHack(target.dataset.mode);
   }
 
   static async #onAdjustAlert(event, target) {
@@ -185,8 +210,7 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static async #onSetCohesion(event, target) {
     const deck = this.actor.deck;
     if (!deck) return;
-    const n = Number(target.dataset.n);
-    return deck.update({ "system.cohesion": deck.system.cohesion === n ? n - 1 : n });
+    return deck.update({ "system.cohesion": clickedBox(deck.system.cohesion, Number(target.dataset.n)) });
   }
 
   /** Resist a continuous spell on this actor (p.167). */
@@ -195,31 +219,10 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     return effect ? this.actor.resistSustainedSpell(effect) : null;
   }
 
-  /** RNID / enemy decker: shrink the targeted decker's influence (p.205). */
-  static async #onRollShrink() {
-    return this.actor.rollShrinkInfluence();
-  }
-
   /* ------------------------------------------------------------------ */
 
-  static async #onRollSkill(event, target) {
-    return this.actor.rollSkill(target.dataset.skill);
-  }
-
-  static async #onRollDefense(event, target) {
-    return this.actor.rollDefense(target.dataset.defense);
-  }
-
-  static async #onRollPool(event, target) {
-    return this.actor.rollPool(target.dataset.pool);
-  }
-
-  static async #onRollEtiquette(event, target) {
-    return this.actor.rollEtiquette(target.dataset.etiquette);
-  }
-
   static async #onRollItem(event, target) {
-    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    const item = this._itemFrom(target);
     if (!item) return;
     switch (item.type) {
       case "weapon": return this.actor.rollWeapon(item);
@@ -234,40 +237,14 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   static async #onInvokeSpirit(event, target) {
-    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    const item = this._itemFrom(target);
     return item ? this.actor.invokeSpirit(item) : null;
-  }
-
-  static async #onRefreshPools() {
-    return this.actor.refreshPools();
-  }
-
-  static async #onStabilize() {
-    return this.actor.stabilize();
-  }
-
-  static async #onRollOverload(event, target) {
-    return this.actor.rollOverload(target.dataset.track);
-  }
-
-  static async #onStabilizeDying() {
-    return this.actor.stabilizeDying();
-  }
-
-  static async #onRollPermanentInjury() {
-    return this.actor.rollPermanentInjury();
-  }
-
-  static async #onRefreshKismet() {
-    return this.actor.refreshKismet();
   }
 
   /** Click a condition box: fill up to it, or clear it if it is the last filled box. */
   static async #onSetCondition(event, target) {
     const track = target.dataset.track;
-    const n = Number(target.dataset.n);
-    const current = this.actor.system.condition[track].value;
-    const value = current === n ? n - 1 : n;
+    const value = clickedBox(this.actor.system.condition[track].value, Number(target.dataset.n));
     return this.actor.update({ [`system.condition.${track}.value`]: value });
   }
 
@@ -279,16 +256,15 @@ export class SinlessActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   static async #onItemEdit(event, target) {
-    this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId)?.sheet.render(true);
+    this._itemFrom(target)?.sheet.render(true);
   }
 
   static async #onItemDelete(event, target) {
-    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
-    return item?.deleteDialog();
+    return this._itemFrom(target)?.deleteDialog();
   }
 
   static async #onItemToggle(event, target) {
-    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    const item = this._itemFrom(target);
     const field = target.dataset.field;
     if (!item || !field) return;
     return item.update({ [`system.${field}`]: !foundry.utils.getProperty(item.system, field) });
@@ -375,10 +351,7 @@ export class CharacterSheet extends SinlessActorSheet {
   }
 
   static async #onPayLifestyle() {
-    const ok = await foundry.applications.api.DialogV2.confirm({
-      window: { title: "SINLESS.Lifestyle.pay" },
-      content: `<p>${game.i18n.localize("SINLESS.Lifestyle.payConfirm")}</p>`
-    });
+    const ok = await confirmAction("SINLESS.Lifestyle.pay", "SINLESS.Lifestyle.payConfirm");
     return ok ? this.actor.payLifestyle() : null;
   }
 
@@ -409,10 +382,7 @@ export class CharacterSheet extends SinlessActorSheet {
   }
 
   static async #onUndoAdvance() {
-    const ok = await foundry.applications.api.DialogV2.confirm({
-      window: { title: "SINLESS.Advance.undo" },
-      content: `<p>${game.i18n.localize("SINLESS.Advance.undoConfirm")}</p>`
-    });
+    const ok = await confirmAction("SINLESS.Advance.undo", "SINLESS.Advance.undoConfirm");
     return ok ? this.actor.undoAdvance() : null;
   }
 
@@ -505,16 +475,12 @@ export class CharacterSheet extends SinlessActorSheet {
   }
 
   static async #onFinishCreation() {
-    const ok = await foundry.applications.api.DialogV2.confirm({
-      window: { title: "SINLESS.Creation.finish" },
-      content: `<p>${game.i18n.localize("SINLESS.Creation.finishConfirm")}</p>`
-    });
+    const ok = await confirmAction("SINLESS.Creation.finish", "SINLESS.Creation.finishConfirm");
     if (ok) return this.actor.update({ "system.creation.active": false });
   }
 
   async _preparePartContext(partId, context, options) {
     context = await super._preparePartContext(partId, context, options);
-    if (partId in context.tabs) context.tab = context.tabs[partId];
     if (partId === "gear" || partId === "magic" || partId === "grid") context.groups = context.itemGroups[partId];
     return context;
   }
@@ -543,10 +509,7 @@ export class NpcSheet extends SinlessActorSheet {
 
   async _preparePartContext(partId, context, options) {
     context = await super._preparePartContext(partId, context, options);
-    if (partId in context.tabs) context.tab = context.tabs[partId];
-    if (partId === "gear") {
-      context.groups = [...context.itemGroups.gear, ...context.itemGroups.magic];
-    }
+    if (partId === "gear") context.groups = [...context.itemGroups.gear, ...context.itemGroups.magic];
     if (partId === "grid") context.groups = context.itemGroups.grid.filter(g => g.type !== "vcr");
     return context;
   }
