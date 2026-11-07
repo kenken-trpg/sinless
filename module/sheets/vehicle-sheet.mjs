@@ -1,6 +1,6 @@
 import { SYSTEM_ID, SINLESS } from "../config.mjs";
 import { CONTROL_PENALTY } from "../helpers/rigging.mjs";
-import { SinlessActorSheet } from "./actor-sheet.mjs";
+import { SinlessActorSheet, actorCall } from "./actor-sheet.mjs";
 
 const T = path => `systems/${SYSTEM_ID}/templates/${path}`;
 const labels = obj => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, typeof v === "string" ? v : v.label]));
@@ -11,7 +11,7 @@ export class VehicleSheet extends SinlessActorSheet {
     classes: ["vehicle"],
     position: { width: 720, height: 760 },
     actions: {
-      rollVehicleTest: VehicleSheet.#onRollVehicleTest,
+      rollVehicleTest: actorCall("rollVehicleTest", "kind"),
       adjustInertia: VehicleSheet.#onAdjustInertia,
       openController: VehicleSheet.#onOpenController,
       removeController: VehicleSheet.#onRemoveController
@@ -47,12 +47,6 @@ export class VehicleSheet extends SinlessActorSheet {
     context.chaseActions = ["trap", "book", "burn", "switch", "plot"].map(key => ({
       key, label: `SINLESS.Chase.action.${key}`, hint: `SINLESS.Chase.actionHint.${key}`
     }));
-    const boxes = (value, max) => Array.from({ length: max }, (_, i) => ({
-      n: i + 1, filled: i < value, mark: (i + 1) % 3 === 0
-    }));
-    context.physicalBoxes = boxes(sys.condition.physical.value, sys.condition.physical.max);
-    context.stunBoxes = boxes(sys.condition.stun.value, sys.condition.stun.max);
-
     const rigger = actor.vehicleController;
     const control = actor.controlMode;
     context.rigger = rigger;
@@ -69,20 +63,10 @@ export class VehicleSheet extends SinlessActorSheet {
     return context;
   }
 
-  async _preparePartContext(partId, context, options) {
-    context = await super._preparePartContext(partId, context, options);
-    if (partId in context.tabs) context.tab = context.tabs[partId];
-    return context;
-  }
-
   /** Dropping a character on the sheet makes it the controlling rigger. */
   async _onDropActor(event, actor) {
     if (!this.isEditable) return null;
     return this.actor.setVehicleController(actor);
-  }
-
-  static async #onRollVehicleTest(event, target) {
-    return this.actor.rollVehicleTest(target.dataset.kind);
   }
 
   static async #onAdjustInertia(event, target) {

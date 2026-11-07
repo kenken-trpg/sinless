@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`batch`、`magic`、`samples`、`all`(この 8 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`batch`、`magic`、`samples`、`all`(この 9 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -54,6 +54,7 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 | `2026-11-06/current/extra.mjs` | `player` | プレイヤー視点(別ブラウザー)と戦闘の進行 |
 | `2026-11-07/help.mjs` | `help-window` | ヘルプ画面(ページと言語の切り替え)、GM による Journal への取り込みと更新(GM が足したページは残る)、プレイヤーからの閲覧 |
 | `2026-11-07/permissions.mjs` | `permissions` | 他人が所有する文書に触れるプレイヤー操作(ホットシートのフィードバック、体当たり、ブランドのメンバー)が、権限エラーなしで終わること |
+| `2026-11-07/sheet-actions.mjs` | `sheet-actions` | アクターシートのボタンを種類ごとに押す。判定はダイアログが開き、状態ゲージの枠や回復ボタンはアクターを変え、アイテム行は編集・切り替え・削除確認、確認ダイアログは閉じれば何も変えない |
 | `2026-11-06/current/batch.mjs` | `batch` | `original/` の機能別スクリプト 9 本を順に実行。前提データは `current/fixtures.mjs` が作り、出力を `current/batch-checks.mjs` で判定する |
 
 総当たりは、シートを `SINLESS_SWEEP_WORKERS`(既定 3)本のセッションに分けて並行に回す。

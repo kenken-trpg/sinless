@@ -1,6 +1,6 @@
 import { SYSTEM_ID, SINLESS } from "../config.mjs";
 import { sustainedNeeded, summonResult } from "../helpers/magic.mjs";
-import { summarize, renderCard } from "../dice/test-roll.mjs";
+import { summarize, saveCard } from "../dice/test-roll.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -8,11 +8,6 @@ const { DialogV2 } = foundry.applications.api;
 function messageSuccesses(message) {
   const state = message?.getFlag?.(SYSTEM_ID, "test");
   return state ? summarize(state).successes : 0;
-}
-
-/** Store a changed card state and re-render the card. */
-async function saveCard(message, state) {
-  return message.update({ content: await renderCard(state), [`flags.${SYSTEM_ID}.test`]: state });
 }
 
 const note = (actor, text, flags = {}) => ChatMessage.create({
