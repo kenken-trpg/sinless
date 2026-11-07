@@ -1197,6 +1197,8 @@
     "Rig": {
       "title": "Rigging",
       "feedback": "Hot-seat feedback from {name}",
+      "feedbackPending": "Hot-seat feedback not applied: {name} takes {n} stun. Their owner or the GM marks it.",
+      "inertiaNotReset": "Ramming removes all inertia, but you do not own {name}: the GM resets it.",
       "inertiaNote": "Inertia −{n}",
       "vcrNote": "VCR dice +{n}",
       "action": {

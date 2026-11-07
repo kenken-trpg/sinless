@@ -280,10 +280,12 @@ export function onRenderChatMessage(message, html) {
     else drain.remove();
   }
 
-  // Ramming: the rigger applies the damage to their own vehicle once.
+  // Ramming: the rigger applies the damage to their own vehicle once (the GM if the rigger does not own it).
   const ramSelf = html.querySelector("[data-sinless-action='apply-ram-self']");
   if (ramSelf) {
-    if (message.isOwner) guard(ramSelf, () => applyRamSelf(message));
+    const uuid = message.getFlag(SYSTEM_ID, "test")?.extra?.vehicleUuid;
+    const vehicle = uuid ? fromUuidSync(uuid) : null;
+    if (game.user.isGM || (message.isOwner && vehicle?.isOwner)) guard(ramSelf, () => applyRamSelf(message));
     else ramSelf.remove();
   }
 

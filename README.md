@@ -124,6 +124,9 @@ this system contains no rules text.
     stun, less VCR hardening.
   - Vehicles are immune to weapons whose penetration is below their armor.
   - Ram cards compute both damages and clear inertia.
+  - A player changes only the actors they own. When a step needs another actor (the inertia
+    or ram damage of a vehicle the rigger only observes, the hot-seat feedback to a rigger the
+    player does not own), a notice or the card leaves it to its owner or the GM.
 - Decking (ch.7), from a Grid tab:
   - The equipped cyberdeck shows MCP dice, threads, core, I/O, nerve rig and a cohesion track.
   - Software tests use skill + software rating as the limit and Focus + MCP dice as the pool.
