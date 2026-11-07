@@ -3,6 +3,8 @@
 TRPG **Sinless** を Foundry Virtual Tabletop で遊ぶための、非公式のファンメイド・システムです。
 出版社とは無関係で、承認も受けていません。プレイにはルールブックが必要です（ルール本文は含みません）。
 
+English: see [README.md](README.md).
+
 ## 主な機能
 
 - キャラクター／NPC アクター。6能力値、4つのダイスプール（剛力・技巧・集中・決意）を
@@ -121,7 +123,9 @@ TRPG **Sinless** を Foundry Virtual Tabletop で遊ぶための、非公式の�
 ビルド不要です（Foundry が ES モジュールを直接読み込みます）。
 
 ```sh
+# Foundry のデータフォルダーにリンクする
 ln -s "$PWD" "<FoundryData>/Data/systems/sinless"
+
 npm test             # ルールの単体テスト＋i18n チェック
 npm run check:i18n   # 言語ファイルのキー・プレースホルダ整合性
 npm run lint:syntax  # 全モジュールと JSON の構文チェック
@@ -154,5 +158,20 @@ git tag v0.9.0 && git push origin v0.9.0
 
 foundryvtt.com にパッケージが登録されたら、その *Package Release Token* をリポジトリの Secret `FOUNDRY_RELEASE_TOKEN` に入れてください（`gh secret set FOUNDRY_RELEASE_TOKEN`）。リリースのワークフローが Package Release API で各バージョンを一覧に通知します（`tools/foundry-release.mjs`）。Secret が未設定の間は、この段階を飛ばします。
 
-表示文字列は直接書かず、必ず `lang/en.json` と `lang/ja.json` の両方にキーを追加してください。
+### テキストの追加
+
+表示文字列は直接書かず、必ず `lang/en.json` と `lang/ja.json` の両方にキーを追加してください
+（どちらかにキーがないか、プレースホルダーが違うと `npm run check:i18n` が失敗します）。
+言語を足すには、`lang/<code>.json` を置いて `system.json` に登録します。
 訳語は暫定です。用語集の確定に合わせて `lang/ja.json` を更新してください。
+
+### 構成
+
+| パス | 役割 |
+| --- | --- |
+| `module/helpers/rules.mjs` | ルールの純粋な計算（Foundry のグローバルを使わない）。単体テストあり |
+| `module/config.mjs` | 技能、プール、エチケットなどの定義（表示名は i18n キー） |
+| `module/data/` | アクターとアイテムの TypeDataModel |
+| `module/documents/` | アクター（共通の判定処理は `actor.mjs`、ルールの分野ごとの mixin は `actor/`）とコンバタント（イニシアチブ） |
+| `module/sheets/`、`templates/` | ApplicationV2 のシートと Handlebars テンプレート |
+| `module/dice/` | ロールとチャットカード |
