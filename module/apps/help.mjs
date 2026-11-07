@@ -1,6 +1,7 @@
 // In-game help: pages written per language in help/<lang>/ (index.json lists them),
 // shown in a window and importable by the GM as a journal entry.
 import { SYSTEM_ID } from "../config.mjs";
+import { addControlButton } from "./control-button.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 
@@ -143,17 +144,5 @@ export class HelpApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
 /** Help button in the token controls, for every user. */
 export function registerHelp() {
-  Hooks.on("getSceneControlButtons", controls => {
-    const tokens = controls.tokens ?? controls.token;
-    if (!tokens?.tools) return;
-    tokens.tools.sinlessHelp = {
-      name: "sinlessHelp",
-      title: "SINLESS.Help.title",
-      icon: "fa-solid fa-circle-question",
-      order: Object.keys(tokens.tools).length,
-      button: true,
-      visible: true,
-      onChange: () => HelpApp.open()
-    };
-  });
+  addControlButton("sinlessHelp", { title: "SINLESS.Help.title", icon: "fa-solid fa-circle-question", open: () => HelpApp.open() });
 }

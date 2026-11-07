@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from "../config.mjs";
+import { addControlButton } from "./control-button.mjs";
 import { getSetting } from "../settings.mjs";
 import {
   CHASE_LEGS, CHASE_PATHS, CHASE_RANGES, parseDeck, dealPaths, moveRange, inAttackRange, chaseOutcome
@@ -396,19 +397,6 @@ export function registerChase() {
     const next = await checkOutcome(state);
     if (next.ended) await saveChase(next);
   });
-  Hooks.on("getSceneControlButtons", controls => {
-    if (!game.user.isGM) return;
-    const tokens = controls.tokens ?? controls.token;
-    if (!tokens?.tools) return;
-    tokens.tools.sinlessChase = {
-      name: "sinlessChase",
-      title: "SINLESS.Chase.title",
-      icon: "fa-solid fa-car-side",
-      order: Object.keys(tokens.tools).length,
-      button: true,
-      visible: true,
-      onChange: () => ChaseApp.open()
-    };
-  });
+  addControlButton("sinlessChase", { title: "SINLESS.Chase.title", icon: "fa-solid fa-car-side", gmOnly: true, open: () => ChaseApp.open() });
 }
 
