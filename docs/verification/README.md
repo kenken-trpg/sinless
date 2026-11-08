@@ -99,6 +99,8 @@ Sinlessの入力欄・選択欄・テキスト欄・編集欄・操作リンク�
 
 3本の後片付けは、開始後に増えた全チャットではなく、各検証が作ったカードのIDだけを削除する。アクターの残存確認も、名前の接頭辞ではなく作成したIDで行う。実行結果は [chat-cleanup/README.md](2026-11-08/chat-cleanup/README.md) を参照。
 
+`npm run verify -- sample-chat-cleanup` はサンプル検証向けの追加検証。サンプルの最初の判定カードが作られた後、別ユーザーの投稿と実行GMと同じ作者IDの投稿を追加し、両方と既存チャットが残ることを確認する。`samples` の後片付けは開始後のメッセージのうち、検証用アクターの発言者ID、検証用シーン、または `flags.sinless.actorUuid` が検証用アクターに一致するものだけを削除する。アクター・シーン・戦闘・関連メッセージの残存も確認する。このコマンドも `all` の19本には含めない。結果は [sample-chat-cleanup/README.md](2026-11-08/sample-chat-cleanup/README.md) を参照。
+
 ## 共通ヘルパー [lib.mjs](lib.mjs)
 
 - `joinGM({ user, viewport, browser, noCanvas })`: 入室して `game.ready` を待つ。`{ browser, page, logs }` を返す。

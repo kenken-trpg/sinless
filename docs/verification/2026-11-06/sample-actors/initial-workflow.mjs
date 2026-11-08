@@ -42,6 +42,19 @@ try{
  const recovery=await page.evaluate(async()=>{const f=window.sampleReview;const pc=game.actors.get(f.actors[0]);await pc.update({'system.pools.finesse.spent':2});const c=game.combats.get(f.combats[0]);await c.nextRound();const t0=Date.now();while(pc.system.pools.finesse.spent!==0&&Date.now()-t0<5000)await new Promise(r=>setTimeout(r,100));return {round:c.round,spent:pc.system.pools.finesse.spent,waitedMs:Date.now()-t0};});assert.equal(recovery.spent,0);pass('round pool recovery',recovery);
 }catch(e){pass('FAIL',{message:e.message,stack:e.stack});await page.screenshot({path:out+'/failure.png',fullPage:true});process.exitCode=1;}
 finally{
- try{const cleanup=await page.evaluate(async()=>{const f=window.sampleReview;if(!f)return null;for(const id of f.combats)await game.combats.get(id)?.delete();if(f.scene&&game.scenes.has(f.scene))await game.scenes.get(f.scene).view();for(const id of f.scenes)await game.scenes.get(id)?.delete();for(const id of f.actors){const a=game.actors.get(id);await a?.sheet.close();await a?.delete();}const created=game.messages.filter(m=>!f.before.includes(m.id)&&m.author.id===game.user.id);for(const m of created)await m.delete();return {actorsRemaining:f.actors.filter(id=>game.actors.has(id)),scenesRemaining:f.scenes.filter(id=>game.scenes.has(id)),combatsRemaining:f.combats.filter(id=>game.combats.has(id))};});pass('cleanup',cleanup);}catch(e){pass('cleanup failed',e.message);process.exitCode=1;}
+ try{
+  const cleanup=await page.evaluate(async()=>{
+   const f=window.sampleReview;if(!f)return null;
+   const ownsMessage=m=>!f.before.includes(m.id)&&(f.actors.includes(m.speaker.actor)||f.scenes.includes(m.speaker.scene)||f.actors.some(id=>m.flags.sinless?.actorUuid===`Actor.${id}`));
+   for(const id of f.combats)await game.combats.get(id)?.delete();
+   if(f.scene&&game.scenes.has(f.scene))await game.scenes.get(f.scene).view();
+   for(const id of f.scenes)await game.scenes.get(id)?.delete();
+   for(const id of f.actors){const a=game.actors.get(id);await a?.sheet.close();await a?.delete();}
+   for(const m of game.messages.filter(ownsMessage))await m.delete();
+   return {actorsRemaining:f.actors.filter(id=>game.actors.has(id)),scenesRemaining:f.scenes.filter(id=>game.scenes.has(id)),combatsRemaining:f.combats.filter(id=>game.combats.has(id)),messagesRemaining:game.messages.filter(ownsMessage).map(m=>m.id)};
+  });
+  if(cleanup)assert.deepEqual(cleanup,{actorsRemaining:[],scenesRemaining:[],combatsRemaining:[],messagesRemaining:[]});
+  pass('cleanup',cleanup);
+ }catch(e){pass('cleanup failed',e.message);process.exitCode=1;}
  writeFileSync(out+'/results.json',JSON.stringify({results,logs},null,2));await browser.close();
 }

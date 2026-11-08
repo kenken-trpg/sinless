@@ -1,0 +1,8 @@
+{
+  "samples": {
+    "sentinel": true,
+    "existing": true,
+    "sameAuthor": true,
+    "authorMatches": true
+  }
+}
