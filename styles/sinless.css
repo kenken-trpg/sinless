@@ -428,8 +428,15 @@
   .sinless.sheet .item > .item-summary { grid-column: 2 / -1; grid-row: 2; }
   .sinless.sheet .item:has(> .item-summary) > .item-controls { grid-column: 3; grid-row: 1; }
 }
-/* Dialogs and trackers are 420-560px wide: 24rem is reached only with enlarged text. Captions go above their fields. */
+/* Below 24rem, stack brand actions and resource controls as well as dialog captions. */
 @container sinless-window (max-width: 24rem) {
+  .sinless.sheet .brand-stats { grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr)); }
+  .sinless.sheet .brand-traits { grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); }
+  .sinless.sheet .sector-turn-header .actions-left { flex: 1 1 100%; }
+  .sinless.sheet .brand-actions li { grid-template-columns: minmax(0, 1fr); }
+  .sinless.sheet .resource-list .item { grid-template-columns: 1.75rem minmax(0, 1fr); }
+  .sinless.sheet .resource-list .resource-main { grid-column: 2; }
+  .sinless.sheet .resource-list .resource-adjust, .sinless.sheet .resource-list .item-controls { grid-column: 2; }
   .sinless-test-dialog .sinless-test .form-group { grid-template-columns: minmax(0, 1fr); }
   .sinless-operation .stars, .sinless-operation .alert-row, .sinless-operation .responses li { flex-wrap: wrap; }
   .sinless-operation .stars button { margin-left: 0; }
