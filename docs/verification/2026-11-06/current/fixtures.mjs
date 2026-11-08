@@ -1,21 +1,79 @@
 // Fixtures for the feature scripts in ../original (shoot, cond, adv, op, life, chase, digital, magic, magic9).
 // Originally these actors were left behind by earlier scripts (roll, damage, npcatk, creation, brand, rig).
 // createFixtures builds the same state directly; removeFixtures restores the world to the snapshot it took.
+//
+// An interrupted run (killed, crashed, machine asleep) never reaches removeFixtures. So before building anything,
+// createFixtures writes the world's active scene and settings to a recovery file, and marks every fixture with
+// flags.sinless.verifyFixture. The next run removes what the interrupted run left (marked fixtures, and the actors,
+// combats and messages its scripts made) and restores the active scene and settings from that file.
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+
 const SETTINGS = ["intrusion", "alert", "heat", "operation", "chase"];
+export const RECOVERY = process.env.SINLESS_FIXTURE_RECOVERY ?? join(tmpdir(), "sinless-verify", "batch-fixtures.json");
+
+const alive = pid => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === "EPERM"; } };
+
+/** Undo an interrupted run recorded in the recovery file. Returns what was removed, or null when there is nothing to do. */
+export async function recoverFixtures(page) {
+  if (!existsSync(RECOVERY)) return null;
+  const rec = JSON.parse(readFileSync(RECOVERY, "utf8"));
+  if (rec.pid !== process.pid && alive(rec.pid)) throw new Error(`Another batch run (pid ${rec.pid}) is using the fixtures; recovery file ${RECOVERY}`);
+  const result = await page.evaluate(async rec => {
+    if (game.world.id !== rec.world) return { skipped: `the recovery file is for world ${rec.world}` };
+    const made = d => (d._stats?.createdTime ?? 0) >= rec.started;
+    const actors = game.actors.filter(a => a.getFlag("sinless", "verifyFixture") === rec.run
+      || made(a) && (a.name.startsWith("SMOKE ") || a.name === "Chase Pursuer")).map(a => a.id);
+    const scenes = game.scenes.filter(s => s.getFlag("sinless", "verifyFixture") === rec.run).map(s => s.id);
+    const combats = game.combats.filter(c => scenes.includes(c.scene?.id) || c.combatants.some(t => actors.includes(t.actorId))).map(c => c.id);
+    const messages = game.messages.filter(m => m.timestamp >= rec.started && (actors.includes(m.speaker.actor) || scenes.includes(m.speaker.scene))).map(m => m.id);
+    await Combat.deleteDocuments(combats);
+    // Reactivate the scene that was active before the run, so the canvas is ready for the next scripts.
+    const previous = rec.activeScene && game.scenes.get(rec.activeScene);
+    if (previous && (!game.scenes.active || scenes.includes(game.scenes.active.id))) { await previous.activate(); await previous.view(); }
+    await Scene.deleteDocuments(scenes);
+    await Actor.deleteDocuments(actors);
+    await ChatMessage.deleteDocuments(messages);
+    for (const [k, v] of Object.entries(rec.settings)) await game.settings.set("sinless", k, v);
+    return { run: rec.run, actors: actors.length, scenes: scenes.length, combats: combats.length, messages: messages.length,
+      reactivated: previous?.name ?? null, settings: Object.keys(rec.settings) };
+  }, rec);
+  if (!result.skipped) rmSync(RECOVERY, { force: true });
+  return result;
+}
 
 export async function createFixtures(page) {
-  return page.evaluate(async settingKeys => {
-    const snapshot = {
+  const recovered = await recoverFixtures(page);
+  if (recovered) {
+    console.log("RECOVERED", JSON.stringify(recovered));
+    // The client that reactivated the scene can keep a stale Scene#active (seen on Foundry 14.365); reload so the
+    // snapshot below reads the world as the server has it.
+    await page.reload();
+    await page.waitForFunction(() => window.game?.ready, null, { timeout: 90000 });
+  }
+  const snapshot = await page.evaluate(async settingKeys => {
+    const clash = game.actors.filter(a => a.name.startsWith("SMOKE") || a.name === "Chase Pursuer").map(a => a.name)
+      .concat(game.scenes.filter(s => s.name === "SMOKE Scene").map(s => s.name));
+    // Fixtures without a recovery record (left before recovery files existed, or made by hand) are not removed automatically.
+    if (clash.length) throw new Error(`Fixtures already exist without a recovery record: ${clash.join(", ")}. `
+      + "Remove them, and reactivate the scene that was active before (deleting the SMOKE Scene leaves none active).");
+    return {
       actors: game.actors.map(a => a.id), items: game.items.map(i => i.id), scenes: game.scenes.map(s => s.id),
       combats: game.combats.map(c => c.id), messages: game.messages.map(m => m.id), activeScene: game.scenes.active?.id ?? null,
-      settings: Object.fromEntries(settingKeys.map(k => [k, foundry.utils.deepClone(game.settings.get("sinless", k))]))
+      settings: Object.fromEntries(settingKeys.map(k => [k, foundry.utils.deepClone(game.settings.get("sinless", k))])),
+      world: game.world.id, started: Date.now()
     };
-    const clash = game.actors.filter(a => a.name.startsWith("SMOKE") || a.name === "Chase Pursuer").map(a => a.name)
-      .concat(game.scenes.getName("SMOKE Scene") ? ["SMOKE Scene"] : []);
-    if (clash.length) throw new Error(`Fixtures already exist: ${clash.join(", ")}`);
+  }, SETTINGS);
+  const run = `${snapshot.started}-${process.pid}`;
+  mkdirSync(dirname(RECOVERY), { recursive: true });
+  writeFileSync(RECOVERY, JSON.stringify({ run, pid: process.pid, world: snapshot.world, started: snapshot.started, activeScene: snapshot.activeScene, settings: snapshot.settings }, null, 1));
+  const built = await page.evaluate(async run => {
+    const flags = { sinless: { verifyFixture: run } };
+    const create = data => Actor.create({ ...data, flags });
 
     // damage.mjs
-    const ben = await Actor.create({ name: "SMOKE D Ben", type: "character", system: {
+    const ben = await create({ name: "SMOKE D Ben", type: "character", system: {
       attributes: { str: { value: 12 }, bod: { value: 8 }, rea: { value: 12 }, int: { value: 6 }, wil: { value: 6 }, cha: { value: 4 } },
       skills: { firearms: { rank: 6 }, meleeWeapons: { rank: 4 }, drive: { rank: 4 }, fly: { rank: 3 }, gunnery: { rank: 3 } } } });
     await ben.createEmbeddedDocuments("Item", [
@@ -24,21 +82,21 @@ export async function createFixtures(page) {
       // rig.mjs
       { name: "Advanced VCR", type: "vcr", system: { bonusDice: 4, hardeningBonus: 1, links: 2, core: 2, mods: 2, zoeticCost: 0.5 } }
     ]);
-    const guard = await Actor.create({ name: "SMOKE D Guard", type: "npc", system: { armorBonus: { ballistic: 4, impact: 1 }, conditionMax: { physical: 6, stun: 6 } } });
+    const guard = await create({ name: "SMOKE D Guard", type: "npc", system: { armorBonus: { ballistic: 4, impact: 1 }, conditionMax: { physical: 6, stun: 6 } } });
     // npcatk.mjs
     await guard.createEmbeddedDocuments("Item", [
       { name: "SMOKE Pistol", type: "weapon", system: { category: "firearm", skill: "firearms", damage: "2", penetration: 2, attackDice: 8 } },
       { name: "SMOKE Cudgel", type: "weapon", system: { category: "melee", skill: "meleeWeapons", damage: "8" } }
     ]);
     // creation.mjs (finished)
-    const rookie = await Actor.create({ name: "SMOKE C Rookie", type: "character", system: {
+    const rookie = await create({ name: "SMOKE C Rookie", type: "character", system: {
       attributes: { str: { value: 10 }, bod: { value: 10 }, rea: { value: 12 }, int: { value: 7 }, wil: { value: 8 }, cha: { value: 4 } },
       skills: { firearms: { rank: 7 }, martialArts: { rank: 2 } }, etiquettes: { street: { rank: 6 }, criminal: { rank: 3 } },
       heritage: "green", talent: "hedge", lifestyle: "middle", lifestyleMonths: 3 } });
     await rookie.update({ "system.creation.active": false });
     // brand.mjs
-    const member = await Actor.create({ name: "SMOKE Member", type: "character", system: { etiquettes: { street: { rank: 4 } } } });
-    const brand = await Actor.create({ name: "SMOKE Black Adder", type: "brand", system: { base: { muscle: 2 }, sector: { name: "Docks", heat: 1 } } });
+    const member = await create({ name: "SMOKE Member", type: "character", system: { etiquettes: { street: { rank: 4 } } } });
+    const brand = await create({ name: "SMOKE Black Adder", type: "brand", system: { base: { muscle: 2 }, sector: { name: "Docks", heat: 1 } } });
     await brand.update({ "system.traits": ["dangerous", "competence"] });
     await brand.createEmbeddedDocuments("Item", [
       { name: "Tattoo Parlor", type: "resource", system: { class: "D", market: 2, marketBonus: 1, upkeep: 1, tags: ["service", "business"] } },
@@ -47,15 +105,15 @@ export async function createFixtures(page) {
     ]);
     await brand.addBrandMember(member);
     // rig.mjs
-    const van = await Actor.create({ name: "SMOKE V Van", type: "vehicle", system: { kind: "vehicle", frame: "none", mobility: "ground", body: 12, handling: 2, movement: 20, inertia: 2, armorBonus: { ballistic: 4 } } });
+    const van = await create({ name: "SMOKE V Van", type: "vehicle", system: { kind: "vehicle", frame: "none", mobility: "ground", body: 12, handling: 2, movement: 20, inertia: 2, armorBonus: { ballistic: 4 } } });
     await van.setVehicleController(ben);
     await van.update({ "system.controlMode": "hotseat" });
     await van.createEmbeddedDocuments("Item", [{ name: "Minigun", type: "weapon", system: { category: "vehicle", skill: "gunnery", accuracy: 1, damage: "3", penetration: 3, weight: 3 } }]);
-    const roto = await Actor.create({ name: "SMOKE V Roto", type: "vehicle", system: { kind: "drone", frame: "small", mobility: "air", body: 6, weaponWeight: 2, handling: 6, movement: 10 } });
+    const roto = await create({ name: "SMOKE V Roto", type: "vehicle", system: { kind: "drone", frame: "small", mobility: "air", body: 6, weaponWeight: 2, handling: 6, movement: 10 } });
     await roto.setVehicleController(ben);
 
     // roll.mjs / damage.mjs / grid.mjs: an active, viewed scene with Ben and the guard on it.
-    const scene = await Scene.create({ name: "SMOKE Scene", active: true });
+    const scene = await Scene.create({ name: "SMOKE Scene", active: true, flags });
     await scene.activate();
     await scene.view();
     for (let i = 0; i < 100 && !(canvas.ready && canvas.scene?.id === scene.id); i++) await new Promise(r => setTimeout(r, 100));
@@ -64,11 +122,11 @@ export async function createFixtures(page) {
     await place(guard, 500, 500);
     await new Promise(r => setTimeout(r, 1000));
     return {
-      snapshot,
       summary: { system: game.system.version, canvas: canvas.ready && canvas.scene?.name, tokens: canvas.tokens.placeables.map(t => t.name),
         vehicles: ben.controlledVehicles.map(v => v.name), members: brand.system.members.length, rookieCreation: rookie.system.creation.active }
     };
-  }, SETTINGS);
+  }, run);
+  return { snapshot, summary: { ...built.summary, run, recovered } };
 }
 
 export async function removeFixtures(page, snapshot) {
@@ -82,5 +140,5 @@ export async function removeFixtures(page, snapshot) {
     await ChatMessage.deleteDocuments(keep(s.messages, game.messages));
     for (const [k, v] of Object.entries(s.settings)) await game.settings.set("sinless", k, v);
     return { actors: game.actors.size, items: game.items.size, scenes: game.scenes.map(x => x.name), combats: game.combats.size, messages: game.messages.size };
-  }, snapshot);
+  }, snapshot).then(result => { rmSync(RECOVERY, { force: true }); return result; });
 }
