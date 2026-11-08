@@ -54,9 +54,9 @@
       <li class="{{#if wrecked}}wrecked{{/if}}{{#if (eq range "out")}} out{{/if}}">
         <a class="name" data-action="openActor" data-uuid="{{uuid}}">{{name}}</a>
         <a data-action="moveEnemy" data-index="{{index}}" data-delta="-1" data-tooltip="{{localize "SINLESS.Chase.closeIn"}}" aria-label="{{localize "SINLESS.Chase.closeIn"}}"><i class="fa-solid fa-angles-left"></i></a>
-        <select name="enemies.{{index}}.range">{{selectOptions ../rangeChoices selected=range localize=true}}</select>
+        <select aria-label="{{localize "SINLESS.Accessibility.enemyRange" name=name}}" name="enemies.{{index}}.range">{{selectOptions ../rangeChoices selected=range localize=true}}</select>
         <a data-action="moveEnemy" data-index="{{index}}" data-delta="1" data-tooltip="{{localize "SINLESS.Chase.fallBack"}}" aria-label="{{localize "SINLESS.Chase.fallBack"}}"><i class="fa-solid fa-angles-right"></i></a>
-        <label data-tooltip="{{localize "SINLESS.Chase.flyingHint"}}"><input type="checkbox" name="enemies.{{index}}.flying" {{checked flying}}> <i class="fa-solid fa-helicopter"></i></label>
+        <label data-tooltip="{{localize "SINLESS.Chase.flyingHint"}}"><input type="checkbox" aria-label="{{localize "SINLESS.Accessibility.enemyFlying" name=name}}" name="enemies.{{index}}.flying" {{checked flying}}> <i class="fa-solid fa-helicopter"></i></label>
         {{#if wrecked}}<span class="warn">{{localize "SINLESS.Chase.wrecked"}}</span>{{else if attackable}}<i class="fa-solid fa-crosshairs" data-tooltip="{{localize "SINLESS.Chase.attackable"}}"></i>{{/if}}
         <a data-action="removeEnemy" data-index="{{index}}" data-tooltip="{{localize "SINLESS.Chase.removeEnemy"}}" aria-label="{{localize "SINLESS.Chase.removeEnemy"}}"><i class="fa-solid fa-trash"></i></a>
       </li>

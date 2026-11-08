@@ -1,7 +1,7 @@
 <header class="sheet-header">
   <img class="profile" src="{{item.img}}" alt="{{item.name}}" data-edit="img" data-action="editImage">
   <div class="header-fields">
-    <input class="item-name" type="text" name="name" value="{{item.name}}">
+    <input class="item-name" type="text" aria-label="{{localize "SINLESS.Name"}}" name="name" value="{{item.name}}">
     <span class="item-type">{{localize (concat "TYPES.Item." item.type)}}</span>
   </div>
 </header>

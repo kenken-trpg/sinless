@@ -713,6 +713,9 @@
         "spiritActor": {
           "label": "Spirit actor",
           "hint": "NPC actor placed on the scene when the spirit appears (p.183)."
+        },
+        "action": {
+          "label": "Action type"
         }
       }
     },
@@ -1651,6 +1654,15 @@
       "imported": "Help imported as the journal entry {name}.",
       "updated": "Help pages in {name} updated.",
       "replaceConfirm": "Replace the help pages in {name} with this version? Changes made to those pages are lost; pages you added are kept."
+    },
+    "Accessibility": {
+      "base": "{name} base value",
+      "maximum": "{name} maximum",
+      "responseThreshold": "Alert response {n}: threshold",
+      "responseLabel": "Alert response {n}: description",
+      "enemyRange": "{name}: range",
+      "enemyFlying": "{name}: flying",
+      "edit": "Edit {name}"
     }
   }
 }

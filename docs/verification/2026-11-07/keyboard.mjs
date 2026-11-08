@@ -3,9 +3,12 @@
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { joinGM } from "../lib.mjs";
+import { verifyInputAccessibility } from '../input-accessibility.mjs';
 import { verifyOtherSheets } from './keyboard-sheets.mjs';
 const outDir = process.env.SINLESS_VERIFY_OUT ?? "/private/tmp/sinless-verification";
 const { browser, page, logs } = await joinGM({ noCanvas: true });
+if (process.env.SINLESS_VERIFY_LANGUAGE) assert.equal(await page.evaluate(() => game.i18n.lang), process.env.SINLESS_VERIFY_LANGUAGE);
+console.log('Accessibility language:', await page.evaluate(() => game.i18n.lang));
 page.setDefaultTimeout(20000);
 const out = {};
 let f;
@@ -75,6 +78,7 @@ try {
       assert.equal(await page.evaluate(() => document.activeElement.dataset.verifyFocus ?? document.activeElement.outerHTML.slice(0,250)), String(i), `${tab}: Shift+Tab ${i}`);
     }
     await page.evaluate(() => document.querySelectorAll("[data-verify-focus]").forEach(e => e.removeAttribute("data-verify-focus")));
+    await verifyInputAccessibility(page, await page.evaluate(async uuid => `#${CSS.escape((await fromUuid(uuid)).sheet.id)}`, f.ch));
     pass(`tab order ${tab}`, {controls:count});
   }
 

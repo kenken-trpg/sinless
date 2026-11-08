@@ -34,7 +34,7 @@
     </div>
     <div class="grid-box">
       <span class="label">{{localize "SINLESS.Grid.influence"}}</span>
-      <input type="number" name="system.grid.influence" value="{{grid.influence}}" min="0"> m
+      <input type="number" aria-label="{{localize "SINLESS.Grid.influence"}}" name="system.grid.influence" value="{{grid.influence}}" min="0"> m
       {{#if grid.influencePenalty}}<span class="penalty" data-tooltip="{{localize "SINLESS.Grid.rangePenaltyHint"}}">−{{grid.influencePenalty}}</span>{{/if}}
       <a data-action="resetInfluence" data-tooltip="{{localize "SINLESS.Grid.resetInfluence"}}" aria-label="{{localize "SINLESS.Grid.resetInfluence"}}"><i class="fa-solid fa-rotate-left"></i></a>
     </div>

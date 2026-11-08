@@ -5,7 +5,7 @@
       {{#each etiquettes}}
       <li>
         <a data-action="rollEtiquette" data-etiquette="{{key}}">{{localize label}}</a>
-        <input type="number" name="system.etiquettes.{{key}}.rank" value="{{rank}}" min="0">
+        <input type="number" aria-label="{{localize label}} {{localize "SINLESS.Test.rank"}}" name="system.etiquettes.{{key}}.rank" value="{{rank}}" min="0">
       </li>
       {{/each}}
     </ol>

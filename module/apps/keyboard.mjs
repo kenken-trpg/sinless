@@ -6,6 +6,7 @@
 // returns to the control with the same data attributes.
 
 /** Links without href that run an application action. */
+import { associateFieldLabels } from './accessibility.mjs';
 export const CLICKABLE = "a[data-action]:not([href])";
 
 /** Where to put focus back after the next render: the application and the control's selector. */
@@ -89,6 +90,7 @@ function onRender(app, element) {
   const root = element instanceof HTMLElement ? element : app.element;
   if (!root?.classList.contains("sinless")) return;
   makeFocusable(root);
+  associateFieldLabels(root, app.document?.system?.schema);
   if (pending && pending.appId !== root.id && Date.now() <= pending.until && app.document
       && (!pending.existing.has(app.id) || app.document.parent?.sheet?.id === pending.appId)) {
     const { origin, appId, selector } = pending;

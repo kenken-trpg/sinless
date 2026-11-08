@@ -153,7 +153,7 @@ export async function startChase() {
     <div class="form-group"><label>${esc(loc("SINLESS.Chase.legs"))}</label><input type="number" name="legs" value="${legs}" min="1"></div>
     <div class="form-group"><label>${esc(loc("SINLESS.Chase.paths"))}</label><input type="number" name="paths" value="${paths}" min="1" max="4"></div>
     <p class="hint">${esc(loc("SINLESS.Chase.deckHint"))}</p>
-    <textarea name="deck" rows="12">${esc(sample)}</textarea>
+    <textarea name="deck" rows="12" aria-label="${esc(loc('SINLESS.Chase.deckHint'))}">${esc(sample)}</textarea>
   </div>`;
   const data = await DialogV2.wait({
     window: { title: "SINLESS.Chase.start", icon: "fa-solid fa-car-side" },

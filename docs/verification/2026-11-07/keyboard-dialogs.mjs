@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import {verifyInputAccessibility} from '../input-accessibility.mjs';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {joinGM} from '../lib.mjs';
 const {browser,page,logs}=await joinGM({noCanvas:true});
+if (process.env.SINLESS_VERIFY_LANGUAGE) assert.equal(await page.evaluate(() => game.i18n.lang), process.env.SINLESS_VERIFY_LANGUAGE);
+console.log('Accessibility language:', await page.evaluate(() => game.i18n.lang));
 const results={};
 const pass=(name,data)=>{results[name]=data;console.log('PASS',name,JSON.stringify(data));};
 let id;
@@ -43,6 +46,7 @@ try {
   for(const kind of ['test','damage','drain','digital:weapon','digital:strike','digital:derez','digital:acid']) {
     const before=await snapshot();
     await open(kind);
+    await verifyInputAccessibility(page,'dialog.sinless[open]');
     const count=await page.evaluate(()=>{
       const root=document.querySelector('dialog.sinless[open]');
       const els=[...root.querySelectorAll('button,input,select,[tabindex]')].filter(e=>!e.disabled&&e.tabIndex>=0&&e.getClientRects().length);
@@ -57,6 +61,7 @@ try {
       await focus(`[name="${checkbox}"]`);
       const old=await page.evaluate(()=>document.activeElement.checked);
       await page.keyboard.press('Space');
+      await verifyInputAccessibility(page,'dialog.sinless[open]');
       assert.equal(await page.evaluate(()=>document.activeElement.checked),!old);
       if(kind==='drain')assert.equal(await page.locator('dialog.sinless[open] [name=soak]').isDisabled(),true);
       await page.keyboard.press('Space');

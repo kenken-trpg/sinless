@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {verifyInputAccessibility} from '../input-accessibility.mjs';
 
 /** Exercise every non-character document sheet using real keyboard events. */
 export async function verifyOtherSheets(page, pass) {
@@ -36,6 +37,7 @@ export async function verifyOtherSheets(page, pass) {
           }
         }
         await page.evaluate(()=>document.querySelectorAll('[data-verify-focus]').forEach(e=>e.removeAttribute('data-verify-focus')));
+        await verifyInputAccessibility(page, await page.evaluate(async uuid => `#${CSS.escape((await fromUuid(uuid)).sheet.id)}`,uuid));
         pass(`tab order ${kind}/${type}/${tab ?? 'sheet'}`,{controls:count});
       }
       if (kind === 'Actor') {

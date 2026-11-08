@@ -20,7 +20,7 @@
     <h3>{{localize "SINLESS.Operation.alert"}}</h3>
     <div class="alert-row">
       <button type="button" data-action="alert" data-delta="-1">−1</button>
-      <input type="number" name="alert" value="{{alert}}" min="0">
+      <input type="number" aria-label="{{localize "SINLESS.Operation.alert"}}" name="alert" value="{{alert}}" min="0">
       <button type="button" data-action="alert" data-delta="1">+1</button>
       <button type="button" data-action="alert" data-delta="2">+2</button>
       <span class="hint">{{localize "SINLESS.Operation.alertHint"}}</span>
@@ -30,8 +30,8 @@
     <ol class="responses">
       {{#each responses}}
       <li class="{{#if active}}active{{/if}}">
-        <input type="number" name="responses.{{index}}.threshold" value="{{threshold}}" min="1" class="threshold">
-        <input type="text" name="responses.{{index}}.label" value="{{label}}" placeholder="{{localize "SINLESS.Operation.responsePlaceholder"}}">
+        <input type="number" aria-label="{{localize "SINLESS.Accessibility.responseThreshold" n=number}}" name="responses.{{index}}.threshold" value="{{threshold}}" min="1" class="threshold">
+        <input type="text" aria-label="{{localize "SINLESS.Accessibility.responseLabel" n=number}}" name="responses.{{index}}.label" value="{{label}}" placeholder="{{localize "SINLESS.Operation.responsePlaceholder"}}">
         {{#if active}}<i class="fa-solid fa-triangle-exclamation" data-tooltip="{{localize "SINLESS.Operation.active"}}"></i>{{/if}}
         <a data-action="removeResponse" data-index="{{index}}" data-tooltip="{{localize "SINLESS.Operation.removeResponse"}}" aria-label="{{localize "SINLESS.Operation.removeResponse"}}"><i class="fa-solid fa-trash"></i></a>
       </li>

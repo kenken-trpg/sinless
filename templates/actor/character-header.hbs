@@ -1,7 +1,7 @@
 <header class="sheet-header">
   <img class="profile" src="{{actor.img}}" alt="{{actor.name}}" data-edit="img" data-action="editImage" data-tooltip="{{actor.name}}">
   <div class="header-fields">
-    <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize "SINLESS.Name"}}">
+    <input class="actor-name" type="text" aria-label="{{localize "SINLESS.Name"}}" name="name" value="{{actor.name}}" placeholder="{{localize "SINLESS.Name"}}">
     <div class="header-grid">
       <label>{{localize "SINLESS.Character.FIELDS.heritage.label"}}
         <select name="system.heritage">{{selectOptions heritageChoices selected=system.heritage localize=true}}</select>
@@ -17,7 +17,7 @@
         </span>
         <span class="inline">
           <select name="system.lifestyle">{{selectOptions lifestyleChoices selected=system.lifestyle localize=true}}</select>
-          <input type="number" name="system.lifestyleMonths" value="{{system.lifestyleMonths}}" min="0" data-tooltip="{{localize "SINLESS.Character.FIELDS.lifestyleMonths.label"}}">
+          <input type="number" aria-label="{{localize "SINLESS.Character.FIELDS.lifestyleMonths.label"}}" name="system.lifestyleMonths" value="{{system.lifestyleMonths}}" min="0" data-tooltip="{{localize "SINLESS.Character.FIELDS.lifestyleMonths.label"}}">
         </span>
       </label>
       <label>{{localize "SINLESS.Character.FIELDS.brand.label"}}

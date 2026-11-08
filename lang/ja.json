@@ -713,6 +713,9 @@
         "spiritActor": {
           "label": "精霊のアクター",
           "hint": "精霊が現れたときにシーンに置く NPC アクター（p.183）。"
+        },
+        "action": {
+          "label": "アクション種別"
         }
       }
     },
@@ -1651,6 +1654,15 @@
       "imported": "ヘルプを Journal「{name}」として取り込みました。",
       "updated": "「{name}」のヘルプのページを更新しました。",
       "replaceConfirm": "「{name}」のヘルプのページをこの版に置き換えますか？ そのページへの変更は失われます。自分で足したページは残ります。"
+    },
+    "Accessibility": {
+      "base": "{name} 基本値",
+      "maximum": "{name} 上限",
+      "responseThreshold": "アラート対応 {n}: 閾値",
+      "responseLabel": "アラート対応 {n}: 内容",
+      "enemyRange": "{name}: 距離",
+      "enemyFlying": "{name}: 飛行",
+      "edit": "{name}を編集"
     }
   }
 }
