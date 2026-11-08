@@ -27,6 +27,8 @@ const SCRIPTS = {
   "color-independence": { script: "docs/verification/2026-11-08/color-independence.mjs", args: [], about: "dice, resource tracks and toggles exposed as text and kept visible in high contrast mode" },
   contrast: { script: "docs/verification/2026-11-08/contrast.mjs", args: [], about: "text contrast on sheets, windows, a test dialog and a chat card, dark and light themes" }
 };
+/** Scripts that need an active scene: they place tokens or use the scene controls. */
+const CANVAS = new Set(["magic", "player", "help-window"]);
 const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "contrast", "batch", "sweep-ja", "sweep-en"];
 
 function parse(argv) {
@@ -85,6 +87,11 @@ async function main() {
   const loaded = await lib.loadedVersions();
   console.log(`Foundry ${loaded.foundry}, world ${loaded.world}, system ${loaded.system} (system.json ${manifest})`);
   if (loaded.system !== manifest) console.warn(`WARNING: the world has system ${loaded.system} loaded, not ${manifest}. Use --relaunch to reload it.`);
+  const needCanvas = names.filter(n => CANVAS.has(n));
+  if (!loaded.activeScene && needCanvas.length) {
+    console.error(`No scene is active in world ${loaded.world}, so the canvas is not ready for ${needCanvas.join(", ")}. Activate a scene first.`);
+    return 1;
+  }
 
   // A long sweep outlasts the idle-sleep timer; sleep drops the browser's socket and every sheet times out.
   if (process.platform === "darwin") spawn("caffeinate", ["-i", "-w", String(process.pid)], { stdio: "ignore" }).on("error", () => {}).unref();

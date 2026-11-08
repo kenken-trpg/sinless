@@ -94,7 +94,7 @@ export async function relaunchWorld(world = "sinless-test") {
 export async function loadedVersions() {
   const { browser, page } = await joinGM();
   try {
-    return await page.evaluate(() => ({ foundry: game.version, system: game.system.version, world: game.world.id, lang: game.i18n.lang }));
+    return await page.evaluate(() => ({ foundry: game.version, system: game.system.version, world: game.world.id, lang: game.i18n.lang, activeScene: game.scenes.active?.name ?? null }));
   } finally {
     await browser.close();
   }
