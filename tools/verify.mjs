@@ -27,6 +27,7 @@ const SCRIPTS = {
   "color-independence": { script: "docs/verification/2026-11-08/color-independence.mjs", args: [], about: "dice, resource tracks and toggles exposed as text and kept visible in high contrast mode" },
   contrast: { script: "docs/verification/2026-11-08/contrast.mjs", args: [], about: "text contrast on sheets, windows, a test dialog and a chat card, dark and light themes" },
   "text-resize": { script: "docs/verification/2026-11-08/text-resize.mjs", args: [], about: "sheets, windows, a test dialog and a chat card at 200% text: nothing cut off, clipped or squeezed" },
+  "chat-cleanup": { script: "docs/verification/2026-11-08/chat-cleanup.mjs", args: [], about: "optional: run color, contrast and target-size checks with a concurrent unrelated chat message" },
   "focus-visibility": { script: "docs/verification/2026-11-08/focus-visibility.mjs", args: [], about: "sample keyboard focus ring contrast in dark and light application themes" },
   reflow: { script: "docs/verification/2026-11-08/text-resize.mjs", args: ["reflow"], about: "actor and weapon sheets at 320px width with default text size: nothing lost" },
   "text-spacing": { script: "docs/verification/2026-11-08/text-resize.mjs", args: ["spacing"], about: "the same windows with WCAG 1.4.12 line, paragraph, letter and word spacing: nothing lost" },

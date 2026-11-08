@@ -51,7 +51,6 @@ try{
  fixture=await page.evaluate(async samples=>{
   if(game.world.id!=='sinless-test')throw new Error('Use sinless-test');
   const settings=Object.fromEntries(['operation','chase'].map(k=>[k,foundry.utils.deepClone(game.settings.get('sinless',k))]));
-  const messages=game.messages.map(m=>m.id);
   const actors=[];
   for(const s of samples)actors.push(await Actor.create({...s,name:`VERIFY Target ${s.name}`}));
   const ch=actors.find(a=>a.type==='character');
@@ -65,7 +64,7 @@ try{
   const state={label:'VERIFY Target',pool:null,target:4,untrained:false,plan:{usesPool:false,total:5,poolDice:0,bonusDice:0,kismetDice:0},reroll:1,threshold:5,notes:[],extra:{},
    initial:[5,1,3,6,2],final:[5,4,3,6,2],rerolledIndices:[1],rerollCancelled:false,abf:false,kismetAdded:[],autoSuccesses:0,mcpUsed:0,vcrUsed:0};
   const message=await ChatMessage.create({content:await renderCard(state),speaker:ChatMessage.getSpeaker({actor:ch})});
-  return {settings,messages,message:message.id,actors:actors.map(a=>a.id),ch:ch.id,vehicle:vehicle.uuid,items};
+  return {settings,message:message.id,actors:actors.map(a=>a.id),ch:ch.id,vehicle:vehicle.uuid,items};
  },samples);
  await page.evaluate(async f=>{
   await game.settings.set('sinless','operation',{responses:[{label:'VERIFY Target Response',threshold:10}],lastAlert:0,lastHeat:0,htr:null});
@@ -123,10 +122,10 @@ try{
   for(const app of [...foundry.applications.instances.values()])if(['sinless-help','sinless-operation','sinless-chase'].includes(app.id)||f.actors.includes(app.document?.id)||f.actors.includes(app.document?.parent?.id))await app.close();
   for(const key of ['operation','chase'])await game.settings.set('sinless',key,f.settings[key]);
   await Actor.deleteDocuments(f.actors.filter(id=>game.actors.get(id)));
-  await ChatMessage.deleteDocuments(game.messages.filter(m=>!f.messages.includes(m.id)).map(m=>m.id));
+  if(game.messages.has(f.message))await ChatMessage.deleteDocuments([f.message]);
  },fixture).catch(e=>console.error('cleanup',e.message));
  if(fixture){
-  const left=await page.evaluate(f=>({actors:game.actors.filter(a=>a.name.startsWith('VERIFY Target')).length,messages:game.messages.size===f.messages.length,
+  const left=await page.evaluate(f=>({actors:f.actors.filter(id=>game.actors.has(id)).length,messages:!game.messages.has(f.message),
    settings:['operation','chase'].every(k=>JSON.stringify(game.settings.get('sinless',k))===JSON.stringify(f.settings[k]))}),fixture);
   assert.deepEqual(left,{actors:0,messages:true,settings:true});
   pass('temporary data removed and settings restored',left);

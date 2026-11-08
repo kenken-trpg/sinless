@@ -68,7 +68,6 @@ async function measure(roots,label){
 try{
  fixture=await page.evaluate(async()=>{
   if(game.world.id!=='sinless-test')throw new Error('Use sinless-test');
-  const messages=game.messages.map(m=>m.id);
   const ui=foundry.utils.deepClone(game.settings.get('core','uiConfig'));
   const {renderCard}=await import('/systems/sinless/module/dice/test-roll.mjs');
   // A failed test with every kind of die: success, one, rerolled, plain and Kismet.
@@ -82,7 +81,7 @@ try{
   await brand.createEmbeddedDocuments('Item',[{name:'VERIFY Safehouse',type:'resource',system:{class:'D',damage:1}}]);
   const npc=await Actor.create({name:'VERIFY Contrast NPC',type:'npc'});
   const vehicle=await Actor.create({name:'VERIFY Contrast Van',type:'vehicle'});
-  return {messages,message:message.id,actors:[ch.id,npc.id,vehicle.id,brand.id],ui};
+  return {message:message.id,actors:[ch.id,npc.id,vehicle.id,brand.id],ui};
  });
  const failures=[];let measured=0;
  for(const theme of ['dark','light']){
@@ -138,11 +137,11 @@ try{
   await game.settings.set('core','uiConfig',f.ui);
   for(const app of [...foundry.applications.instances.values()])if(f.actors.includes(app.document?.id))await app.close();
   await Actor.deleteDocuments(f.actors.filter(id=>game.actors.get(id)));
-  const created=game.messages.filter(m=>!f.messages.includes(m.id)).map(m=>m.id);
+  const created=[f.message].filter(id=>game.messages.has(id));
   if(created.length)await ChatMessage.deleteDocuments(created);
  },fixture).catch(e=>console.error('cleanup',e.message));
  if(fixture){
-  const left=await page.evaluate(f=>({actors:game.actors.filter(a=>a.name.startsWith('VERIFY Contrast')).length,messages:game.messages.filter(m=>!f.messages.includes(m.id)).length,ui:JSON.stringify(game.settings.get('core','uiConfig'))===JSON.stringify(f.ui)}),fixture);
+  const left=await page.evaluate(f=>({actors:f.actors.filter(id=>game.actors.has(id)).length,messages:Number(game.messages.has(f.message)),ui:JSON.stringify(game.settings.get('core','uiConfig'))===JSON.stringify(f.ui)}),fixture);
   assert.deepEqual(left,{actors:0,messages:0,ui:true});
   pass('temporary data removed and theme restored',left);
  }
