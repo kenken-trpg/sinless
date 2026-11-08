@@ -1,0 +1,42 @@
+{
+  "checks": [
+    "environment",
+    "import 01-combat-character.json",
+    "import 02-magic-character.json",
+    "import 03-decker-character.json",
+    "import 04-training-npc.json",
+    "import 05-test-vehicle.json",
+    "import 06-test-brand.json",
+    "compendium pack matches samples/actors",
+    "actor links and derived data",
+    "combat started",
+    "combat weapon card",
+    "NPC fixed soak",
+    "NPC physical damage applied",
+    "attack spell and drain card",
+    "continuous spell card",
+    "summoning roll",
+    "ritual roll",
+    "digital attack 0",
+    "digital attack 1",
+    "digital attack 2",
+    "vehicle maneuver",
+    "mounted weapon",
+    "brand sector action",
+    "round pool recovery",
+    "cleanup"
+  ],
+  "environment": {
+    "foundry": "14.365",
+    "cachedSystem": "0.15.18",
+    "world": "sinless-test",
+    "currentAPI": "function"
+  },
+  "cleanup": {
+    "actorsRemaining": [],
+    "scenesRemaining": [],
+    "combatsRemaining": [],
+    "messagesRemaining": []
+  },
+  "pageErrors": []
+}
