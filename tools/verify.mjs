@@ -24,9 +24,10 @@ const SCRIPTS = {
   "keyboard-apps": { script: "docs/verification/2026-11-07/keyboard-apps.mjs", args: [], about: "keyboard navigation and focus in help, operation and chase windows" },
   "keyboard-dialogs": { script: "docs/verification/2026-11-07/keyboard-dialogs.mjs", args: [], about: "keyboard navigation, submission and cancellation inside test and damage dialogs" },
   keyboard: { script: "docs/verification/2026-11-07/keyboard.mjs", args: [], about: "sheet controls by keyboard: focus, Enter / Space, focus kept after re-render" },
-  "color-independence": { script: "docs/verification/2026-11-08/color-independence.mjs", args: [], about: "dice, resource tracks and toggles exposed as text and kept visible in high contrast mode" }
+  "color-independence": { script: "docs/verification/2026-11-08/color-independence.mjs", args: [], about: "dice, resource tracks and toggles exposed as text and kept visible in high contrast mode" },
+  contrast: { script: "docs/verification/2026-11-08/contrast.mjs", args: [], about: "text contrast on sheets, windows, a test dialog and a chat card, dark and light themes" }
 };
-const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "batch", "sweep-ja", "sweep-en"];
+const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "contrast", "batch", "sweep-ja", "sweep-en"];
 
 function parse(argv) {
   const opts = { names: [], out: null, world: "sinless-test", relaunch: false, launch: true };

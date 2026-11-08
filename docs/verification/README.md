@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`batch`、`magic`、`samples`、`all`(この 13 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`batch`、`magic`、`samples`、`all`(この 14 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -41,6 +41,10 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 ## 色に頼らない状態表示の検証
 
 `color-independence` は、色で示している状態が文字や形でも伝わることを確かめる。判定カードのダイスは、成功・振り直しの別が Chromium のアクセシビリティツリーに文字として出ること、ブランドのリソース欄は名前の付いた 1 枚の画像として出て、ダメージは×、影響力は斜線で描かれることを確認する。続いて `forced-colors: active` を模擬し、状態モニターの埋まったマス、成功ダイス、リソースの印、オンの切り替えボタンの下線が消えないことを計算済みスタイルで確認する。Windows のハイコントラスト表示そのものは確認していない。オペレーションの発動中のアラート対応の読み上げ用テキストは、単体テストで確認している。
+
+## 文字のコントラストの検証
+
+`contrast` は、全種類のアクターシートの全タブ、ヘルプ・オペレーション・チェイスの画面、判定ダイアログ、判定カードで、文字のコントラストが WCAG 2.2 の AA 基準(通常の文字は 4.5:1、大きな文字は 3:1)を満たすことを、アプリケーションのダークテーマとライトテーマの両方で確認する。チャットカードの背景は羊皮紙の画像なので、背景色は計算済みスタイルからは取らない。文字を透明にしてスクリーンショットを撮り、各要素の範囲の画素の中央値を背景とする。文字色は計算済みの色に祖先の `opacity` を掛けたもの。入力欄の値とプレースホルダーも対象にし、無効の入力欄とアイコンは除く。スクロールで隠れた要素や、他の要素に覆われた要素は測らない。検証中に変えたテーマ設定は元に戻す。
 
 ## 共通ヘルパー [lib.mjs](lib.mjs)
 
