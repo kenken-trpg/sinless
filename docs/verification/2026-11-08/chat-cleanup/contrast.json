@@ -1,0 +1,14 @@
+{
+  "failures": [],
+  "text contrast meets WCAG AA in both themes": {
+    "measured": 2006
+  },
+  "no page errors": {
+    "errors": 0
+  },
+  "temporary data removed and theme restored": {
+    "actors": 0,
+    "messages": 0,
+    "ui": true
+  }
+}

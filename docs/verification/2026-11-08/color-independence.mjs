@@ -32,7 +32,6 @@ async function exposed(selector){
 try{
  fixture=await page.evaluate(async()=>{
   if(game.world.id!=='sinless-test')throw new Error('Use sinless-test');
-  const messages=game.messages.map(m=>m.id);
   const {renderCard}=await import('/systems/sinless/module/dice/test-roll.mjs');
   // Target 4: 5 and 6 succeed, the 1 and the 3 are rerolled into 4 and 2, and a Kismet 6 is added.
   const state={label:'VERIFY Color',pool:null,target:4,untrained:false,plan:{usesPool:false,total:4,poolDice:0,bonusDice:0,kismetDice:0},reroll:1,threshold:2,notes:[],extra:{},
@@ -42,7 +41,7 @@ try{
   const [resource]=await brand.createEmbeddedDocuments('Item',[{name:'VERIFY Color Resource',type:'resource',system:{class:'C',damage:3,influence:2,demolished:1,controlled:true}}]);
   const ch=await Actor.create({name:'VERIFY Color Runner',type:'character',system:{creation:{active:false}}});
   await ch.update({'system.condition.physical.value':2});
-  return {messages,message:message.id,actors:[brand.id,ch.id],brand:brand.id,ch:ch.id,resource:resource.id};
+  return {message:message.id,actors:[brand.id,ch.id],brand:brand.id,ch:ch.id,resource:resource.id};
  });
  await page.evaluate(()=>ui.sidebar.changeTab?.('chat','primary'));
  const card=`#chat [data-message-id="${fixture.message}"] .sinless-card`;
@@ -102,11 +101,11 @@ try{
  if(fixture)await page.evaluate(async f=>{
   for(const app of [...foundry.applications.instances.values()])if(f.actors.includes(app.document?.id))await app.close();
   await Actor.deleteDocuments(f.actors.filter(id=>game.actors.get(id)));
-  const created=game.messages.filter(m=>!f.messages.includes(m.id)).map(m=>m.id);
+  const created=[f.message].filter(id=>game.messages.has(id));
   if(created.length)await ChatMessage.deleteDocuments(created);
  },fixture).catch(e=>console.error('cleanup',e.message));
  if(fixture){
-  const left=await page.evaluate(f=>({actors:game.actors.filter(a=>a.name.startsWith('VERIFY Color')).length,messages:game.messages.filter(m=>!f.messages.includes(m.id)).length}),fixture);
+  const left=await page.evaluate(f=>({actors:f.actors.filter(id=>game.actors.has(id)).length,messages:Number(game.messages.has(f.message))}),fixture);
   assert.deepEqual(left,{actors:0,messages:0});
   pass('temporary data removed',left);
  }

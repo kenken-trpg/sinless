@@ -1,0 +1,14 @@
+{
+  "color-independence": {
+    "sentinel": true,
+    "existing": true
+  },
+  "contrast": {
+    "sentinel": true,
+    "existing": true
+  },
+  "target-size": {
+    "sentinel": true,
+    "existing": true
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "dice states exposed as text": {
+    "dice": [
+      "5(成功)",
+      "1(振り直し済み)",
+      "3(振り直し済み)",
+      "6(成功)",
+      "5(成功)",
+      "4(成功)",
+      "2",
+      "6(成功)",
+      "6(成功)"
+    ]
+  },
+  "resource track named and marked": {
+    "name": "9 マス: ダメージ 3・影響力 2・破壊済み 1",
+    "marks": [
+      "damaged demolished",
+      "damaged",
+      "damaged",
+      "-",
+      "-",
+      "-",
+      "-",
+      "influenced",
+      "influenced"
+    ]
+  },
+  "active toggle underlined": {},
+  "high contrast mode keeps the states visible": {
+    "matches": true,
+    "canvas": "rgb(255, 255, 255)",
+    "filled": {
+      "bg": "rgba(55, 0, 110, 0.8)",
+      "fg": "rgb(255, 255, 255)",
+      "image": "none",
+      "border": "rgba(55, 0, 110, 0.8)",
+      "adjust": "none",
+      "shadow": "none"
+    },
+    "empty": {
+      "bg": "rgba(255, 255, 255, 0)",
+      "fg": "rgb(0, 0, 0)",
+      "image": "none",
+      "border": "rgb(0, 0, 0)",
+      "adjust": "auto",
+      "shadow": "none"
+    },
+    "die": {
+      "bg": "rgba(5, 0, 73, 0.8)",
+      "fg": "rgb(255, 255, 255)",
+      "image": "none",
+      "border": "rgba(5, 0, 73, 0.8)",
+      "adjust": "none",
+      "shadow": "none"
+    },
+    "damaged": {
+      "bg": "rgb(255, 255, 255)",
+      "fg": "rgb(239, 230, 216)",
+      "image": "linear-gradient(to right top, rgba(0, 0, 0, 0) 42%, rgb(0, 0, 0) 42%, rgb(0, 0, 0) 58%, rgba(0, 0, 0, 0) 58%), linear-gradient(to left top, rgba(0, 0, 0, 0) 42%, rgb(0, 0, 0) 42%, rgb(0, 0, 0) 58%, rgba(0, 0, 0, 0) 58%), none",
+      "border": "rgb(0, 0, 0)",
+      "adjust": "none",
+      "shadow": "none"
+    },
+    "influenced": {
+      "bg": "rgb(255, 255, 255)",
+      "fg": "rgb(239, 230, 216)",
+      "image": "linear-gradient(to right top, rgba(0, 0, 0, 0) 42%, rgb(0, 0, 0) 42%, rgb(0, 0, 0) 58%, rgba(0, 0, 0, 0) 58%)",
+      "border": "rgb(0, 0, 0)",
+      "adjust": "none",
+      "shadow": "none"
+    },
+    "demolished": {
+      "bg": "rgb(0, 0, 0)",
+      "fg": "rgb(239, 230, 216)",
+      "image": "none",
+      "border": "rgb(0, 0, 0)",
+      "adjust": "none",
+      "shadow": "none"
+    },
+    "toggle": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "fg": "rgba(55, 0, 110, 0.8)",
+      "image": "none",
+      "border": "rgba(55, 0, 110, 0.8)",
+      "adjust": "none",
+      "shadow": "rgba(55, 0, 110, 0.8) 0px -2px 0px 0px inset"
+    }
+  },
+  "no page errors": {
+    "errors": 0
+  },
+  "temporary data removed": {
+    "actors": 0,
+    "messages": 0
+  }
+}
