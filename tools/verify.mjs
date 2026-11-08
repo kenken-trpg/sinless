@@ -27,13 +27,14 @@ const SCRIPTS = {
   "color-independence": { script: "docs/verification/2026-11-08/color-independence.mjs", args: [], about: "dice, resource tracks and toggles exposed as text and kept visible in high contrast mode" },
   contrast: { script: "docs/verification/2026-11-08/contrast.mjs", args: [], about: "text contrast on sheets, windows, a test dialog and a chat card, dark and light themes" },
   "text-resize": { script: "docs/verification/2026-11-08/text-resize.mjs", args: [], about: "sheets, windows, a test dialog and a chat card at 200% text: nothing cut off, clipped or squeezed" },
+  "focus-visibility": { script: "docs/verification/2026-11-08/focus-visibility.mjs", args: [], about: "sample keyboard focus ring contrast in dark and light application themes" },
   reflow: { script: "docs/verification/2026-11-08/text-resize.mjs", args: ["reflow"], about: "actor and weapon sheets at 320px width with default text size: nothing lost" },
   "text-spacing": { script: "docs/verification/2026-11-08/text-resize.mjs", args: ["spacing"], about: "the same windows with WCAG 1.4.12 line, paragraph, letter and word spacing: nothing lost" },
   "target-size": { script: "docs/verification/2026-11-08/target-size.mjs", args: [], about: "pointer targets in sheets, windows, a test dialog and a chat card are 24px or spaced apart" }
 };
 /** Scripts that need an active scene: they place tokens or use the scene controls. */
 const CANVAS = new Set(["magic", "player", "help-window"]);
-const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "contrast", "text-resize", "text-spacing", "reflow", "target-size", "batch", "sweep-ja", "sweep-en"];
+const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "contrast", "text-resize", "text-spacing", "reflow", "focus-visibility", "target-size", "batch", "sweep-ja", "sweep-en"];
 
 function parse(argv) {
   const opts = { names: [], out: null, world: "sinless-test", relaunch: false, launch: true };

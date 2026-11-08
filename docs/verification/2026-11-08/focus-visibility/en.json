@@ -1,0 +1,152 @@
+[
+  {
+    "theme": "dark",
+    "selector": "input.actor-name",
+    "ratio": 16.02,
+    "ring": [
+      239,
+      230,
+      216
+    ],
+    "background": [
+      10,
+      9,
+      17
+    ]
+  },
+  {
+    "theme": "dark",
+    "selector": "select[name=\"system.heritage\"]",
+    "ratio": 16.02,
+    "ring": [
+      239,
+      230,
+      216
+    ],
+    "background": [
+      10,
+      9,
+      17
+    ]
+  },
+  {
+    "theme": "dark",
+    "selector": "a.lifestyle-action",
+    "ratio": 7.41,
+    "ring": [
+      193,
+      186,
+      176
+    ],
+    "background": [
+      48,
+      40,
+      49
+    ]
+  },
+  {
+    "theme": "dark",
+    "selector": ".window-content button.icon",
+    "ratio": 15.9,
+    "ring": [
+      239,
+      230,
+      216
+    ],
+    "background": [
+      12,
+      10,
+      18
+    ]
+  },
+  {
+    "theme": "dark",
+    "selector": "input[name=\"system.skills.firearms.rank\"]",
+    "ratio": 14.64,
+    "ring": [
+      239,
+      230,
+      216
+    ],
+    "background": [
+      22,
+      21,
+      30
+    ]
+  },
+  {
+    "theme": "light",
+    "selector": "input.actor-name",
+    "ratio": 10.8,
+    "ring": [
+      34,
+      34,
+      34
+    ],
+    "background": [
+      215,
+      213,
+      201
+    ]
+  },
+  {
+    "theme": "light",
+    "selector": "select[name=\"system.heritage\"]",
+    "ratio": 11.34,
+    "ring": [
+      34,
+      34,
+      34
+    ],
+    "background": [
+      220,
+      218,
+      206
+    ]
+  },
+  {
+    "theme": "light",
+    "selector": "a.lifestyle-action",
+    "ratio": 4.95,
+    "ring": [
+      71,
+      70,
+      68
+    ],
+    "background": [
+      190,
+      188,
+      177
+    ]
+  },
+  {
+    "theme": "light",
+    "selector": ".window-content button.icon",
+    "ratio": 11.06,
+    "ring": [
+      34,
+      34,
+      34
+    ],
+    "background": [
+      219,
+      215,
+      203
+    ]
+  },
+  {
+    "theme": "light",
+    "selector": "input[name=\"system.skills.firearms.rank\"]",
+    "ratio": 11.23,
+    "ring": [
+      34,
+      34,
+      34
+    ],
+    "background": [
+      219,
+      217,
+      205
+    ]
+  }
+]
