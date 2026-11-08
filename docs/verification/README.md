@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`batch`、`magic`、`samples`、`all`(この 15 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`target-size`、`batch`、`magic`、`samples`、`all`(この 16 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -59,6 +59,14 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 `SINLESS_TEXT_SCALE` で別の文字サイズ(1〜10)を、`SINLESS_TEXT_WIDTH` でシートの幅(px)を指定できる。例えば `SINLESS_TEXT_SCALE=5 SINLESS_TEXT_WIDTH=400` は、標準の文字サイズで狭くしたシート(1.4.10 のリフロー)を確かめる。`SINLESS_TEXT_SHOTS=1` で、問題のあった画面のスクリーンショットを出力先に保存する。検証後は文字サイズの設定を元に戻す。
 
 レイアウトは CSS のコンテナークエリーで切り替えている。各ウィンドウの内容部分の幅を `rem` で測るので、文字の拡大とウィンドウの縮小のどちらでも同じ規則が働く。シートは 40rem 未満(標準の文字サイズで 640px)になると、ヘッダーを含めてシート全体がスクロールし、横に並んでいた行が折り返す。ダイアログとトラッカーは 24rem 未満で、見出しを入力欄の上に置く。
+
+## 操作対象の大きさの検証
+
+`target-size` は、クリックやタップの対象が 24×24 CSS ピクセル以上あること(WCAG 2.2 の 2.5.8)を確かめる。小さい対象でも、中心に置いた直径 24px の円が、ほかの対象にも、ほかの小さい対象の円にも重ならなければよい(間隔の例外)。チェックボックスや入力欄は、クリックできるラベルを含めた範囲で測る。文中のリンクは対象外(インラインの例外)。
+
+サンプルのアクター(全種類のシートの全タブ)、全種類のアイテムシート、ヘルプ・オペレーション・チェイスの画面(アラート対応、進行中のチェイスと追手を入れた状態)、判定ダイアログ、チャットカードを開いて測る。`SINLESS_TARGET_SHOTS=1` で、各画面のスクリーンショットを出力先に保存する。検証後は、作ったアクターとチャットメッセージを消し、オペレーションとチェイスの設定を元に戻す。
+
+状態モニターのマス、アイテムと効果の行の操作アイコン、ブランド特性、ライフスタイルの操作、チェイスの区間の増減は、`max(1.5rem, 24px)` 以上にしている。文字サイズを標準より小さくしても 24px を下回らない。
 
 ## 共通ヘルパー [lib.mjs](lib.mjs)
 

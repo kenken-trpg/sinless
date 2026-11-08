@@ -100,3 +100,15 @@ test("windows reflow for enlarged text instead of squeezing it", () => {
     assert.ok(widths >= opened, `${file.slice(root.length)}: every window sets a width`);
   }
 });
+
+test("small controls are at least 24px square", () => {
+  const css = readFileSync(join(root, "styles/sinless.css"), "utf8");
+  const size = "max\\(1\\.5rem, 24px\\)";
+  // Condition and cohesion boxes.
+  assert.match(css, new RegExp(`\\.sinless\\.sheet \\.box \\{ width: ${size}; height: ${size};`));
+  // Icon controls: item and effect rows, lifestyle upkeep, chase legs; brand traits are rows of text.
+  for (const sel of ["\\.sinless\\.sheet \\.item-controls a", "\\.sinless\\.sheet \\.header-grid \\.lifestyle-action", "\\.sinless-chase \\.chase-status \\.legs a", "\\.sinless\\.sheet \\.brand-traits \\.trait"])
+    assert.match(css, new RegExp(`${sel} \\{[^}]*min-height: ${size};`), sel);
+  for (const sel of ["\\.sinless\\.sheet \\.item-controls a", "\\.sinless\\.sheet \\.header-grid \\.lifestyle-action", "\\.sinless-chase \\.chase-status \\.legs a"])
+    assert.match(css, new RegExp(`${sel} \\{[^}]*min-width: ${size};`), sel);
+});
