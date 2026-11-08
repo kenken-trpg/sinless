@@ -110,7 +110,7 @@ export async function endOperation() {
     buttons: [
       { action: "end", label: "SINLESS.Operation.end", icon: "fa-solid fa-flag-checkered", default: true,
         callback: (event, button) => new foundry.applications.ux.FormDataExtended(button.form).object },
-      { action: "cancel", label: "Cancel", icon: "fa-solid fa-xmark", type: "button" }
+      { action: "cancel", label: "SINLESS.Dialog.cancel", icon: "fa-solid fa-xmark", type: "button" }
     ],
     rejectClose: false
   });

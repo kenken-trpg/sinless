@@ -1,6 +1,6 @@
 // In-game help: pages written per language in help/<lang>/ (index.json lists them),
 // shown in a window and importable by the GM as a journal entry.
-import { SYSTEM_ID } from "../config.mjs";
+import { SYSTEM_ID, CONFIRM_BUTTONS } from "../config.mjs";
 import { addControlButton } from "./control-button.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
@@ -67,6 +67,7 @@ export async function importHelpJournal(lang = helpLanguage()) {
   const ok = await DialogV2.confirm({
     window: { title: "SINLESS.Help.import" },
     content: `<p>${foundry.utils.escapeHTML(game.i18n.format("SINLESS.Help.replaceConfirm", { name: existing.name }))}</p>`,
+    ...CONFIRM_BUTTONS,
     rejectClose: false
   });
   if (!ok) return null;

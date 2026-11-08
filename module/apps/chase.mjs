@@ -163,7 +163,7 @@ export async function startChase() {
     buttons: [
       { action: "start", label: "SINLESS.Chase.start", icon: "fa-solid fa-flag", default: true,
         callback: (event, button) => new foundry.applications.ux.FormDataExtended(button.form).object },
-      { action: "cancel", label: "Cancel", icon: "fa-solid fa-xmark", type: "button" }
+      { action: "cancel", label: "SINLESS.Dialog.cancel", icon: "fa-solid fa-xmark", type: "button" }
     ],
     rejectClose: false
   });

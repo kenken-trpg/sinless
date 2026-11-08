@@ -1,4 +1,4 @@
-import { SYSTEM_ID, SINLESS, skillLabel } from "../config.mjs";
+import { SYSTEM_ID, SINLESS, skillLabel, CONFIRM_BUTTONS } from "../config.mjs";
 import { currentTargetNumber, getSetting, adjustAlert } from "../settings.mjs";
 import { deckStatus, influencePenalty, INTRUSION_PENALTY } from "../helpers/grid.mjs";
 import { actorEffects, effectActions, lockOverriddenInputs, EFFECT_KEYS } from "./effects.mjs";
@@ -33,7 +33,8 @@ const clickedBox = (current, n) => (current === n ? n - 1 : n);
 /** Ask the user to confirm; both arguments are localization keys. */
 export const confirmAction = (title, text) => foundry.applications.api.DialogV2.confirm({
   window: { title },
-  content: `<p>${game.i18n.localize(text)}</p>`
+  content: `<p>${game.i18n.localize(text)}</p>`,
+  ...CONFIRM_BUTTONS
 });
 
 /** Shared behavior for character and NPC sheets. */

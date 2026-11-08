@@ -27,7 +27,7 @@ export async function awardDialog(actor) {
           return { selected: Object.keys(KISMET_AWARDS).filter(k => data[k]), extra: Number(data.extra) || 0 };
         }
       },
-      { action: "cancel", label: "Cancel", icon: "fa-solid fa-xmark", type: "button" }
+      { action: "cancel", label: "SINLESS.Dialog.cancel", icon: "fa-solid fa-xmark", type: "button" }
     ],
     rejectClose: false
   });
@@ -62,7 +62,7 @@ export async function advanceDialog(actor) {
         action: "buy", label: "SINLESS.Advance.buy", icon: "fa-solid fa-arrow-up", default: true,
         callback: (event, button) => new foundry.applications.ux.FormDataExtended(button.form).object
       },
-      { action: "cancel", label: "Cancel", icon: "fa-solid fa-xmark", type: "button" }
+      { action: "cancel", label: "SINLESS.Dialog.cancel", icon: "fa-solid fa-xmark", type: "button" }
     ],
     rejectClose: false
   });
@@ -115,7 +115,7 @@ export async function boonDialog(actor) {
         action: "take", label: "SINLESS.Advance.takeBoon", icon: "fa-solid fa-gift", default: true,
         callback: (event, button) => new foundry.applications.ux.FormDataExtended(button.form).object
       },
-      { action: "cancel", label: "Cancel", icon: "fa-solid fa-xmark", type: "button" }
+      { action: "cancel", label: "SINLESS.Dialog.cancel", icon: "fa-solid fa-xmark", type: "button" }
     ],
     rejectClose: false
   });
