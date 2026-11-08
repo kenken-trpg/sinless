@@ -95,7 +95,7 @@ export async function digitalDialog(message, actor) {
     content,
     buttons: [
       { action: "apply", label: "SINLESS.Damage.apply", icon: "fa-solid fa-bolt", default: true, callback: (event, button) => read(button.form) },
-      { action: "cancel", label: "Cancel", icon: "fa-solid fa-xmark", type: "button" }
+      { action: "cancel", label: "SINLESS.Dialog.cancel", icon: "fa-solid fa-xmark", type: "button" }
     ],
     render: (event, dialog) => {
       const form = dialog.element.querySelector("form");

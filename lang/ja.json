@@ -1666,6 +1666,11 @@
       "dieSuccess": "成功",
       "dieRerolled": "振り直し済み",
       "resourceTrack": "{total} マス: ダメージ {damaged}・影響力 {influenced}・破壊済み {demolished}"
+    },
+    "Dialog": {
+      "cancel": "キャンセル",
+      "yes": "はい",
+      "no": "いいえ"
     }
   }
 }

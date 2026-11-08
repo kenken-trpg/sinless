@@ -113,7 +113,7 @@ export async function damageDialog(message, actor) {
         default: true,
         callback: (event, button) => read(button.form)
       },
-      { action: "cancel", label: "Cancel", icon: "fa-solid fa-xmark", type: "button" }
+      { action: "cancel", label: "SINLESS.Dialog.cancel", icon: "fa-solid fa-xmark", type: "button" }
     ],
     render: (event, dialog) => {
       const form = dialog.element.querySelector("form");

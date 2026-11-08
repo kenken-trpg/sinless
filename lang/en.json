@@ -1666,6 +1666,11 @@
       "dieSuccess": "success",
       "dieRerolled": "rerolled",
       "resourceTrack": "{total} boxes: {damaged} damaged, {influenced} influenced, {demolished} demolished"
+    },
+    "Dialog": {
+      "cancel": "Cancel",
+      "yes": "Yes",
+      "no": "No"
     }
   }
 }

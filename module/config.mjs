@@ -357,3 +357,9 @@ export const SINLESS = {
 
 /** i18n key for a skill label. */
 export const skillLabel = key => `SINLESS.Skill.${key}`;
+
+/** Yes/No labels for DialogV2.confirm. Foundry's own "Yes"/"No" stay English without a core translation module. */
+export const CONFIRM_BUTTONS = Object.freeze({
+  yes: Object.freeze({ label: "SINLESS.Dialog.yes" }),
+  no: Object.freeze({ label: "SINLESS.Dialog.no" })
+});
