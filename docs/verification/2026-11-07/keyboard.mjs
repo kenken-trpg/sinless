@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { joinGM } from "../lib.mjs";
+import { verifyOtherSheets } from './keyboard-sheets.mjs';
 const outDir = process.env.SINLESS_VERIFY_OUT ?? "/private/tmp/sinless-verification";
 const { browser, page, logs } = await joinGM({ noCanvas: true });
 page.setDefaultTimeout(20000);
@@ -135,6 +136,8 @@ try {
   const opened = await page.evaluate(id => [...foundry.applications.instances.values()].some(a => a.rendered && a.document?.id === id), f.gear);
   assert.equal(opened, true, "item sheet opened");
   pass("Enter on edit opens the item sheet", { opened });
+  await page.evaluate(async uuid => (await fromUuid(uuid)).sheet.close(), f.gearUuid);
+  await verifyOtherSheets(page, pass);
 
   const errors = logs.filter(l => l.startsWith("pageerror") || /sinless/i.test(l) && l.startsWith("error"));
   assert.deepEqual(errors, []);

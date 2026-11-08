@@ -40,7 +40,8 @@ function onKeydown(event) {
   event.preventDefault();
   if (event.repeat) return;
   const appId = el.closest(".application")?.id;
-  pending = { appId, selector: controlSelector(el), until: Date.now() + 3000 };
+  pending = { appId, origin: el, selector: controlSelector(el), until: Date.now() + 3000,
+    existing: new Set(foundry.applications.instances.keys()) };
   el.click();
 }
 
@@ -75,6 +76,14 @@ function onRender(app, element) {
   const root = element instanceof HTMLElement ? element : app.element;
   if (!root?.classList.contains("sinless")) return;
   makeFocusable(root);
+  if (pending && pending.appId !== root.id && Date.now() <= pending.until && app.document
+      && (!pending.existing.has(app.id) || app.document.parent?.sheet?.id === pending.appId)) {
+    const { origin, appId, selector } = pending;
+    pending = null;
+    dialogOrigins.set(app.id, { root, origin, appId, selector });
+    root.querySelector('input[name="name"], input:not([type="hidden"]):not(:disabled), button')?.focus();
+    return;
+  }
   if (!pending || pending.appId !== root.id) return;
   const { selector, until } = pending;
   pending = null;
