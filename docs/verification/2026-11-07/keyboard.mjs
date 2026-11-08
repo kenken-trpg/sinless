@@ -5,6 +5,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { joinGM } from "../lib.mjs";
 import { verifyInputAccessibility } from '../input-accessibility.mjs';
 import { verifyOtherSheets } from './keyboard-sheets.mjs';
+import { verifyFocusScroll } from '../2026-11-08/focus-scroll.mjs';
 const outDir = process.env.SINLESS_VERIFY_OUT ?? "/private/tmp/sinless-verification";
 const { browser, page, logs } = await joinGM({ noCanvas: true });
 if (process.env.SINLESS_VERIFY_LANGUAGE) assert.equal(await page.evaluate(() => game.i18n.lang), process.env.SINLESS_VERIFY_LANGUAGE);
@@ -41,6 +42,8 @@ try {
     return { ch: ch.uuid, id: ch.id, gear: gear.id, gearUuid: gear.uuid };
   });
   await page.waitForTimeout(300);
+
+  await verifyFocusScroll(page, pass);
 
   // Every action link is a focusable button with a name.
   const links = await page.evaluate(async uuid => {

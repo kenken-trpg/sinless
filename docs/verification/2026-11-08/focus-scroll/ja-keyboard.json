@@ -1,0 +1,193 @@
+{
+ "scrolled focus default": {
+  "width": 800,
+  "scale": 5,
+  "items": 35,
+  "toggleKeys": [
+   "Space",
+   "Enter"
+  ],
+  "childReturn": true
+ },
+ "scrolled focus narrow": {
+  "width": 320,
+  "scale": 5,
+  "items": 35,
+  "toggleKeys": [
+   "Space",
+   "Enter"
+  ],
+  "childReturn": true
+ },
+ "scrolled focus large text": {
+  "width": 800,
+  "scale": 10,
+  "items": 35,
+  "toggleKeys": [
+   "Space",
+   "Enter"
+  ],
+  "childReturn": true
+ },
+ "action links are named, focusable buttons": {
+  "count": 80
+ },
+ "tab order main": {
+  "controls": 191
+ },
+ "tab order gear": {
+  "controls": 29
+ },
+ "tab order magic": {
+  "controls": 25
+ },
+ "tab order social": {
+  "controls": 46
+ },
+ "tab order grid": {
+  "controls": 28
+ },
+ "tab order effects": {
+  "controls": 23
+ },
+ "tab order bio": {
+  "controls": 24
+ },
+ "dialog focus [data-action=rollDefense] Escape": {
+  "restored": true
+ },
+ "dialog focus [data-action=rollDefense] close": {
+  "restored": true
+ },
+ "dialog focus [data-action=payLifestyle] Escape": {
+  "restored": true
+ },
+ "dialog focus [data-action=payLifestyle] no": {
+  "restored": true
+ },
+ "Enter fills a box and keeps focus": {
+  "value": 2,
+  "inSheet": true,
+  "action": "setCondition",
+  "n": "2",
+  "pressed": "true"
+ },
+ "Tab reaches the next box, Space fills it": {
+  "value": 3,
+  "inSheet": true,
+  "action": "setCondition",
+  "n": "3",
+  "pressed": "true"
+ },
+ "Space toggles an item and keeps focus": {
+  "field": "carried",
+  "from": true,
+  "to": false,
+  "inSheet": true,
+  "action": "itemToggle",
+  "n": null,
+  "pressed": "false"
+ },
+ "Enter on edit opens the item sheet": {
+  "opened": true
+ },
+ "tab order Actor/npc/main": {
+  "controls": 167
+ },
+ "tab order Actor/npc/gear": {
+  "controls": 27
+ },
+ "tab order Actor/npc/grid": {
+  "controls": 26
+ },
+ "tab order Actor/npc/effects": {
+  "controls": 17
+ },
+ "tab order Actor/npc/bio": {
+  "controls": 16
+ },
+ "child focus npc/itemEdit": {
+  "restored": true
+ },
+ "child focus npc/itemDelete": {
+  "restored": true
+ },
+ "child focus npc/rollDefense": {
+  "restored": true
+ },
+ "tab order Actor/brand/main": {
+  "controls": 56
+ },
+ "tab order Actor/brand/resources": {
+  "controls": 20
+ },
+ "tab order Actor/brand/members": {
+  "controls": 11
+ },
+ "child focus brand/itemEdit": {
+  "restored": true
+ },
+ "child focus brand/itemDelete": {
+  "restored": true
+ },
+ "child focus brand/endSectorTurn": {
+  "restored": true
+ },
+ "tab order Actor/vehicle/main": {
+  "controls": 40
+ },
+ "tab order Actor/vehicle/effects": {
+  "controls": 13
+ },
+ "tab order Actor/vehicle/bio": {
+  "controls": 12
+ },
+ "child focus vehicle/itemEdit": {
+  "restored": true
+ },
+ "child focus vehicle/itemDelete": {
+  "restored": true
+ },
+ "child focus vehicle/rollDefense": {
+  "restored": true
+ },
+ "tab order Item/weapon/sheet": {
+  "controls": 33
+ },
+ "tab order Item/armor/sheet": {
+  "controls": 19
+ },
+ "tab order Item/gear/sheet": {
+  "controls": 17
+ },
+ "tab order Item/implant/sheet": {
+  "controls": 14
+ },
+ "tab order Item/power/sheet": {
+  "controls": 23
+ },
+ "tab order Item/ritual/sheet": {
+  "controls": 11
+ },
+ "tab order Item/knowledge/sheet": {
+  "controls": 9
+ },
+ "tab order Item/asset/sheet": {
+  "controls": 14
+ },
+ "tab order Item/resource/sheet": {
+  "controls": 29
+ },
+ "tab order Item/deck/sheet": {
+  "controls": 23
+ },
+ "tab order Item/software/sheet": {
+  "controls": 24
+ },
+ "tab order Item/vcr/sheet": {
+  "controls": 17
+ },
+ "no page errors": {
+  "errors": 0
+ }
+}
