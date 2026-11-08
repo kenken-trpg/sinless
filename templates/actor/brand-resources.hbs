@@ -14,7 +14,7 @@
             {{localize "SINLESS.Resource.classLabel" cls=item.system.class}} · {{tags}} ·
             {{localize "SINLESS.Resource.marketUpkeep" market=item.system.effectiveMarket upkeep=item.system.upkeep}}
           </span>
-          <div class="resource-track">
+          <div class="resource-track" role="img" aria-label="{{localize "SINLESS.Accessibility.resourceTrack" total=track.total damaged=track.damaged influenced=track.influenced demolished=track.demolished}}">
             {{#each boxes}}<span class="rbox{{#if damaged}} damaged{{/if}}{{#if influenced}} influenced{{/if}}{{#if demolished}} demolished{{/if}}"></span>{{/each}}
           </div>
         </div>

@@ -10,19 +10,19 @@
   <p class="breakdown">{{localize "SINLESS.Card.dice" n=plan.total}}</p>
   {{/if}}
   <ol class="dice">
-    {{#each initialDice}}<li class="die{{#if success}} success{{/if}}{{#if one}} one{{/if}}{{#if rerolled}} rerolled{{/if}}">{{value}}</li>{{/each}}
+    {{#each initialDice}}<li class="die{{#if success}} success{{/if}}{{#if one}} one{{/if}}{{#if rerolled}} rerolled{{/if}}">{{value}}{{#if success}}<span class="sinless-sr-only">({{localize "SINLESS.Accessibility.dieSuccess"}})</span>{{/if}}{{#if rerolled}}<span class="sinless-sr-only">({{localize "SINLESS.Accessibility.dieRerolled"}})</span>{{/if}}</li>{{/each}}
   </ol>
   {{#if rerollCancelled}}<p class="reroll-note">{{localize "SINLESS.Card.rerollCancelled"}}</p>{{/if}}
   {{#if finalDice}}
   <p class="reroll-note">{{localize "SINLESS.Card.afterReroll"}}</p>
   <ol class="dice">
-    {{#each finalDice}}<li class="die{{#if success}} success{{/if}}{{#if one}} one{{/if}}">{{value}}</li>{{/each}}
+    {{#each finalDice}}<li class="die{{#if success}} success{{/if}}{{#if one}} one{{/if}}">{{value}}{{#if success}}<span class="sinless-sr-only">({{localize "SINLESS.Accessibility.dieSuccess"}})</span>{{/if}}</li>{{/each}}
   </ol>
   {{/if}}
   {{#if kismetDice.length}}
   <p class="reroll-note">{{localize "SINLESS.Card.kismetAdded"}}</p>
   <ol class="dice">
-    {{#each kismetDice}}<li class="die kismet{{#if success}} success{{/if}}">{{value}}</li>{{/each}}
+    {{#each kismetDice}}<li class="die kismet{{#if success}} success{{/if}}">{{value}}{{#if success}}<span class="sinless-sr-only">({{localize "SINLESS.Accessibility.dieSuccess"}})</span>{{/if}}</li>{{/each}}
   </ol>
   {{/if}}
   <div class="result">

@@ -1662,7 +1662,10 @@
       "responseLabel": "アラート対応 {n}: 内容",
       "enemyRange": "{name}: 距離",
       "enemyFlying": "{name}: 飛行",
-      "edit": "{name}を編集"
+      "edit": "{name}を編集",
+      "dieSuccess": "成功",
+      "dieRerolled": "振り直し済み",
+      "resourceTrack": "{total} マス: ダメージ {damaged}・影響力 {influenced}・破壊済み {demolished}"
     }
   }
 }
