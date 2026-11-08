@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`batch`、`magic`、`samples`、`all`(この 14 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`batch`、`magic`、`samples`、`all`(この 15 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -46,6 +46,19 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 ## 文字のコントラストの検証
 
 `contrast` は、全種類のアクターシートの全タブ、ヘルプ・オペレーション・チェイスの画面、判定ダイアログ、判定カードで、文字のコントラストが WCAG 2.2 の AA 基準(通常の文字は 4.5:1、大きな文字は 3:1)を満たすことを、アプリケーションのダークテーマとライトテーマの両方で確認する。チャットカードの背景は羊皮紙の画像なので、背景色は計算済みスタイルからは取らない。文字を透明にしてスクリーンショットを撮り、各要素の範囲の画素の中央値を背景とする。文字色は計算済みの色に祖先の `opacity` を掛けたもの。入力欄の値とプレースホルダーも対象にし、無効の入力欄とアイコンは除く。スクロールで隠れた要素や、他の要素に覆われた要素は測らない。検証中に変えたテーマ設定は元に戻す。
+
+## 文字の拡大の検証
+
+`text-resize` は、文字を 200% に拡大しても内容が失われないこと(WCAG 2.2 の 1.4.4)を確かめる。Foundry の文字サイズ設定は最大の 10 でルートの文字サイズが 16px から 32px になるが、ウィンドウの幅は変わらない。この設定で、全種類のアクターシートの全タブ、アイテムシート、ヘルプ・オペレーション・チェイスの画面、判定ダイアログを既定の大きさで開き、次のどれもないことを確認する。
+
+- 内容が横にはみ出して切れる。縦にはみ出すのにスクロールできない
+- 文字が、自分や祖先の `overflow: hidden` で切れる
+- 入力欄や選択欄が狭く、値が入りきらない
+- 文字が 3 文字分より狭い列に押し込まれ、1 文字ずつ折り返す
+
+`SINLESS_TEXT_SCALE` で別の文字サイズ(1〜10)を、`SINLESS_TEXT_WIDTH` でシートの幅(px)を指定できる。例えば `SINLESS_TEXT_SCALE=5 SINLESS_TEXT_WIDTH=400` は、標準の文字サイズで狭くしたシート(1.4.10 のリフロー)を確かめる。`SINLESS_TEXT_SHOTS=1` で、問題のあった画面のスクリーンショットを出力先に保存する。検証後は文字サイズの設定を元に戻す。
+
+レイアウトは CSS のコンテナークエリーで切り替えている。各ウィンドウの内容部分の幅を `rem` で測るので、文字の拡大とウィンドウの縮小のどちらでも同じ規則が働く。シートは 40rem 未満(標準の文字サイズで 640px)になると、ヘッダーを含めてシート全体がスクロールし、横に並んでいた行が折り返す。ダイアログとトラッカーは 24rem 未満で、見出しを入力欄の上に置く。
 
 ## 共通ヘルパー [lib.mjs](lib.mjs)
 

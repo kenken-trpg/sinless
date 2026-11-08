@@ -80,3 +80,23 @@ test("muted text keeps its contrast instead of being faded", () => {
   const faded = css.split("\n").filter(l => /\b(hint|empty|die|count|cost|time|effect-source|modifiers)\b[^{]*\{[^}]*opacity: 0\.[0-7]/.test(l));
   assert.deepEqual(faded, []);
 });
+
+test("windows reflow for enlarged text instead of squeezing it", () => {
+  const css = readFileSync(join(root, "styles/sinless.css"), "utf8");
+  // Every Sinless window measures its content area and scrolls vertically.
+  assert.match(css, /\.sinless \.window-content \{ container: sinless-window \/ inline-size; overflow-y: auto; \}/);
+  // Widths are measured in rem, so the same rules apply to larger text and to narrower windows.
+  const queries = [...css.matchAll(/@container sinless-window \(max-width: ([\d.]+)(rem|px)\)/g)];
+  assert.ok(queries.length >= 2, "sheet and dialog breakpoints");
+  assert.deepEqual(queries.map(q => q[2]), queries.map(() => "rem"));
+  // Containment needs an explicit window width; every Sinless application sets one.
+  const read = f => readFileSync(join(root, f), "utf8");
+  const apps = walk(join(root, "module")).filter(f => f.endsWith(".mjs")).map(f => [f, read(f.slice(root.length))])
+    .filter(([, src]) => /classes: \["sinless"/.test(src));
+  assert.ok(apps.length >= 10, `found ${apps.length} application files`);
+  for (const [file, src] of apps) {
+    const opened = (src.match(/classes: \["sinless"/g) ?? []).length;
+    const widths = (src.match(/position: \{ width: [^,}]+/g) ?? []).length;
+    assert.ok(widths >= opened, `${file.slice(root.length)}: every window sets a width`);
+  }
+});
