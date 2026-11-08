@@ -1,6 +1,6 @@
 {
   "name": "sinless",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "private": true,
   "description": "Unofficial Foundry VTT system for the Sinless tabletop RPG",
   "type": "module",
