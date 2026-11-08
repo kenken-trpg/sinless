@@ -13,11 +13,12 @@ import assert from 'node:assert/strict';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {joinGM} from '../lib.mjs';
 const SPACING=process.argv.includes('spacing');
-const SCALE=SPACING?null:Number(process.env.SINLESS_TEXT_SCALE??10);
-const MODE=SPACING?'with WCAG text spacing':`at font scale ${SCALE}`;
+const REFLOW=process.argv.includes('reflow');
+const SCALE=SPACING?null:Number(process.env.SINLESS_TEXT_SCALE??(REFLOW?5:10));
+const MODE=REFLOW?'at 320px sheet width':SPACING?'with WCAG text spacing':`at font scale ${SCALE}`;
 const SPACING_CSS='*{line-height:1.5!important;letter-spacing:0.12em!important;word-spacing:0.16em!important}p{margin-bottom:2em!important}';
 // SINLESS_TEXT_WIDTH narrows the sheets instead (WCAG 1.4.10 reflow), e.g. 400 with SINLESS_TEXT_SCALE=5.
-const WIDTH=process.env.SINLESS_TEXT_WIDTH?Number(process.env.SINLESS_TEXT_WIDTH):null;
+const WIDTH=process.env.SINLESS_TEXT_WIDTH?Number(process.env.SINLESS_TEXT_WIDTH):(REFLOW?320:null);
 const {browser,page,logs}=await joinGM({noCanvas:true,viewport:{width:1600,height:1100}});
 page.setDefaultTimeout(20000);
 const outDir=process.env.SINLESS_VERIFY_OUT??'/private/tmp/sinless-verification';mkdirSync(outDir,{recursive:true});
@@ -181,5 +182,5 @@ try{
   assert.deepEqual(left,{actors:0,messages:true,ui:true});
   pass('temporary data removed and font scale restored',left);
  }
- writeFileSync(`${outDir}/${SPACING?'text-spacing':'text-resize'}.json`,JSON.stringify(results,null,2));await browser.close();
+ writeFileSync(`${outDir}/${REFLOW?'reflow':SPACING?'text-spacing':'text-resize'}.json`,JSON.stringify(results,null,2));await browser.close();
 }

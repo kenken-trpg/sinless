@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`text-spacing`、`target-size`、`batch`、`magic`、`samples`、`all`(この 17 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`text-spacing`、`reflow`、`target-size`、`batch`、`magic`、`samples`、`all`(この 18 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -68,6 +68,12 @@ Foundry はボタンの高さを 2em に固定しているため、文字が折�
 `text-spacing` は、利用者のスタイルで文字の間隔を広げても内容が失われないこと(WCAG 2.2 の 1.4.12)を確かめる。`text-resize` と同じスクリプトに引数 `spacing` を渡し、文字の大きさは変えずに、行の高さ 1.5、段落の後ろの間隔 2em、文字の間隔 0.12em、単語の間隔 0.16em のスタイルを全体に加える。同じ画面を開き、`text-resize` と同じ項目を確認する。スタイルが効いていることは、本文の行の高さ・文字の間隔・単語の間隔を読んで確かめる。選択欄や狭い列の文字幅の測定にも文字と単語の間隔を含める。検証後は、自分で作ったチャットメッセージだけを削除する。
 
 日本語・英語での実行結果は [2026-11-08/text-spacing/README.md](2026-11-08/text-spacing/README.md) に記録している。
+
+## 狭いシートの検証
+
+`npm run verify -- reflow` は標準の文字サイズ（font scale 5）でアクターと武器のシートを幅320pxにし、`text-resize` と同じ内容の欠落を検査する。ヘルプ・オペレーション・チェイス・判定ダイアログとチャットカードも既定幅で確認する。ブラウザーのビューポート全体を320pxにする検証ではない。結果は `reflow.json` に出力する。日本語・英語の記録は [reflow/README.md](2026-11-08/reflow/README.md) を参照。
+
+ブランドの残りアクション数、アクション一覧、リソースの操作欄は、内容領域が24rem以下になると縦に並ぶ。
 
 ## 操作対象の大きさの検証
 
