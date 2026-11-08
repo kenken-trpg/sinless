@@ -62,7 +62,8 @@
 .sinless.sheet .track { display: flex; align-items: center; gap: 0.5rem; }
 .sinless.sheet .track-label { width: 4.5rem; font-weight: bold; font-size: 0.85rem; }
 .sinless.sheet .boxes { display: flex; flex-wrap: wrap; gap: 2px; }
-.sinless.sheet .box { width: 1.3rem; height: 1.3rem; border: 1px solid var(--sl-border); border-radius: 2px; display: grid; place-items: center; font-size: 0.6rem; color: var(--sl-muted); }
+/* Pointer targets are at least 24px square (WCAG 2.5.8), also at font scales below the default. */
+.sinless.sheet .box { width: max(1.5rem, 24px); height: max(1.5rem, 24px); border: 1px solid var(--sl-border); border-radius: 2px; display: grid; place-items: center; font-size: 0.6rem; color: var(--sl-muted); }
 .sinless.sheet .box.mark { border-right: 2px solid var(--sl-accent); }
 .sinless.sheet .box.filled { background: var(--sl-accent); color: white; }
 .sinless.sheet .condition-footer { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; font-size: 0.85rem; }
@@ -104,8 +105,8 @@
 .sinless.sheet .item { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr) auto auto; gap: 0.5rem; align-items: center; padding: 2px 0; border-bottom: 1px solid var(--sl-border); }
 .sinless.sheet .item-img { width: 1.75rem; height: 1.75rem; border: none; cursor: pointer; }
 .sinless.sheet .item-summary { font-size: 0.8rem; color: var(--sl-muted); }
-.sinless.sheet .item-controls { display: flex; gap: 0.4rem; }
-.sinless.sheet .item-controls a { color: var(--sl-muted); }
+.sinless.sheet .item-controls { display: flex; gap: 0.1rem; }
+.sinless.sheet .item-controls a { color: var(--sl-muted); display: inline-grid; place-items: center; min-width: max(1.5rem, 24px); min-height: max(1.5rem, 24px); }
 /* Active toggles are underlined as well as colored, so the state does not depend on color. */
 .sinless.sheet .item-controls a.active { color: var(--sl-accent); box-shadow: inset 0 -2px 0 currentColor; }
 .sinless.sheet .carry .warn { color: var(--sl-fail); }
@@ -164,7 +165,7 @@
 .sinless.sheet .brand-stat .value { font-size: 1.6rem; font-weight: bold; color: var(--sl-accent); }
 .sinless.sheet .brand-stat .base input { width: 3rem; text-align: center; }
 .sinless.sheet .brand-traits { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.2rem 0.5rem; font-size: 0.85rem; }
-.sinless.sheet .brand-traits .trait { color: var(--sl-muted); }
+.sinless.sheet .brand-traits .trait { color: var(--sl-muted); display: flex; align-items: center; gap: 0.3rem; min-height: max(1.5rem, 24px); }
 .sinless.sheet .brand-traits .trait.active { color: inherit; font-weight: bold; }
 .sinless.sheet .slots { font-size: 0.85rem; font-weight: normal; }
 .sinless.sheet .warn, .sinless.sheet .slots.warn { color: var(--sl-fail); }
@@ -326,7 +327,8 @@
 .sinless-operation-card ul { margin: 0.25rem 0; padding-left: 1.2rem; }
 
 /* Lifestyle upkeep (p.46) */
-.sinless.sheet .header-grid .lifestyle-action { flex: 0 0 auto; padding: 0 2px; opacity: 0.8; }
+.sinless.sheet .header-grid .lifestyle-action { flex: 0 0 auto; display: inline-grid; place-items: center; min-width: max(1.5rem, 24px); min-height: max(1.5rem, 24px); margin-block: -0.25rem; opacity: 0.8; }
+/* The negative margin keeps the label row at its text height; the target still spans 24px. */
 .sinless.sheet .header-grid .lifestyle-action:hover { opacity: 1; }
 .sinless-card.sector-turn .lifestyles { margin: 0.2rem 0; padding-left: 1.2rem; }
 .sinless-card.sector-turn .lifestyles .warn { color: var(--sl-fail, #b71c1c); }
@@ -338,7 +340,7 @@
 .sinless-chase .warn { color: var(--sl-fail, #b71c1c); font-weight: bold; }
 .sinless-chase .chase-status { display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
 .sinless-chase .chase-status .legs i.fa-circle { color: #f9a825; margin: 0 1px; }
-.sinless-chase .chase-status .legs a { margin-left: 4px; font-size: 0.8em; }
+.sinless-chase .chase-status .legs a { margin-left: 2px; font-size: 0.8em; display: inline-grid; place-items: center; min-width: max(1.5rem, 24px); min-height: max(1.5rem, 24px); vertical-align: middle; }
 .sinless-chase .outcome { padding: 0.3rem; border: 2px solid #f9a825; border-radius: 4px; font-weight: bold; text-align: center; }
 .sinless-chase .paths { display: flex; gap: 6px; }
 .sinless-chase .path { flex: 1; padding: 0.3rem; border: 1px solid var(--sl-border, #888); border-radius: 4px; display: flex; flex-direction: column; gap: 4px; }
