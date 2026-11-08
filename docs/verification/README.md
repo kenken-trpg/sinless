@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`batch`、`magic`、`samples`、`all`(この 11 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`batch`、`magic`、`samples`、`all`(この 12 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -57,6 +57,7 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 | `2026-11-07/sheet-actions.mjs` | `sheet-actions` | アクターシートのボタンを種類ごとに押す。判定はダイアログが開き、状態ゲージの枠や回復ボタンはアクターを変え、アイテム行は編集・切り替え・削除確認、確認ダイアログは閉じれば何も変えない |
 | `2026-11-07/keyboard.mjs` | `keyboard` | シートの操作をキーボードで。`data-action` のリンクがフォーカスでき名前を持つこと、Enter と Space で押せること、押したあとシートが描き直されてもフォーカスが同じボタンに戻ることを確かめる。キャラクター全 7 タブに加え、NPC・車両・ブランドと全アイテム種別を入力欄も含め Tab / Shift+Tab で往復する。判定・確認ダイアログ、所持アイテムの編集画面を閉じた後のフォーカスも確認（追加対象は `2026-11-07/keyboard-sheets.mjs`） |
 | `2026-11-07/keyboard-dialogs.mjs` | `keyboard-dialogs` | 判定・ダメージ・ドレイン・デジタル4種のダイアログ内でTab / Shift+Tab、入力編集、Space、Enter確定を確認。EscapeとキャンセルのEnter / Spaceではアクターとチャットが変わらないこと、補助判定のキャンセル後に元のボタンへ戻ることも確認 |
+| `2026-11-07/keyboard-apps.mjs` | `keyboard-apps` | ヘルプ・オペレーション・チェイスのTab / Shift+Tab移動、Enter / Space操作、状態変更と削除後のフォーカス、子画面・確認ダイアログからの復帰。言語選択はフォーカス中の選択変更で確認。検証後にワールド設定を復元 |
 | `2026-11-06/current/batch.mjs` | `batch` | `original/` の機能別スクリプト 9 本を順に実行。前提データは `current/fixtures.mjs` が作り、出力を `current/batch-checks.mjs` で判定する |
 
 総当たりは、シートを `SINLESS_SWEEP_WORKERS`(既定 3)本のセッションに分けて並行に回す。

@@ -28,21 +28,34 @@ export function controlSelector(el) {
     .map(a => `[${a.name}="${CSS.escape(a.value)}"]`).join("");
   const row = el.parentElement?.closest("[data-item-id], [data-effect-id]");
   const tag = el.localName;
-  if (!row) return `${tag}${own}`;
+  const name = el.hasAttribute('name') ? `[name="${CSS.escape(el.getAttribute('name'))}"]` : '';
+  if (!row) return `${tag}${own}${name}`;
   const key = row.hasAttribute("data-item-id") ? "data-item-id" : "data-effect-id";
   return `[${key}="${CSS.escape(row.getAttribute(key))}"] ${tag}${own}`;
 }
 
-function onKeydown(event) {
-  if (event.key !== "Enter" && event.key !== " ") return;
-  const el = event.target;
-  if (!(el instanceof HTMLElement) || !el.matches(CLICKABLE) || !el.closest(".application.sinless")) return;
-  event.preventDefault();
-  if (event.repeat) return;
-  const appId = el.closest(".application")?.id;
+function rememberControl(el) {
+  const root = el.closest('.application.sinless');
+  const appId = root.id;
+  const controls = [...root.querySelectorAll('[data-action],input[name],select[name],textarea[name]')]
+    .filter(e => e.tabIndex >= 0 && !e.disabled && e.getClientRects().length);
+  const index = controls.indexOf(el);
   pending = { appId, origin: el, selector: controlSelector(el), until: Date.now() + 3000,
+    fallback: [...controls.slice(index + 1), ...controls.slice(0, index).reverse()].map(controlSelector),
     existing: new Set(foundry.applications.instances.keys()) };
-  el.click();
+}
+
+function onKeydown(event) {
+  const el = event.target;
+  if (!(el instanceof HTMLElement) || !el.closest('.application.sinless')) return;
+  // A new keyboard navigation supersedes a previous action's delayed renders.
+  if (event.key === 'Tab') pending = null;
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  if (!el.matches(`${CLICKABLE},button[data-action]`)) return;
+  if (el.matches(CLICKABLE)) event.preventDefault();
+  if (event.repeat) return;
+  rememberControl(el);
+  if (el.matches(CLICKABLE)) el.click();
 }
 
 /** Focus moving to another window (a dialog the click opened) cancels the pending return. */
@@ -85,10 +98,14 @@ function onRender(app, element) {
     return;
   }
   if (!pending || pending.appId !== root.id) return;
-  const { selector, until } = pending;
-  pending = null;
-  if (Date.now() > until || root.contains(document.activeElement)) return;
-  root.querySelector(selector)?.focus();
+  const { selector, until, fallback } = pending;
+  if (Date.now() > until) { pending = null; return; }
+  if (root.contains(document.activeElement)) return;
+  // A setting change can render twice (heat, then operation state). Keep the
+  // return target until navigation supersedes it or the short deadline expires.
+  const target = [selector, ...fallback].map(s => root.querySelector(s))
+    .find(e => e && !e.disabled && e.tabIndex >= 0 && e.getClientRects().length);
+  target?.focus();
 }
 
 export function registerKeyboard() {
@@ -96,6 +113,12 @@ export function registerKeyboard() {
   Hooks.on("closeApplicationV2", onClose);
   document.addEventListener("keydown", onKeydown);
   document.addEventListener("focusin", onFocusIn);
+  document.addEventListener('change', event => {
+    const el = event.target;
+    if (el instanceof HTMLElement && el === document.activeElement
+        && el.matches('input[name],select[name],textarea[name]') && el.closest('.application.sinless')) rememberControl(el);
+  }, true);
+  document.addEventListener('pointerdown', () => { pending = null; }, true);
   // A link used as a button inside a label must not activate the label's input.
   document.addEventListener("click", event => {
     if (event.target.closest?.(CLICKABLE)?.closest('.application.sinless')) event.preventDefault();
