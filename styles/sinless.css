@@ -5,7 +5,8 @@
   --sl-success: #2e7d32;
   --sl-fail: #b71c1c;
   --sl-border: var(--color-border, rgba(128, 128, 128, 0.4));
-  --sl-muted: var(--color-text-subtle, #777);
+  /* Foundry's subtle text is under 4.5:1 on inputs; mixing in the primary text color keeps it muted but readable in both themes. */
+  --sl-muted: color-mix(in srgb, var(--color-text-subtle, #777) 70%, var(--color-text-primary, #222));
 }
 
 /* Action links are focusable buttons (module/apps/keyboard.mjs); show where focus is. */
@@ -13,6 +14,9 @@
 
 /* Text for assistive technology only, such as a die's result that is otherwise shown by color. */
 .sinless-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* Placeholders are text too (WCAG 1.4.3); Foundry's default is under 4.5:1 on dark inputs. */
+.sinless input::placeholder, .sinless textarea::placeholder { color: var(--sl-muted); opacity: 1; }
 
 /* ---------- Sheet layout ---------- */
 /* Foundry hides rich text edit buttons until hover; keep them reachable by Tab. */
@@ -126,10 +130,10 @@
 .sinless-test-dialog .combat-modifiers { margin: 0.4rem 0; padding: 0.25rem 0.5rem; }
 .sinless-test-dialog .combat-modifiers .form-group.checks { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
 .sinless-test-dialog .combat-modifiers .checks label { display: flex; flex: 0 0 auto; align-items: center; gap: 4px; white-space: nowrap; }
-.sinless-test-dialog .combat-modifiers .hint { font-size: 0.8em; opacity: 0.75; }
+.sinless-test-dialog .combat-modifiers .hint { font-size: 0.8em; color: var(--sl-muted); }
 .sinless-test-dialog .combat-modifiers .recoil { margin: 0.25rem 0 0; }
 .sinless-test-dialog .combat-modifiers .recoil.jammed { color: var(--sl-fail, #b71c1c); font-weight: bold; }
-.sinless-test-dialog .sinless-test-preview .modifiers { font-size: 0.85em; opacity: 0.85; }
+.sinless-test-dialog .sinless-test-preview .modifiers { font-size: 0.85em; color: var(--sl-muted); }
 .sinless-test-dialog .notes span + span::before, .sinless-card .notes span + span::before { content: " · "; }
 
 /* ---------- Chat card ---------- */
@@ -139,8 +143,8 @@
 .sinless-card .tn { font-size: 0.8rem; }
 .sinless-card .notes, .sinless-card .breakdown, .sinless-card .reroll-note { margin: 0.2rem 0; font-size: 0.8rem; opacity: 0.8; }
 .sinless-card .dice { list-style: none; display: flex; flex-wrap: wrap; gap: 3px; padding: 0; margin: 0.25rem 0; }
-.sinless-card .die { width: 1.5rem; height: 1.5rem; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 3px; font-weight: bold; opacity: 0.55; }
-.sinless-card .die.success { opacity: 1; background: var(--sl-success); color: white; border-color: var(--sl-success); }
+.sinless-card .die { width: 1.5rem; height: 1.5rem; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 3px; font-weight: bold; color: #444; }
+.sinless-card .die.success { background: var(--sl-success); color: white; border-color: var(--sl-success); }
 .sinless-card .die.one { border-color: var(--sl-fail); color: var(--sl-fail); }
 .sinless-card .die.rerolled { text-decoration: line-through; }
 .sinless-card .die.kismet { border-style: dashed; }
@@ -210,9 +214,9 @@
 /* ---------- Active Effects ---------- */
 .sinless.sheet .attribute .effective { color: var(--sl-accent, #c2185b); }
 .sinless.sheet input.overridden, .sinless.sheet select.overridden { border-color: var(--sl-accent, #c2185b); opacity: 0.85; }
-.sinless.sheet .effects-list .effect.disabled .item-name, .sinless.sheet .effects-list .effect.suppressed .item-name { opacity: 0.5; text-decoration: line-through; }
-.sinless.sheet .effects-list .effect-source { font-size: 0.8rem; opacity: 0.7; }
-.sinless.sheet .effects-list .empty { opacity: 0.6; padding: 0.25rem; }
+.sinless.sheet .effects-list .effect.disabled .item-name, .sinless.sheet .effects-list .effect.suppressed .item-name { color: var(--sl-muted); text-decoration: line-through; }
+.sinless.sheet .effects-list .effect-source { font-size: 0.8rem; color: var(--sl-muted); }
+.sinless.sheet .effects-list .empty { color: var(--sl-muted); padding: 0.25rem; }
 .sinless.sheet .effect-keys { margin-top: 0.5rem; font-size: 0.8rem; }
 .sinless.sheet .effect-keys ul { margin: 0.25rem 0; padding-left: 1rem; columns: 2; }
 .sinless.sheet .item-effects { padding: 0 0.5rem; }
@@ -251,7 +255,7 @@
 .sinless.sheet .deck-stats { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.85rem; margin: 0.25rem 0; }
 .sinless.sheet .deck-panel .issues { margin: 0.25rem 0; padding-left: 1.25rem; font-size: 0.8rem; color: var(--sl-fail, #b71c1c); }
 .sinless.sheet .hack-buttons { display: flex; gap: 0.5rem; margin: 0.4rem 0 0.2rem; }
-.sinless.sheet .grid .hint { opacity: 0.75; font-size: 0.85rem; }
+.sinless.sheet .grid .hint { color: var(--sl-muted); font-size: 0.85rem; }
 .sinless-card .grid-result p { margin: 0.2rem 0; font-size: 0.85rem; }
 .sinless-card .grid-result button { margin-top: 0.2rem; }
 
@@ -285,11 +289,11 @@
 .sinless.sheet .kismet-block .boon-ready { border-color: var(--sl-accent, #c2185b); font-weight: bold; }
 .sinless.sheet .kismet-block .resilience span + span::before { content: " · "; }
 .sinless.sheet .kismet-block .advance-log ol { margin: 0.25rem 0; padding-left: 1.2rem; font-size: 0.85rem; }
-.sinless.sheet .kismet-block .advance-log .time { opacity: 0.6; margin-right: 4px; }
+.sinless.sheet .kismet-block .advance-log .time { color: var(--sl-muted); margin-right: 4px; }
 .sinless.sheet .kismet-block .advance-log button { width: auto; padding: 0 8px; }
 .sinless-advance-dialog .sinless-advance .award { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
-.sinless-advance-dialog .sinless-advance .award .cost { margin-left: auto; opacity: 0.75; }
-.sinless-advance-dialog .sinless-advance .hint { font-size: 0.85em; opacity: 0.8; margin: 0.2rem 0; }
+.sinless-advance-dialog .sinless-advance .award .cost { margin-left: auto; color: var(--sl-muted); }
+.sinless-advance-dialog .sinless-advance .hint { font-size: 0.85em; color: var(--sl-muted); margin: 0.2rem 0; }
 .sinless-advance-dialog .sinless-advance .boon { padding: 0.3rem 0.4rem; margin: 0.25rem 0; border: 1px solid var(--sl-border, #888); border-radius: 4px; }
 .sinless-advance-dialog .sinless-advance .boon.major { border-style: dashed; }
 .sinless-advance-dialog .sinless-advance .boon label { display: flex; align-items: center; gap: 6px; }
@@ -301,7 +305,7 @@
 .sinless-operation .sinless-operation-body { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.25rem; }
 .sinless-operation h3 { margin: 0.25rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--sl-border, #888); }
 .sinless-operation h4 { margin: 0.4rem 0 0.1rem; font-size: 0.95rem; }
-.sinless-operation .hint { font-size: 0.85em; opacity: 0.8; margin: 0.1rem 0; }
+.sinless-operation .hint { font-size: 0.85em; color: var(--sl-muted); margin: 0.1rem 0; }
 .sinless-operation .stars { display: flex; align-items: center; gap: 6px; font-size: 1.4rem; }
 .sinless-operation .stars .star { color: #888; }
 .sinless-operation .stars .star.on { color: #f9a825; }
@@ -330,7 +334,7 @@
 /* Car chase board (pp.151-152, 230-232) */
 .sinless-chase .sinless-chase-body { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.25rem; }
 .sinless-chase h3 { margin: 0.25rem 0; font-size: 1.05rem; border-bottom: 1px solid var(--sl-border, #888); }
-.sinless-chase .hint { font-size: 0.85em; opacity: 0.8; margin: 0.1rem 0; }
+.sinless-chase .hint { font-size: 0.85em; color: var(--sl-muted); margin: 0.1rem 0; }
 .sinless-chase .warn { color: var(--sl-fail, #b71c1c); font-weight: bold; }
 .sinless-chase .chase-status { display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
 .sinless-chase .chase-status .legs i.fa-circle { color: #f9a825; margin: 0 1px; }
@@ -341,7 +345,7 @@
 .sinless-chase .path.primary { border: 2px solid #f9a825; }
 .sinless-chase .path header { display: flex; justify-content: space-between; align-items: center; }
 .sinless-chase .path .badge { font-size: 0.75em; padding: 0 4px; border-radius: 3px; background: #f9a825; color: #000; }
-.sinless-chase .path .count { margin: 0; font-size: 0.85em; opacity: 0.8; }
+.sinless-chase .path .count { margin: 0; font-size: 0.85em; color: var(--sl-muted); }
 .sinless-chase .path .top-card { min-height: 3.2rem; padding: 0.25rem; border: 1px dashed var(--sl-border, #888); border-radius: 4px; font-size: 0.85em; display: flex; align-items: center; justify-content: center; text-align: center; }
 .sinless-chase .path .top-card.revealed { border-style: solid; }
 .sinless-chase .path .top-card.leg { border-color: #43a047; }
@@ -353,7 +357,7 @@
 .sinless-chase .chase-enemies li select { flex: 0 0 8rem; width: 8rem; }
 .sinless-chase .chase-enemies li label { display: flex; align-items: center; gap: 2px; }
 .sinless-chase .chase-enemies li label input { flex: 0 0 auto; width: 1rem; height: 1rem; margin: 0; }
-.sinless-chase .chase-enemies li.out, .sinless-chase .chase-enemies li.wrecked { opacity: 0.55; }
+.sinless-chase .chase-enemies li.out, .sinless-chase .chase-enemies li.wrecked { color: var(--sl-muted); text-decoration: line-through; }
 .sinless-chase [data-drop] { border-radius: 4px; }
 .sinless-chase .chase-footer button { width: 100%; }
 .sinless-chase-setup textarea { width: 100%; font-family: inherit; }
@@ -376,7 +380,7 @@
 .sinless.sheet .ley-line label { display: flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
 .sinless.sheet .ley-line input { width: 3.5rem; }
 .sinless.sheet .spirit-actor .form-fields { display: flex; align-items: center; gap: 0.5rem; }
-.sinless.sheet .spirit-actor .hint { opacity: 0.7; font-size: 0.85rem; }
+.sinless.sheet .spirit-actor .hint { color: var(--sl-muted); font-size: 0.85rem; }
 
 /* Help window */
 .sinless-help .window-content { padding: 0; }

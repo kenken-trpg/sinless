@@ -70,3 +70,13 @@ test("states shown by color are also given as text or marks", () => {
   const forced = css.slice(css.indexOf("@media (forced-colors: active)"));
   for (const sel of [".box.filled", ".die.success", ".rbox", "a.active"]) assert.ok(forced.includes(sel), `forced colors cover ${sel}`);
 });
+
+test("muted text keeps its contrast instead of being faded", () => {
+  const css = readFileSync(join(root, "styles/sinless.css"), "utf8");
+  // Muted text mixes Foundry's subtle color with the primary text color (measured >= 4.5:1 in both themes).
+  assert.match(css, /--sl-muted: color-mix\(in srgb, var\(--color-text-subtle[^)]*\) 70%, var\(--color-text-primary/);
+  assert.match(css, /\.sinless input::placeholder, \.sinless textarea::placeholder \{ color: var\(--sl-muted\); opacity: 1; \}/);
+  // Hints, notes and dice were faded with opacity, which fell below 4.5:1; they use the muted color now.
+  const faded = css.split("\n").filter(l => /\b(hint|empty|die|count|cost|time|effect-source|modifiers)\b[^{]*\{[^}]*opacity: 0\.[0-7]/.test(l));
+  assert.deepEqual(faded, []);
+});
