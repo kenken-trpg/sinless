@@ -32,6 +32,12 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 - 全部で約 5 分(2026-11-07、macOS)。以前は約 45 分かかっていた。headless Chromium はゲームキャンバスの WebGL をソフトウェアで描き、そのあいだページが塞がるため、サーバーの応答を受け取るたびに約 300 ms 待っていた。いまは macOS では GPU(Metal)で描き、総当たりではキャンバスを切っている。
 - `npm run check` には含まれない。
 
+## 入力欄のアクセシビリティ検証
+
+`keyboard`・`keyboard-apps`・`keyboard-dialogs` は `input-accessibility.mjs` で Chromium のアクセシビリティツリーを読み、表示中の入力欄に名前があること、明示した名前が反映されること、チェック・選択・無効状態が正しく公開されることを確認する。リッチテキスト欄はキーボードで編集を開始し、名前のある複数行テキスト欄として公開され、保存後に編集ボタンへ戻ることも確認する。
+
+`SINLESS_VERIFY_LANGUAGE=en` または `ja` を指定すると、検証用ブラウザーの言語を固定できる。ワールドや普段使うブラウザーの設定は変えない。これはブラウザーが支援技術へ渡す情報の検証であり、VoiceOver・NVDA の実際の音声読み上げの確認は含まない。
+
 ## 共通ヘルパー [lib.mjs](lib.mjs)
 
 - `joinGM({ user, viewport, browser, noCanvas })`: 入室して `game.ready` を待つ。`{ browser, page, logs }` を返す。

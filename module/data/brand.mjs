@@ -13,7 +13,7 @@ const statsField = initial => new SchemaField(
 
 /** The group's brand (pp.47, 221-224). */
 export class BrandData extends foundry.abstract.TypeDataModel {
-  static LOCALIZATION_PREFIXES = ["SINLESS.Brand"];
+  static LOCALIZATION_PREFIXES = ["SINLESS.Actor", "SINLESS.Brand"];
 
   static defineSchema() {
     return {

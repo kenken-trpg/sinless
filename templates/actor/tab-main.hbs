@@ -5,14 +5,14 @@
     {{#each attributes}}
     <div class="attribute">
       <span class="label">{{localize label}}{{#if modified}} <span class="effective" data-tooltip="{{localize "SINLESS.Effect.effective"}}">→ {{value}}</span>{{/if}}</span>
-      <input type="number" name="system.attributes.{{key}}.value" value="{{base}}" min="0" data-source-value>
+      <input type="number" aria-label="{{localize "SINLESS.Accessibility.base" name=(localize label)}}" name="system.attributes.{{key}}.value" value="{{base}}" min="0" data-source-value>
       <span class="slash">/</span>
-      <input type="number" class="max" name="system.attributes.{{key}}.max" value="{{max}}" min="0">
+      <input type="number" class="max" aria-label="{{localize "SINLESS.Accessibility.maximum" name=(localize label)}}" name="system.attributes.{{key}}.max" value="{{max}}" min="0">
     </div>
     {{/each}}
     <div class="attribute charisma-pool">
       <span class="label" data-tooltip="{{localize "SINLESS.Character.FIELDS.charismaPool.hint"}}">{{localize "SINLESS.Character.FIELDS.charismaPool.label"}}</span>
-      <select name="system.charismaPool">{{selectOptions charismaPoolChoices selected=system.charismaPool localize=true}}</select>
+      <select aria-label="{{localize "SINLESS.Character.FIELDS.charismaPool.label"}}" name="system.charismaPool">{{selectOptions charismaPoolChoices selected=system.charismaPool localize=true}}</select>
     </div>
   </div>
   {{/if}}
@@ -79,7 +79,7 @@
           <i class="fa-solid fa-shield-halved"></i> {{localize label}}
         </button>
         {{#if ../hasFixedDefenses}}
-        <input type="number" class="fixed-defense" name="system.defenses.{{key}}" value="{{fixed}}" min="0"
+        <input type="number" class="fixed-defense" aria-label="{{localize label}} {{localize "SINLESS.Npc.FIELDS.defenses.label"}}" name="system.defenses.{{key}}" value="{{fixed}}" min="0"
           placeholder="{{poolLabel}}" data-tooltip="{{localize "SINLESS.Npc.FIELDS.defenses.hint"}}">
         {{/if}}
       </div>
@@ -95,16 +95,16 @@
         <a class="pool-name" data-action="rollPool" data-pool="{{key}}" data-tooltip="{{localize "SINLESS.RollPool"}}">{{localize label}}</a>
         <span class="pool-value"><strong>{{value}}</strong> / {{max}}</span>
         {{#if ../system.poolMax}}
-        <input type="number" class="pool-max" name="system.poolMax.{{key}}" value="{{lookup ../system.poolMax key}}" min="0" data-tooltip="{{localize "SINLESS.Npc.FIELDS.poolMax.label"}}">
+        <input type="number" class="pool-max" aria-label="{{localize "SINLESS.Accessibility.maximum" name=(localize label)}}" name="system.poolMax.{{key}}" value="{{lookup ../system.poolMax key}}" min="0" data-tooltip="{{localize "SINLESS.Npc.FIELDS.poolMax.label"}}">
         {{/if}}
-        <input type="number" class="pool-spent" name="system.pools.{{key}}.spent" value="{{spent}}" min="0" data-tooltip="{{localize "SINLESS.PoolSpent"}}">
+        <input type="number" class="pool-spent" aria-label="{{localize label}} {{localize "SINLESS.PoolSpent"}}" name="system.pools.{{key}}.spent" value="{{spent}}" min="0" data-tooltip="{{localize "SINLESS.PoolSpent"}}">
       </header>
       <ol class="skills">
         {{#each skills}}
         <li class="skill{{#if trainedOnly}} trained-only{{/if}}{{#unless rank}} unranked{{/unless}}">
           <a class="skill-name" data-action="rollSkill" data-skill="{{key}}"{{#if group}} data-tooltip="{{group}}"{{/if}}>{{label}}{{#if trainedOnly}}*{{/if}}</a>
-          <input type="text" class="spec" name="system.skills.{{key}}.spec" value="{{spec}}" placeholder="{{localize "SINLESS.Specialization"}}">
-          <input type="number" class="rank" name="system.skills.{{key}}.rank" value="{{rank}}" min="0">
+          <input type="text" class="spec" aria-label="{{label}} {{localize "SINLESS.Specialization"}}" name="system.skills.{{key}}.spec" value="{{spec}}" placeholder="{{localize "SINLESS.Specialization"}}">
+          <input type="number" class="rank" aria-label="{{label}} {{localize "SINLESS.Test.rank"}}" name="system.skills.{{key}}.rank" value="{{rank}}" min="0">
         </li>
         {{/each}}
       </ol>

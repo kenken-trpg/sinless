@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import {verifyInputAccessibility} from '../input-accessibility.mjs';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {joinGM} from '../lib.mjs';
 const {browser,page,logs}=await joinGM({noCanvas:true});
+if (process.env.SINLESS_VERIFY_LANGUAGE) assert.equal(await page.evaluate(() => game.i18n.lang), process.env.SINLESS_VERIFY_LANGUAGE);
+console.log('Accessibility language:', await page.evaluate(() => game.i18n.lang));
 const results={};let fixture;
 const pass=(name,data)=>{results[name]=data;console.log('PASS',name,JSON.stringify(data));};
 const settle=()=>page.waitForTimeout(600);
@@ -19,6 +22,7 @@ const tabOrder=async id=>{
   await page.keyboard.press(key);assert.equal(await page.evaluate(()=>document.activeElement.dataset.verifyFocus),String(i),`${id} ${key} ${i}`);
  }
  await page.evaluate(()=>document.querySelectorAll('[data-verify-focus]').forEach(e=>e.removeAttribute('data-verify-focus')));
+ await verifyInputAccessibility(page,`#${id}`);
  pass(`tab order ${id}`,{controls:count});
 };
 try{

@@ -8,7 +8,7 @@
       <a class="label" data-action="rollBrandStat" data-stat="{{key}}" data-tooltip="{{localize "SINLESS.Brand.rollStat"}}">{{localize label}}</a>
       <span class="value">{{value}}</span>
       <label class="base" data-tooltip="{{localize "SINLESS.Brand.FIELDS.base.hint"}}">
-        <input type="number" name="system.base.{{key}}" value="{{base}}" min="0">
+        <input type="number" aria-label="{{localize "SINLESS.Accessibility.base" name=(localize label)}}" name="system.base.{{key}}" value="{{base}}" min="0">
       </label>
     </div>
     {{/each}}

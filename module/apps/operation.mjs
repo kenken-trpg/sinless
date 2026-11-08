@@ -232,7 +232,7 @@ export class OperationApp extends HandlebarsApplicationMixin(ApplicationV2) {
       heatEffect: `SINLESS.Operation.heatEffect.${heat}`,
       stars: [1, 2, 3, 4].map(n => ({ n, on: n <= heat })),
       htr: op.htr,
-      responses: op.responses.map((r, i) => ({ ...r, index: i, active: active.has(r) }))
+      responses: op.responses.map((r, i) => ({ ...r, index: i, number: i + 1, active: active.has(r) }))
         .sort((a, b) => (a.threshold ?? 0) - (b.threshold ?? 0))
     };
   }

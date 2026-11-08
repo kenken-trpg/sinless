@@ -31,11 +31,12 @@ export async function launchBrowser() {
  * Pass `browser` to add another session (its own context) to a browser already launched.
  * `noCanvas` turns off the game canvas for this session, for scripts that need no tokens.
  */
-export async function joinGM({ user = "Gamemaster", viewport = { width: 1600, height: 1100 }, browser = null, noCanvas = false } = {}) {
+export async function joinGM({ user = "Gamemaster", viewport = { width: 1600, height: 1100 }, browser = null, noCanvas = false, language = process.env.SINLESS_VERIFY_LANGUAGE } = {}) {
   const owned = !browser;
   browser ??= await launchBrowser();
   // Foundry keys the session on a cookie, so each session needs its own context.
   const context = await browser.newContext({ viewport });
+  if (language) await context.addInitScript(lang => localStorage.setItem('core.language', JSON.stringify(lang)), language);
   // A client setting, kept in this context's own localStorage.
   if (noCanvas) await context.addInitScript(() => localStorage.setItem("core.noCanvas", "true"));
   const page = await context.newPage();

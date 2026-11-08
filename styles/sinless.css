@@ -12,6 +12,8 @@
 .sinless a[role="button"]:focus-visible { outline: 2px solid var(--sl-accent); outline-offset: 1px; border-radius: 2px; }
 
 /* ---------- Sheet layout ---------- */
+/* Foundry hides rich text edit buttons until hover; keep them reachable by Tab. */
+.sinless prose-mirror.inactive > button.toggle { display: block; visibility: visible; opacity: 1; }
 .sinless.sheet .window-content { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.5rem; }
 /* PARTS.scrollable preserves scroll positions; CSS must create the scroll area. */
 .sinless.sheet.actor .window-content { min-height: 0; overflow-y: auto; }
