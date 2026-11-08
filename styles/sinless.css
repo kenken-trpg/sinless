@@ -139,9 +139,10 @@
 
 /* ---------- Chat card ---------- */
 .sinless-card { --sl-accent: #c2185b; --sl-success: #2e7d32; --sl-fail: #b71c1c; }
-.sinless-card .card-header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--sl-accent); }
+.sinless-card .card-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 0.5rem; border-bottom: 1px solid var(--sl-accent); }
 .sinless-card .card-header h3 { margin: 0; border: none; }
-.sinless-card .tn { font-size: 0.8rem; }
+/* The target number moves under the title instead of squeezing when the card is narrow (large text). */
+.sinless-card .tn { font-size: 0.8rem; flex: none; white-space: nowrap; }
 .sinless-card .notes, .sinless-card .breakdown, .sinless-card .reroll-note { margin: 0.2rem 0; font-size: 0.8rem; opacity: 0.8; }
 .sinless-card .dice { list-style: none; display: flex; flex-wrap: wrap; gap: 3px; padding: 0; margin: 0.25rem 0; }
 .sinless-card .die { width: 1.5rem; height: 1.5rem; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 3px; font-weight: bold; color: #444; }
@@ -404,6 +405,9 @@
    area in rem: below 40rem (640px at the default text size) the whole sheet scrolls, header included, and rows that
    were laid out side by side wrap instead of squeezing their captions and fields. */
 .sinless .window-content { container: sinless-window / inline-size; overflow-y: auto; }
+/* Foundry fixes buttons at 2em; a label that wraps (large text, wider spacing) grows the button instead of spilling out.
+   Single-line buttons keep their 2em minimum. */
+.sinless .window-content button, .sinless-card button { height: auto; }
 .sinless code { overflow-wrap: anywhere; white-space: normal; }
 @container sinless-window (max-width: 40rem) {
   .sinless.sheet.actor .window-content > .tab { flex: none; min-height: auto; overflow: visible; }

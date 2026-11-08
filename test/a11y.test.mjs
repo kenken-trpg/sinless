@@ -112,3 +112,11 @@ test("small controls are at least 24px square", () => {
   for (const sel of ["\\.sinless\\.sheet \\.item-controls a", "\\.sinless\\.sheet \\.header-grid \\.lifestyle-action", "\\.sinless-chase \\.chase-status \\.legs a"])
     assert.match(css, new RegExp(`${sel} \\{[^}]*min-width: ${size};`), sel);
 });
+
+test("buttons grow with wrapped labels and card headers wrap", () => {
+  const css = readFileSync(join(root, "styles/sinless.css"), "utf8");
+  // Foundry fixes buttons at 2em; wrapped labels (large text, wider spacing) would spill over the next control.
+  assert.match(css, /\.sinless \.window-content button, \.sinless-card button \{ height: auto; \}/);
+  assert.match(css, /\.sinless-card \.card-header \{[^}]*flex-wrap: wrap;/);
+  assert.match(css, /\.sinless-card \.tn \{[^}]*white-space: nowrap;/);
+});

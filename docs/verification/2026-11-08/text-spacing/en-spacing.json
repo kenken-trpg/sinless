@@ -1,0 +1,14 @@
+{
+  "problems": [],
+  "nothing lost with WCAG text spacing": {
+    "windows": 24
+  },
+  "no page errors": {
+    "errors": 0
+  },
+  "temporary data removed and font scale restored": {
+    "actors": 0,
+    "messages": true,
+    "ui": true
+  }
+}
