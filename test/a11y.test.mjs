@@ -53,3 +53,20 @@ test("toggles and track boxes state whether they are on", () => {
   const missing = stateful.filter(l => !/\baria-pressed="/.test(l.attrs)).map(l => l.where);
   assert.deepEqual(missing, []);
 });
+
+test("states shown by color are also given as text or marks", () => {
+  const read = f => readFileSync(join(root, f), "utf8");
+  // Each successful or rerolled die on a test card carries screen reader text.
+  const dice = [...read("templates/chat/test-card.hbs").matchAll(/<li class="die[^>]*>([\s\S]*?)<\/li>/g)].map(m => m[1]);
+  assert.equal(dice.length, 3);
+  assert.ok(dice.every(d => d.includes("SINLESS.Accessibility.dieSuccess")), "success text on every die list");
+  assert.ok(dice[0].includes("SINLESS.Accessibility.dieRerolled"), "rerolled text on the initial dice");
+  // A resource track is one named image rather than a row of empty boxes.
+  assert.match(read("templates/actor/brand-resources.hbs"), /class="resource-track" role="img" aria-label="\{\{localize "SINLESS\.Accessibility\.resourceTrack"/);
+  // An active alert response says so, not only by its warning icon.
+  assert.match(read("templates/apps/operation.hbs"), /fa-triangle-exclamation"[^>]*aria-hidden="true"><\/i><span class="sinless-sr-only">\{\{localize "SINLESS\.Operation\.active"\}\}/);
+  const css = read("styles/sinless.css");
+  assert.match(css, /\.sinless-sr-only \{[^}]*clip-path/);
+  const forced = css.slice(css.indexOf("@media (forced-colors: active)"));
+  for (const sel of [".box.filled", ".die.success", ".rbox", "a.active"]) assert.ok(forced.includes(sel), `forced colors cover ${sel}`);
+});

@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`batch`、`magic`、`samples`、`all`(この 12 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`batch`、`magic`、`samples`、`all`(この 13 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -37,6 +37,10 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 `keyboard`・`keyboard-apps`・`keyboard-dialogs` は `input-accessibility.mjs` で Chromium のアクセシビリティツリーを読み、表示中の入力欄に名前があること、明示した名前が反映されること、チェック・選択・無効状態が正しく公開されることを確認する。リッチテキスト欄はキーボードで編集を開始し、名前のある複数行テキスト欄として公開され、保存後に編集ボタンへ戻ることも確認する。
 
 `SINLESS_VERIFY_LANGUAGE=en` または `ja` を指定すると、検証用ブラウザーの言語を固定できる。ワールドや普段使うブラウザーの設定は変えない。これはブラウザーが支援技術へ渡す情報の検証であり、VoiceOver・NVDA の実際の音声読み上げの確認は含まない。
+
+## 色に頼らない状態表示の検証
+
+`color-independence` は、色で示している状態が文字や形でも伝わることを確かめる。判定カードのダイスは、成功・振り直しの別が Chromium のアクセシビリティツリーに文字として出ること、ブランドのリソース欄は名前の付いた 1 枚の画像として出て、ダメージは×、影響力は斜線で描かれることを確認する。続いて `forced-colors: active` を模擬し、状態モニターの埋まったマス、成功ダイス、リソースの印、オンの切り替えボタンの下線が消えないことを計算済みスタイルで確認する。Windows のハイコントラスト表示そのものは確認していない。オペレーションの発動中のアラート対応の読み上げ用テキストは、単体テストで確認している。
 
 ## 共通ヘルパー [lib.mjs](lib.mjs)
 

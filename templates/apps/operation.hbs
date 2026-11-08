@@ -32,7 +32,7 @@
       <li class="{{#if active}}active{{/if}}">
         <input type="number" aria-label="{{localize "SINLESS.Accessibility.responseThreshold" n=number}}" name="responses.{{index}}.threshold" value="{{threshold}}" min="1" class="threshold">
         <input type="text" aria-label="{{localize "SINLESS.Accessibility.responseLabel" n=number}}" name="responses.{{index}}.label" value="{{label}}" placeholder="{{localize "SINLESS.Operation.responsePlaceholder"}}">
-        {{#if active}}<i class="fa-solid fa-triangle-exclamation" data-tooltip="{{localize "SINLESS.Operation.active"}}"></i>{{/if}}
+        {{#if active}}<i class="fa-solid fa-triangle-exclamation" data-tooltip="{{localize "SINLESS.Operation.active"}}" aria-hidden="true"></i><span class="sinless-sr-only">{{localize "SINLESS.Operation.active"}}</span>{{/if}}
         <a data-action="removeResponse" data-index="{{index}}" data-tooltip="{{localize "SINLESS.Operation.removeResponse"}}" aria-label="{{localize "SINLESS.Operation.removeResponse"}}"><i class="fa-solid fa-trash"></i></a>
       </li>
       {{/each}}

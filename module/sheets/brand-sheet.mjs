@@ -75,9 +75,11 @@ export class BrandSheet extends SinlessActorSheet {
           demolished: i < r.demolished
         };
       });
+      const count = key => boxes.filter(b => b[key]).length;
       return {
         item,
         boxes,
+        track: { total: boxes.length, damaged: count("damaged"), influenced: count("influenced"), demolished: count("demolished") },
         tags: [...r.tags].map(t => loc(SINLESS.RESOURCE_TAGS[t])).join(", ")
       };
     });

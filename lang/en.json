@@ -1662,7 +1662,10 @@
       "responseLabel": "Alert response {n}: description",
       "enemyRange": "{name}: range",
       "enemyFlying": "{name}: flying",
-      "edit": "Edit {name}"
+      "edit": "Edit {name}",
+      "dieSuccess": "success",
+      "dieRerolled": "rerolled",
+      "resourceTrack": "{total} boxes: {damaged} damaged, {influenced} influenced, {demolished} demolished"
     }
   }
 }
