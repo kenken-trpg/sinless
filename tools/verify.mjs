@@ -25,11 +25,12 @@ const SCRIPTS = {
   "keyboard-dialogs": { script: "docs/verification/2026-11-07/keyboard-dialogs.mjs", args: [], about: "keyboard navigation, submission and cancellation inside test and damage dialogs" },
   keyboard: { script: "docs/verification/2026-11-07/keyboard.mjs", args: [], about: "sheet controls by keyboard: focus, Enter / Space, focus kept after re-render" },
   "color-independence": { script: "docs/verification/2026-11-08/color-independence.mjs", args: [], about: "dice, resource tracks and toggles exposed as text and kept visible in high contrast mode" },
-  contrast: { script: "docs/verification/2026-11-08/contrast.mjs", args: [], about: "text contrast on sheets, windows, a test dialog and a chat card, dark and light themes" }
+  contrast: { script: "docs/verification/2026-11-08/contrast.mjs", args: [], about: "text contrast on sheets, windows, a test dialog and a chat card, dark and light themes" },
+  "text-resize": { script: "docs/verification/2026-11-08/text-resize.mjs", args: [], about: "sheets, windows and a test dialog at 200% text: nothing cut off, clipped or squeezed" }
 };
 /** Scripts that need an active scene: they place tokens or use the scene controls. */
 const CANVAS = new Set(["magic", "player", "help-window"]);
-const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "contrast", "batch", "sweep-ja", "sweep-en"];
+const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "contrast", "text-resize", "batch", "sweep-ja", "sweep-en"];
 
 function parse(argv) {
   const opts = { names: [], out: null, world: "sinless-test", relaunch: false, launch: true };

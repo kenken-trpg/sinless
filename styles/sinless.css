@@ -397,6 +397,38 @@
 .sinless-help .help-content th:first-child { width: 30%; }
 .sinless-help .help-content th:nth-child(2):not(:last-child) { width: 22%; }
 
+/* ---------- Large text and narrow windows (WCAG 1.4.4, 1.4.10) ---------- */
+/* Foundry's font scale doubles rem at its maximum, but windows keep their pixel width. Sheets measure their content
+   area in rem: below 40rem (640px at the default text size) the whole sheet scrolls, header included, and rows that
+   were laid out side by side wrap instead of squeezing their captions and fields. */
+.sinless .window-content { container: sinless-window / inline-size; overflow-y: auto; }
+.sinless code { overflow-wrap: anywhere; white-space: normal; }
+@container sinless-window (max-width: 40rem) {
+  .sinless.sheet.actor .window-content > .tab { flex: none; min-height: auto; overflow: visible; }
+  .sinless.sheet .sheet-header { flex-wrap: wrap; }
+  .sinless.sheet .header-fields { flex: 1 1 12rem; }
+  .sinless.sheet .header-grid { grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); }
+  .sinless.sheet .header-stats { flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; }
+  .sinless.sheet nav.tabs { flex-wrap: wrap; justify-content: flex-start; gap: 0 1rem; }
+  .sinless.sheet nav.tabs > a { flex: 0 0 auto; white-space: nowrap; }
+  .sinless.sheet .attributes { grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
+  .sinless.sheet .status-row { flex-wrap: wrap; }
+  .sinless.sheet .defenses { width: auto; flex: 1 1 100%; }
+  .sinless.sheet .pools, .sinless.sheet .social .etiquettes ol, .sinless.sheet .kismet-block { grid-template-columns: minmax(0, 1fr); }
+  .sinless.sheet .grid-status { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+  .sinless.sheet .ley-line, .sinless.sheet .sector-turn-header { flex-wrap: wrap; }
+  /* Item rows: the summary moves under the name instead of narrowing it. */
+  .sinless.sheet .item:has(> .item-summary) { grid-template-columns: 1.75rem minmax(0, 1fr) auto; }
+  .sinless.sheet .item > .item-summary { grid-column: 2 / -1; grid-row: 2; }
+  .sinless.sheet .item:has(> .item-summary) > .item-controls { grid-column: 3; grid-row: 1; }
+}
+/* Dialogs and trackers are 420-560px wide: 24rem is reached only with enlarged text. Captions go above their fields. */
+@container sinless-window (max-width: 24rem) {
+  .sinless-test-dialog .sinless-test .form-group { grid-template-columns: minmax(0, 1fr); }
+  .sinless-operation .stars, .sinless-operation .alert-row, .sinless-operation .responses li { flex-wrap: wrap; }
+  .sinless-operation .stars button { margin-left: 0; }
+}
+
 /* High contrast modes replace colors; keep filled boxes, successful dice and resource marks visible with system colors. */
 @media (forced-colors: active) {
   .sinless.sheet .box.filled, .sinless-card .die.success, .sinless.sheet .rbox { forced-color-adjust: none; }
