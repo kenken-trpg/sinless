@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`text-spacing`、`reflow`、`target-size`、`batch`、`magic`、`samples`、`all`(この 18 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`text-spacing`、`reflow`、`focus-visibility`、`target-size`、`batch`、`magic`、`samples`、`all`(この 19 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -74,6 +74,12 @@ Foundry はボタンの高さを 2em に固定しているため、文字が折�
 `npm run verify -- reflow` は標準の文字サイズ（font scale 5）でアクターと武器のシートを幅320pxにし、`text-resize` と同じ内容の欠落を検査する。ヘルプ・オペレーション・チェイス・判定ダイアログとチャットカードも既定幅で確認する。ブラウザーのビューポート全体を320pxにする検証ではない。結果は `reflow.json` に出力する。日本語・英語の記録は [reflow/README.md](2026-11-08/reflow/README.md) を参照。
 
 ブランドの残りアクション数、アクション一覧、リソースの操作欄は、内容領域が24rem以下になると縦に並ぶ。
+
+## フォーカス枠の検証
+
+`npm run verify -- focus-visibility` はキャラクターシートの名前・出自・ライフスタイル操作・作成ボタン・技能ランクの5例を、明暗のアプリケーションテーマで測定する。Tab操作の後に各対象へフォーカスを移し、`:focus-visible` と2px以上の実線枠を確認する。画面キャプチャから枠の上辺中央とその外側の画素を読み、コントラストが3:1以上であることを確認する。測定時は遷移アニメーションを止める。対象はサンプルであり、全画面の枠や遮蔽、WCAG全体への適合を確認する検証ではない。作成したアクターを削除し、UI設定を復元する。
+
+Sinlessの入力欄・選択欄・テキスト欄・編集欄・操作リンクと、内容領域内のボタンは、テーマの主文字色で枠を描く。ウィンドウヘッダーのボタンはFoundry既存の枠を使う。
 
 ## 操作対象の大きさの検証
 
