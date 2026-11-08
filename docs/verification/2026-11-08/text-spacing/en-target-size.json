@@ -1,0 +1,15 @@
+{
+  "problems": [],
+  "targets are at least 24px or spaced": {
+    "windows": 49,
+    "targets": 1809
+  },
+  "no page errors": {
+    "errors": 0
+  },
+  "temporary data removed and settings restored": {
+    "actors": 0,
+    "messages": true,
+    "settings": true
+  }
+}

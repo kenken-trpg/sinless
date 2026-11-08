@@ -23,7 +23,7 @@ npm run verify -- batch player         # 複数指定は順に実行
 npm run verify -- all --relaunch       # ワールドを再起動してから全部
 ```
 
-- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`target-size`、`batch`、`magic`、`samples`、`all`(この 16 本を順に実行)。
+- 名前: `sweep-ja`、`sweep-en`、`player`、`permissions`、`help-window`、`sheet-actions`、`keyboard`、`keyboard-dialogs`、`keyboard-apps`、`color-independence`、`contrast`、`text-resize`、`text-spacing`、`target-size`、`batch`、`magic`、`samples`、`all`(この 17 本を順に実行)。
 - 起動中のワールドがなければ `--world`(既定 `sinless-test`)を起動する。`--no-launch` で起動しない。
 - 開始前に、ブラウザーが読み込んでいる system のバージョンと `system.json` を比べ、違えば警告する。
   `/api/status` の値は古いことがあるため使わない。`--relaunch` でワールドを再起動すると、Foundry がマニフェストを読み直す。
@@ -55,10 +55,19 @@ npm run verify -- all --relaunch       # ワールドを再起動してから全
 - 文字が、自分や祖先の `overflow: hidden` で切れる
 - 入力欄や選択欄が狭く、値が入りきらない
 - 文字が 3 文字分より狭い列に押し込まれ、1 文字ずつ折り返す
+- 文字が箱より高くなり、下にはみ出す(折り返したボタンの文字など)。フォントの高さが行の高さを超える分は除く
 
 `SINLESS_TEXT_SCALE` で別の文字サイズ(1〜10)を、`SINLESS_TEXT_WIDTH` でシートの幅(px)を指定できる。例えば `SINLESS_TEXT_SCALE=5 SINLESS_TEXT_WIDTH=400` は、標準の文字サイズで狭くしたシート(1.4.10 のリフロー)を確かめる。`SINLESS_TEXT_SHOTS=1` で、問題のあった画面のスクリーンショットを出力先に保存する。検証後は文字サイズの設定を元に戻す。
 
 レイアウトは CSS のコンテナークエリーで切り替えている。各ウィンドウの内容部分の幅を `rem` で測るので、文字の拡大とウィンドウの縮小のどちらでも同じ規則が働く。シートは 40rem 未満(標準の文字サイズで 640px)になると、ヘッダーを含めてシート全体がスクロールし、横に並んでいた行が折り返す。ダイアログとトラッカーは 24rem 未満で、見出しを入力欄の上に置く。
+
+Foundry はボタンの高さを 2em に固定しているため、文字が折り返すとボタンの外にはみ出す。Sinless のウィンドウとチャットカードのボタンは高さを `auto` にして、折り返した分だけ高くなるようにしている(最小の高さは 2em のまま)。チャットカードの目標値は、幅が足りないと題の下に回る。
+
+## 文字の間隔の検証
+
+`text-spacing` は、利用者のスタイルで文字の間隔を広げても内容が失われないこと(WCAG 2.2 の 1.4.12)を確かめる。`text-resize` と同じスクリプトに引数 `spacing` を渡し、文字の大きさは変えずに、行の高さ 1.5、段落の後ろの間隔 2em、文字の間隔 0.12em、単語の間隔 0.16em のスタイルを全体に加える。同じ画面を開き、`text-resize` と同じ項目を確認する。スタイルが効いていることは、本文の行の高さ・文字の間隔・単語の間隔を読んで確かめる。選択欄や狭い列の文字幅の測定にも文字と単語の間隔を含める。検証後は、自分で作ったチャットメッセージだけを削除する。
+
+日本語・英語での実行結果は [2026-11-08/text-spacing/README.md](2026-11-08/text-spacing/README.md) に記録している。
 
 ## 操作対象の大きさの検証
 
