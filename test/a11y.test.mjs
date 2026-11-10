@@ -81,6 +81,19 @@ test("muted text keeps its contrast instead of being faded", () => {
   assert.deepEqual(faded, []);
 });
 
+test("controls and state icons keep a 3:1 edge against their surroundings", () => {
+  const css = readFileSync(join(root, "styles/sinless.css"), "utf8");
+  // The edge color is the muted text color, which is above 4.5:1 in both themes (WCAG 1.4.11 needs 3:1).
+  assert.match(css, /--sl-control-border: var\(--sl-muted\);/);
+  // Foundry's dark fields have a transparent border; Sinless fields, checkboxes and condition boxes draw one.
+  assert.match(css, /\.sinless :is\(input:not\([^)]*\), select, textarea\) \{ border-color: var\(--sl-control-border\); \}/);
+  assert.match(css, /\.sinless input\[type="checkbox"\]::before \{[^}]*box-shadow: inset 0 0 0 1px var\(--sl-control-border\);/);
+  for (const sel of [".box", ".rbox"]) assert.match(css, new RegExp(`\\.sinless\\.sheet \\${sel} \\{[^}]*border: 1px solid var\\(--sl-control-border\\)`), sel);
+  // Heat stars: no fixed gray or bright amber, which fell under 3:1 on parchment.
+  assert.match(css, /\.stars \.star \{ color: var\(--sl-muted\); \}/);
+  assert.match(css, /\.stars \.star\.on \{ color: color-mix\(in srgb, #f9a825 50%, var\(--color-text-primary/);
+});
+
 test("windows reflow for enlarged text instead of squeezing it", () => {
   const css = readFileSync(join(root, "styles/sinless.css"), "utf8");
   // Every Sinless window measures its content area and scrolls vertically.

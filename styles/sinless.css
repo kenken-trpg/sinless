@@ -7,7 +7,14 @@
   --sl-border: var(--color-border, rgba(128, 128, 128, 0.4));
   /* Foundry's subtle text is under 4.5:1 on inputs; mixing in the primary text color keeps it muted but readable in both themes. */
   --sl-muted: color-mix(in srgb, var(--color-text-subtle, #777) 70%, var(--color-text-primary, #222));
+  /* Edges that identify a control (WCAG 1.4.11, 3:1). Foundry's dark fields have a transparent border and a fill of only 1.4:1. */
+  --sl-control-border: var(--sl-muted);
 }
+
+/* Fields, checkboxes and condition boxes keep a visible edge in both themes (WCAG 1.4.11). */
+.sinless :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="hidden"]), select, textarea) { border-color: var(--sl-control-border); }
+/* Foundry draws checkboxes as 16px glyphs: a dim square when off in the dark theme, and orange on parchment when on in the light theme. */
+.sinless input[type="checkbox"]::before { border-radius: 3px; box-shadow: inset 0 0 0 1px var(--sl-control-border); }
 
 /* Use the theme text color so keyboard focus stays visible on light and dark surfaces. */
 .sinless :is(a[role="button"], input, select, textarea, [contenteditable="true"]):focus-visible, .sinless .window-content button:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: 1px; border-radius: 2px; }
@@ -63,7 +70,7 @@
 .sinless.sheet .track-label { width: 4.5rem; font-weight: bold; font-size: 0.85rem; }
 .sinless.sheet .boxes { display: flex; flex-wrap: wrap; gap: 2px; }
 /* Pointer targets are at least 24px square (WCAG 2.5.8), also at font scales below the default. */
-.sinless.sheet .box { width: max(1.5rem, 24px); height: max(1.5rem, 24px); border: 1px solid var(--sl-border); border-radius: 2px; display: grid; place-items: center; font-size: 0.6rem; color: var(--sl-muted); }
+.sinless.sheet .box { width: max(1.5rem, 24px); height: max(1.5rem, 24px); border: 1px solid var(--sl-control-border); border-radius: 2px; display: grid; place-items: center; font-size: 0.6rem; color: var(--sl-muted); }
 .sinless.sheet .box.mark { border-right: 2px solid var(--sl-accent); }
 .sinless.sheet .box.filled { background: var(--sl-accent); color: white; }
 .sinless.sheet .condition-footer { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; font-size: 0.85rem; }
@@ -188,7 +195,7 @@
 .sinless.sheet .resource.inactive .item-name { color: var(--sl-muted); text-decoration: line-through; }
 .sinless.sheet .resource-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .sinless.sheet .resource-track { display: flex; flex-wrap: wrap; gap: 1px; }
-.sinless.sheet .rbox { width: 0.8rem; height: 0.8rem; border: 1px solid var(--sl-border); }
+.sinless.sheet .rbox { width: 0.8rem; height: 0.8rem; border: 1px solid var(--sl-control-border); }
 /* Influence is drawn as a slash and damage as a cross (the icons of their counters), as well as by color. */
 .sinless.sheet .rbox { --sl-mark: white; }
 .sinless.sheet .rbox.influenced { background: var(--sl-success) linear-gradient(to top right, transparent 42%, var(--sl-mark) 42% 58%, transparent 58%); }
@@ -309,8 +316,9 @@
 .sinless-operation h4 { margin: 0.4rem 0 0.1rem; font-size: 0.95rem; }
 .sinless-operation .hint { font-size: 0.85em; color: var(--sl-muted); margin: 0.1rem 0; }
 .sinless-operation .stars { display: flex; align-items: center; gap: 6px; font-size: 1.4rem; }
-.sinless-operation .stars .star { color: #888; }
-.sinless-operation .stars .star.on { color: #f9a825; }
+.sinless-operation .stars .star { color: var(--sl-muted); }
+/* Amber mixed with the text color: light on the dark theme, dark enough on parchment (3:1, WCAG 1.4.11). */
+.sinless-operation .stars .star.on { color: color-mix(in srgb, #f9a825 50%, var(--color-text-primary, #222)); }
 .sinless-operation .stars button { margin-left: auto; width: auto; font-size: 0.85rem; padding: 0 8px; }
 .sinless-operation .warn { color: var(--sl-fail, #b71c1c); font-weight: bold; }
 .sinless-operation .alert-row { display: flex; align-items: center; gap: 4px; }
