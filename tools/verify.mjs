@@ -26,6 +26,7 @@ const SCRIPTS = {
   keyboard: { script: "docs/verification/2026-11-07/keyboard.mjs", args: [], about: "sheet controls by keyboard: focus, Enter / Space, focus kept after re-render" },
   "color-independence": { script: "docs/verification/2026-11-08/color-independence.mjs", args: [], about: "dice, resource tracks and toggles exposed as text and kept visible in high contrast mode" },
   contrast: { script: "docs/verification/2026-11-08/contrast.mjs", args: [], about: "text contrast on sheets, windows, a test dialog and a chat card, dark and light themes" },
+  "non-text-contrast": { script: "docs/verification/2026-11-08/non-text-contrast.mjs", args: [], about: "field, checkbox, condition box, die and icon edges reach 3:1, dark and light themes" },
   "text-resize": { script: "docs/verification/2026-11-08/text-resize.mjs", args: [], about: "sheets, windows, a test dialog and a chat card at 200% text: nothing cut off, clipped or squeezed" },
   "sample-chat-cleanup": { script: "docs/verification/2026-11-08/chat-cleanup.mjs", args: ["samples"], about: "optional: run samples with unrelated chats from both another user and the running GM" },
   "chat-cleanup": { script: "docs/verification/2026-11-08/chat-cleanup.mjs", args: [], about: "optional: run color, contrast and target-size checks with a concurrent unrelated chat message" },
@@ -36,7 +37,7 @@ const SCRIPTS = {
 };
 /** Scripts that need an active scene: they place tokens or use the scene controls. */
 const CANVAS = new Set(["magic", "player", "help-window"]);
-const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "contrast", "text-resize", "text-spacing", "reflow", "focus-visibility", "target-size", "batch", "sweep-ja", "sweep-en"];
+const ALL = ["samples", "magic", "player", "permissions", "help-window", "sheet-actions", "keyboard", "keyboard-dialogs", "keyboard-apps", "color-independence", "contrast", "non-text-contrast", "text-resize", "text-spacing", "reflow", "focus-visibility", "target-size", "batch", "sweep-ja", "sweep-en"];
 
 function parse(argv) {
   const opts = { names: [], out: null, world: "sinless-test", relaunch: false, launch: true };
